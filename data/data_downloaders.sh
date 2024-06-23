@@ -68,5 +68,6 @@ cp socialiqa-train-dev/dev* .
 cp socialiqa-train-dev/train* .
 
 # vqa
-mkdir ../vqa/
+mkdir ../data/vqa/
+cd data
 python vqaDemo.py
