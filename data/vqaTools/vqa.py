@@ -17,8 +17,9 @@ __version__ = '0.9'
 # Help on each function can be accessed by: "help(COCO.function)"
 
 import json
-import datetime
 import copy
+
+from datetime import datetime, timezone
 
 class VQA:
     def __init__(self, annotation_file=None, question_file=None):
@@ -35,10 +36,10 @@ class VQA:
         self.imgToQA = {}
         if not annotation_file == None and not question_file == None:
             print('loading VQA annotations and questions into memory...')
-            time_t = datetime.now(datetime.UTC)
+            time_t = datetime.now(timezone.utc)
             dataset = json.load(open(annotation_file, 'r'))
             questions = json.load(open(question_file, 'r'))
-            print(datetime.now(datetime.UTC) - time_t)
+            print(datetime.now(timezone.utc) - time_t)
             self.dataset = dataset
             self.questions = questions
             self.createIndex()
@@ -157,7 +158,7 @@ class VQA:
         res.dataset['license'] = copy.deepcopy(self.questions['license'])
 
         print('Loading and preparing results...')
-        time_t = datetime.now(datetime.UTC)
+        time_t = datetime.now(timezone.utc)
         anns    = json.load(open(resFile))
         assert type(anns) == list, 'results is not an array of objects'
         annsQuesIds = [ann['question_id'] for ann in anns]
@@ -171,7 +172,7 @@ class VQA:
             ann['image_id']      = qaAnn['image_id'] 
             ann['question_type'] = qaAnn['question_type']
             ann['answer_type']   = qaAnn['answer_type']
-        print('DONE (t=%0.2fs)'%((datetime.now(datetime.UTC) - time_t).total_seconds()))
+        print('DONE (t=%0.2fs)'%((datetime.now(timezone.utc) - time_t).total_seconds()))
 
         res.dataset['annotations'] = anns
         res.createIndex()
