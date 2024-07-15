@@ -72,6 +72,8 @@ cp socialiqa-train-dev/train* .
 # vqa
 mkdir /content/data/
 cd /content/data/
+mkdir vqa
+cd vqa
 mkdir Annotations
 cd Annotations
 wget https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/Annotations_Train_mscoco.zip

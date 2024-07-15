@@ -31,7 +31,6 @@ from utils.methods import(
     compute_conditional_score_causal,
     compute_conditional_score_vqa,
     inference_language_modeling,
-    inference_vision_language_modeling,
     inference_calibration,
     inference_generate_synonyms,
     generate_synonyms,
@@ -62,7 +61,7 @@ def main():
     elif args.do_synonym == True:
         args.method = "generate_synonyms"
     else:
-        args.method = "language_modeling"
+        args.method = "vision_language_modeling"
 
     # print(args)
     logging.basicConfig(
@@ -115,7 +114,10 @@ def main():
                     "header_name": header_name, 
                     "tokenizer": tokenizer,}
         if args.model_family in ["VILT"]:
-            fn_kwargs["image_header_name"] = image_header_name
+            fn_kwargs = {"ending_names": ending_names, 
+                    "header_name": header_name, 
+                    "processor": tokenizer,
+                    "image_header_name": image_header_name}
         num_of_options = len(ending_names)
         tokenized_dataset = raw_dataset.map(preprocess_func, fn_kwargs=fn_kwargs, batched=True, batch_size=args.batch_size)
         eval_dataloader = DataLoader(tokenized_dataset, batch_size=args.batch_size, shuffle=False)
@@ -123,7 +125,7 @@ def main():
         # step 5: (evaluation) inference on data, and compute accuracy.
         logger.info(f"Start inference (method: {args.method}) on {args.dataset} using {args.model_family} model: {args.checkpoint}.")
         if args.method in ["vision_language_modeling", "multiple_choice_prompt"]:
-            _, lm_accuracy, avg_lm_accuracy = inference_vision_language_modeling(model, eval_dataloader, device, compute_func, tokenizer.pad_token_id)
+            _, lm_accuracy, avg_lm_accuracy = inference_language_modeling(model, eval_dataloader, device, compute_func, tokenizer.pad_token_id)
         elif args.method == "contrastive_decoding":
             logger.info(f"Load {args.model_family} amateur model: {args.amateur_checkpoint}.")
             # get model path: ../models/args.model_family/args.checkpoint
