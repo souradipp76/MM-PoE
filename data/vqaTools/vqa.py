@@ -159,19 +159,19 @@ class VQA:
 
         print('Loading and preparing results...')
         time_t = datetime.now(timezone.utc)
-        anns    = json.load(open(resFile))
+        anns = json.load(open(resFile))
         assert type(anns) == list, 'results is not an array of objects'
         annsQuesIds = [ann['question_id'] for ann in anns]
         assert set(annsQuesIds) == set(self.getQuesIds()), \
         'Results do not correspond to current VQA set. Either the results do not have predictions for all question ids in annotation file or there is atleast one question id that does not belong to the question ids in the annotation file.'
         for ann in anns:
-            quesId 			     = ann['question_id']
+            quesId = ann['question_id']
             if res.dataset['task_type'] == 'Multiple Choice':
                 assert ann['answer'] in self.qqa[quesId]['multiple_choices'], 'predicted answer is not one of the multiple choices'
-            qaAnn                = self.qa[quesId]
-            ann['image_id']      = qaAnn['image_id'] 
+            qaAnn = self.qa[quesId]
+            ann['image_id'] = qaAnn['image_id'] 
             ann['question_type'] = qaAnn['question_type']
-            ann['answer_type']   = qaAnn['answer_type']
+            ann['answer_type'] = qaAnn['answer_type']
         print('DONE (t=%0.2fs)'%((datetime.now(timezone.utc) - time_t).total_seconds()))
 
         res.dataset['annotations'] = anns

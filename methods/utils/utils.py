@@ -8,11 +8,14 @@ from tqdm import tqdm
 
 import numpy as np
 import torch
+from torchvision.transforms import v2
 import transformers
 from transformers import(
     AutoTokenizer, 
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
+    AutoProcessor,
+    AutoModelForVisualQuestionAnswering
 )
 from datasets import Dataset
 
@@ -26,10 +29,9 @@ from .data import(
     qasc_loader,
     siqa_loader,
     winogrande_loader,
-
     date_understanding_loader,
-
-    anli_loader
+    anli_loader,
+    vqa_loader
 )
 
 def set_seed(seed):
@@ -382,6 +384,14 @@ def load_data(args):
         #     file_path.append(os.path.join("../data", f"{args.dataset}", f"{prefix}_dev.jsonl"))
         train_file_path = [path.replace("dev", "train") for path in file_path]
         loader = anli_loader
+    elif args.dataset in ["vqa"]:
+        args.num_options = 10
+        file_path = os.path.join("../data", args.dataset)
+        train_file_path = os.path.join("../data", args.dataset)
+        ending_names = [f"hypothesis{i}" for i in range(args.num_options)]
+        header_name = "premise"
+        image_header_name = "image_path"
+        loader = vqa_loader
     else:
         print(f"{args.dataset}: downloader not implemented.")
         return
@@ -394,6 +404,8 @@ def load_data(args):
         train_dataset = Dataset.from_list(train_data).with_format("torch")
     else: # BB tasks have no train set. 
         train_dataset = dev_dataset
+    if args.dataset in ["vqa"]:
+        return ending_names, header_name, image_header_name, dev_dataset, train_dataset
     return ending_names, header_name, dev_dataset, train_dataset
 
 def load_model(device, model_path, args):
@@ -403,6 +415,9 @@ def load_model(device, model_path, args):
     elif args.model_family in ["T5", "FLAN-T5"]:
         tokenizer_func = AutoTokenizer
         model_func = AutoModelForSeq2SeqLM
+    elif args.model_family in ["BLIP", "VILT"]:
+        tokenizer_func = AutoProcessor
+        model_func = AutoModelForVisualQuestionAnswering
     else:
         print(f"{args.model_family}: downloader not implemented.")
         return

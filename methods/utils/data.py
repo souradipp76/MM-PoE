@@ -5,6 +5,7 @@ import random
 
 import torch
 from huggingface_hub import upload_folder
+from PIL import Image
 
 # write my own data loader, or using HF dataloader?
 # steps for data loader: label, premise, options, hypothesis.
@@ -80,6 +81,44 @@ def preprocess_function_causal(examples, **kwargs):
     return_dict = {f"{k}": [v[i : i + num_choice] for i in range(0, len(v), num_choice)] for k, v in flatten_dict.items()}
     return return_dict
 
+def preprocess_function_vqa(examples, **kwargs):
+    ending_names, header_name, image_header_name, processor = kwargs['ending_names'], kwargs['header_name'], kwargs['image_header_name'], kwargs['processor']
+    tokenizer = processor.tokenizer
+    image_processor = processor.image_processor
+
+    num_choice = len(ending_names)
+    question_headers = examples[header_name]
+    first_sentences = [[context] * len(ending_names) for context in examples[header_name]]
+    second_sentences = [
+        [f"{examples[end][i]}" for end in ending_names] for i, header in enumerate(question_headers)
+    ]
+
+    first_sentences = sum(first_sentences, [])
+    second_sentences = sum(second_sentences, [])
+
+    tokenized_headers = tokenizer(first_sentences, truncation=True)
+    tokenized_endings = tokenizer(second_sentences, truncation=True)  
+
+    image_paths = examples[image_header_name]
+    images = [Image.open(image_path).convert('RGB') for image_path in image_paths]
+    images = [[image] * len(ending_names) for image in images]
+    images = sum(images, [])
+    images = image_processor(images, return_tensors='pt')
+
+    max_len = max(len(header + ending) for header, ending in zip(tokenized_headers['input_ids'], tokenized_endings['input_ids']))
+    input_ids = torch.full((len(tokenized_headers['input_ids']), max_len), tokenizer.pad_token_id, dtype=torch.long)
+    labels = tokenizer.pad_token_id * torch.ones((len(tokenized_headers['input_ids']), max_len), dtype=torch.long)
+    ending_attention_mask = torch.zeros((len(tokenized_headers['input_ids']), max_len), dtype=torch.long)
+    for i, (header, ending) in enumerate(zip(tokenized_headers['input_ids'], tokenized_endings['input_ids'])):
+        input_ids[i, :len(header)] = torch.tensor(header)
+        input_ids[i, len(header):len(header)+len(ending)] = torch.tensor(ending)
+        ending_attention_mask[i, len(header):len(header)+len(ending)] = torch.tensor(1)
+        labels[i, len(header):len(header)+len(ending)] = torch.tensor(ending)
+
+    flatten_dict = {"input_ids": input_ids, "labels": labels, "ending_attention_mask": ending_attention_mask, "images": images}
+    return_dict = {f"{k}": [v[i : i + num_choice] for i in range(0, len(v), num_choice)] for k, v in flatten_dict.items()}
+    return return_dict
+
 def preprocess_function_seq2seq_channel(examples, **kwargs):
     ending_names, header_name, tokenizer = kwargs['ending_names'], kwargs['header_name'], kwargs['tokenizer']
     num_choice = len(ending_names)
@@ -141,6 +180,47 @@ def preprocess_function_causal_channel(examples, **kwargs):
         labels[i, len(header):len(header)+len(ending)] = torch.tensor(ending)
 
     flatten_dict = {"input_ids": input_ids, "labels": labels, "ending_attention_mask": ending_attention_mask}
+    return_dict = {f"{k}": [v[i : i + num_choice] for i in range(0, len(v), num_choice)] for k, v in flatten_dict.items()}
+    return return_dict
+
+def preprocess_function_vqa_channel(examples, **kwargs):
+    ending_names, header_name, image_header_name, processor = kwargs['ending_names'], kwargs['header_name'], kwargs['image_header_name'], kwargs['processor']
+    tokenizer = processor.tokenizer
+    image_processor = processor.image_processor
+
+    num_choice = len(ending_names)
+    question_headers = examples[header_name]
+    first_sentences = [[context] * len(ending_names) for context in examples[header_name]]
+    second_sentences = [
+        [f"{examples[end][i]}" for end in ending_names] for i, header in enumerate(question_headers)
+    ]
+
+    first_sentences = sum(first_sentences, [])
+    second_sentences = sum(second_sentences, [])
+
+     # swap first_sentences and second_sentences
+    first_sentences, second_sentences = second_sentences, first_sentences
+
+    tokenized_headers = tokenizer(first_sentences, truncation=True)
+    tokenized_endings = tokenizer(second_sentences, truncation=True)  
+
+    image_paths = examples[image_header_name]
+    images = [Image.open(image_path).convert('RGB') for image_path in image_paths]
+    images = [[image] * len(ending_names) for image in images]
+    images = sum(images, [])
+    images = image_processor(images, return_tensors='pt')
+
+    max_len = max(len(header + ending) for header, ending in zip(tokenized_headers['input_ids'], tokenized_endings['input_ids']))
+    input_ids = torch.full((len(tokenized_headers['input_ids']), max_len), tokenizer.pad_token_id, dtype=torch.long)
+    labels = tokenizer.pad_token_id * torch.ones((len(tokenized_headers['input_ids']), max_len), dtype=torch.long)
+    ending_attention_mask = torch.zeros((len(tokenized_headers['input_ids']), max_len), dtype=torch.long)
+    for i, (header, ending) in enumerate(zip(tokenized_headers['input_ids'], tokenized_endings['input_ids'])):
+        input_ids[i, :len(header)] = torch.tensor(header)
+        input_ids[i, len(header):len(header)+len(ending)] = torch.tensor(ending)
+        ending_attention_mask[i, len(header):len(header)+len(ending)] = torch.tensor(1)
+        labels[i, len(header):len(header)+len(ending)] = torch.tensor(ending)
+
+    flatten_dict = {"input_ids": input_ids, "labels": labels, "ending_attention_mask": ending_attention_mask, "images": images}
     return_dict = {f"{k}": [v[i : i + num_choice] for i in range(0, len(v), num_choice)] for k, v in flatten_dict.items()}
     return return_dict
 
@@ -650,3 +730,48 @@ def generate_n_shot_poe_demonstrations(n_shot_dataset, num_of_options):
         n_shot_poe_instance = f"{poe_premise}{answer}\n\n"        
         n_shot_poe_demonstrations += n_shot_poe_instance
     return n_shot_demonstrations, n_shot_poe_demonstrations
+
+def vqa_loader(path, args):
+    versionType = '' # this should be '' when using VQA v2.0 dataset
+    taskType = 'MultipleChoice' # 'OpenEnded' only for v2.0. 'OpenEnded' or 'MultipleChoice' for v1.0
+    dataType = 'mscoco'  # 'mscoco' only for v1.0. 'mscoco' for real and 'abstract_v002' for abstract for v1.0.
+    dataSubType = 'train2014'
+    annFile = '%s/Annotations/%s%s_%s_annotations.json'%(path, versionType, dataType, dataSubType)
+    quesFile = '%s/Questions/%s%s_%s_%s_questions.json'%(path, versionType, taskType, dataType, dataSubType)
+    imgDir = '%s/Images/%s/%s' %(path, dataType, dataSubType)
+
+    examples = []
+
+    print('Loading annotations and questions...')
+    train_anno = json.load(open(annFile, 'r'))
+    train_ques = json.load(open(quesFile, 'r'))
+
+    if args.calibration_prompt is not None:
+        uncond_premise = args.calibration_prompt
+    else:
+        uncond_premise = " the answer is:"
+
+    for i in range(len(train_anno['annotations'])):
+        ans = train_anno['annotations'][i]['multiple_choice_answer']
+        img_id = train_anno['annotations'][i]['image_id']
+        # question_id = train_anno['annotations'][i]['question_id']
+        image_path = os.path.join(imgDir, 'COCO_train2014_' + '%012d.jpg' % img_id)
+
+        question = train_ques['questions'][i]['question']
+        mc_ans = train_ques['questions'][i]['multiple_choices']
+
+        # examples.append({'ques_id': question_id, 'image_path': image_path, 'question': question, 'MC_ans': mc_ans, 'ans': ans})
+
+        example = [{
+            'premise': question, 
+            'image_path': image_path, 
+            'uncond_premise': uncond_premise,  
+            'label': ans
+            }]
+        
+        for idx, ans in enumerate(mc_ans):
+            example[0][f'hypothesis{idx}'] = ans
+
+        examples+=example
+    
+    return examples

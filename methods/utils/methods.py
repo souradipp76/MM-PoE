@@ -327,6 +327,35 @@ def compute_conditional_score_causal(batch, model, device, pad_token_id):
     log_prob = ce_loss.view(batch["input_ids"].shape[0], batch["input_ids"].shape[1], -1).sum(dim=-1)
     return log_prob
 
+def compute_conditional_score_vqa(batch, model, device, pad_token_id):
+
+    #TODO
+    # returns log_prob of p(y|x) for each batch
+    # make sure the padding token is aligned with tokenizer.pad_token_id 
+    # and preprocess_function_causal
+    # padding_token = 50256
+    
+    input_ids = batch["input_ids"].view(-1, batch["input_ids"].shape[-1]).to(device)
+    labels = batch["labels"].view(-1, batch["labels"].shape[-1]).to(device)
+    images = batch["images"].view(-1, batch["images"].shape[-1]).to(device)
+
+    # adding this line of code takes me more than an hour.
+    # without adding torch.no_grad, GPU usage will muiltply by 4.
+    with torch.no_grad():
+        outputs = model(input_ids=input_ids, pixel_values=images, labels=labels)
+    
+    _, logits = outputs.loss, outputs.logits
+    # shift
+    logits = logits[:, :-1].contiguous()
+    labels = labels[:, 1:].contiguous()
+    # e.g., (batch_size * #option, ending_seq_len, #vocab): (64, 18, 32128)
+    logits = logits.view(-1, logits.shape[-1])
+    # ignore padding token: 50256
+    ce_loss = F.cross_entropy(logits, labels.view(-1), reduction="none", ignore_index=pad_token_id).detach().cpu()
+    # each score is the negative log-likelihood of a ending given a header.
+    log_prob = ce_loss.view(batch["input_ids"].shape[0], batch["input_ids"].shape[1], -1).sum(dim=-1)
+    return log_prob
+
 def generate_synonyms(args, model, tokenizer, tokenized_dataset):
     
     generation_config = GenerationConfig(
