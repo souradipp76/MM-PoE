@@ -1,3 +1,4 @@
+: '
 proxy_prefix="https://ghproxy.com/"
 
 # anli
@@ -66,6 +67,7 @@ wget https://storage.googleapis.com/ai2-mosaic/public/socialiqa/socialiqa-train-
 unzip socialiqa-train-dev.zip
 cp socialiqa-train-dev/dev* .
 cp socialiqa-train-dev/train* .
+'
 
 # vqa
 mkdir /content/data/
