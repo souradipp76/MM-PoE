@@ -15,7 +15,7 @@ process_of_elimination_prompt="Select the most suitable option to answer the que
 for seed in "${seeds[@]}"; do
     for checkpoint in "${checkpoints[@]}"; do
     # language modeling and average language modeling
-    python visual_language_modeling.py \
+    python vision_language_modeling.py \
         --seed ${seed} \
         --model_family ${model_family} \
         --checkpoint ${checkpoint} \
