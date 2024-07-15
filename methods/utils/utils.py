@@ -386,8 +386,8 @@ def load_data(args):
         loader = anli_loader
     elif args.dataset in ["vqa"]:
         args.num_options = 10
-        file_path = os.path.join("../data", args.dataset)
-        train_file_path = os.path.join("../data", args.dataset)
+        file_path = os.path.join("/content/data", args.dataset)
+        train_file_path = os.path.join("/content/data", args.dataset)
         ending_names = [f"hypothesis{i}" for i in range(args.num_options)]
         header_name = "premise"
         image_header_name = "image_path"

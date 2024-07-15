@@ -1,6 +1,6 @@
 # you may specify model families and checkpoints here
-model_families=("FLAN-T5")
-checkpoints=("google/flan-t5-xl")
+model_families=("VILT")
+checkpoints=("dandelin/vilt-b32-mlm")
 
 for model_family in "${model_families[@]}"
 do

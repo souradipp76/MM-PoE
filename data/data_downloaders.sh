@@ -68,8 +68,8 @@ cp socialiqa-train-dev/dev* .
 cp socialiqa-train-dev/train* .
 
 # vqa
-mkdir /content/vqa/
-cd /content/vqa/
+mkdir /content/data/
+cd /content/data/
 mkdir Annotations
 cd Annotations
 wget https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/Annotations_Train_mscoco.zip
@@ -84,5 +84,5 @@ mkdir mscoco
 cd mscoco
 wget http://images.cocodataset.org/zips/train2014.zip
 unzip train2014.zip
-cd /content/drive/MyDrive/ML/MM-PoE/data
-python vqaDemo.py
+cd /content/data
+# python vqaDemo.py

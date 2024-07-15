@@ -9,6 +9,8 @@ from transformers import (
     AutoTokenizer, 
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
+    AutoProcessor,
+    AutoModelForVisualQuestionAnswering
 )
 
 all_checkpoints = {
@@ -20,6 +22,7 @@ all_checkpoints = {
     "FLAN-T5": ["google/flan-t5-small", "google/flan-t5-base", "google/flan-t5-large", "google/flan-t5-xl", "google/flan-t5-xxl"],
     "MPT": ["mosaicml/mpt-7b", "mosaicml/mpt-7b-instruct", "mosaicml/mpt-7b-chat", "mosaicml/mpt-7b-storywriter"],
     "Dolly": ["databricks/dolly-v2-7b"],
+    "VILT": ["dandelin/vilt-b32-mlm"]
 }
 
 def parse_args():
@@ -28,7 +31,7 @@ def parse_args():
     parser.add_argument(
         "--model_family",
         type=str,
-        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly"],
+        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "VILT"],
         default=None,
         help="The moddel family, as checkpoints under the same model family use same codes to download."
         )
@@ -68,6 +71,9 @@ def main():
     elif args.model_family in ["T5", "FLAN-T5"]:
         tokenizer_func = AutoTokenizer
         model_func = AutoModelForSeq2SeqLM
+    elif args.model_family in ["VILT"]:
+        tokenizer_func = AutoProcessor
+        model_func = AutoModelForVisualQuestionAnswering
     else:
         print(f"{args.model_family}: downloader not implemented.")
         return
