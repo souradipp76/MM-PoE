@@ -104,7 +104,7 @@ def main():
     # evaluate on each dataset
     for dataset in args.datasets:
         args.dataset = dataset
-        if args.model_family in ["VILT", "BLIP"]:
+        if args.model_family in ["VILT"]:
             ending_names, header_name, image_header_name, raw_dataset, n_shot_dataset = load_data(args)
         else:
             ending_names, header_name, raw_dataset, n_shot_dataset = load_data(args)
@@ -114,7 +114,7 @@ def main():
         fn_kwargs = {"ending_names": ending_names, 
                     "header_name": header_name, 
                     "tokenizer": tokenizer,}
-        if args.model_family in ["VILT", "BLIP"]:
+        if args.model_family in ["VILT"]:
             fn_kwargs["image_header_name"] = image_header_name
         num_of_options = len(ending_names)
         tokenized_dataset = raw_dataset.map(preprocess_func, fn_kwargs=fn_kwargs, batched=True, batch_size=args.batch_size)
