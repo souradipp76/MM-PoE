@@ -29,6 +29,8 @@ from utils.data import(
     create_multiple_choice_prompt,
     generate_n_shot_poe_demonstrations,
     create_n_shot_splits,
+    preprocess_function_vqa,
+    preprocess_function_vqa_channel
 )
 from utils.methods import(
     compute_conditional_score_seq2seq,
@@ -37,6 +39,7 @@ from utils.methods import(
     inference_process_of_elimination,
     inference_language_modeling,
     inference_calibration,
+    compute_conditional_score_seq2seq_vqa
 )
 from utils.utils import(
     load_data,
@@ -89,7 +92,7 @@ def main():
                         'ending_input_ids', 
                         'ending_attention_mask', ]
     elif args.model_family in ["VILT"]:
-        compute_func = compute_conditional_score_vqa
+        compute_func = compute_conditional_score_seq2seq_vqa
         preprocess_func = preprocess_function_vqa
         preprocess_func_channel = preprocess_function_vqa_channel
         remove_columns=['header_input_ids', 
