@@ -90,7 +90,7 @@ def main():
         compute_func = compute_conditional_score_seq2seq
         preprocess_func = preprocess_function_seq2seq
         preprocess_func_channel = preprocess_function_seq2seq_channel
-    elif args.model_family in ["VILT", "BLIP"]:
+    elif args.model_family in ["VILT"]:
         compute_func = compute_conditional_score_vqa
         preprocess_func = preprocess_function_vqa
         preprocess_func_channel = preprocess_function_vqa_channel

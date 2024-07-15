@@ -415,7 +415,7 @@ def load_model(device, model_path, args):
     elif args.model_family in ["T5", "FLAN-T5"]:
         tokenizer_func = AutoTokenizer
         model_func = AutoModelForSeq2SeqLM
-    elif args.model_family in ["BLIP", "VILT"]:
+    elif args.model_family in ["VILT"]:
         tokenizer_func = AutoProcessor
         model_func = AutoModelForVisualQuestionAnswering
     else:

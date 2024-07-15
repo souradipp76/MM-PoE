@@ -328,8 +328,6 @@ def compute_conditional_score_causal(batch, model, device, pad_token_id):
     return log_prob
 
 def compute_conditional_score_vqa(batch, model, device, pad_token_id):
-
-    #TODO
     # returns log_prob of p(y|x) for each batch
     # make sure the padding token is aligned with tokenizer.pad_token_id 
     # and preprocess_function_causal
