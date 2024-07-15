@@ -95,10 +95,9 @@ def main():
         compute_func = compute_conditional_score_seq2seq_vqa
         preprocess_func = preprocess_function_vqa
         preprocess_func_channel = preprocess_function_vqa_channel
-        remove_columns=['header_input_ids', 
-                        'header_attention_mask', 
-                        'ending_input_ids', 
-                        'ending_attention_mask', ]
+        remove_columns = ['input_ids',
+                          'labels',
+                          'ending_attention_mask']
     else:
         raise NotImplementedError
 
