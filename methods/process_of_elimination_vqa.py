@@ -88,6 +88,14 @@ def main():
                         'header_attention_mask', 
                         'ending_input_ids', 
                         'ending_attention_mask', ]
+    elif args.model_family in ["Vilt"]:
+        compute_func = compute_conditional_score_seq2seq_vqa
+        preprocess_func = preprocess_function_seq2seq_vqa
+        preprocess_func_channel = preprocess_function_seq2seq_channel_vqa
+        remove_columns=['header_input_ids', 
+                        'header_attention_mask', 
+                        'ending_input_ids', 
+                        'ending_attention_mask', ]
     else:
         raise NotImplementedError
 
