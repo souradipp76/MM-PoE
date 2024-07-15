@@ -65,20 +65,20 @@ for seed in "${seeds[@]}"; do
     #     --sample ${sample} \
     #     # --push_data_to_hub \
 
-    # # process of elimination
-    # python process_of_elimination.py \
-    #     --seed ${seed} \
-    #     --model_family ${model_family} \
-    #     --checkpoint ${checkpoint} \
-    #     --loading_precision ${loading_precision} \
-    #     --datasets "$datasets" \
-    #     --batch_size  ${batch_size} \
-    #     --multiple_choice_prompt "$multiple_choice_prompt" \
-    #     --process_of_elimination_prompt "${process_of_elimination_prompt}" \
-    #     --scoring_method_for_process_of_elimination "multiple_choice_prompt" \
-    #     --mask_strategy_for_process_of_elimination "below_average" \
-    #     --n_shot ${n_shot} \
-    #     --sample ${sample} \
-    #     # --push_data_to_hub 
-    # done
+    # process of elimination
+    python process_of_elimination_vqa.py \
+        --seed ${seed} \
+        --model_family ${model_family} \
+        --checkpoint ${checkpoint} \
+        --loading_precision ${loading_precision} \
+        --datasets "$datasets" \
+        --batch_size  ${batch_size} \
+        --multiple_choice_prompt "$multiple_choice_prompt" \
+        --process_of_elimination_prompt "${process_of_elimination_prompt}" \
+        --scoring_method_for_process_of_elimination "multiple_choice_prompt" \
+        --mask_strategy_for_process_of_elimination "below_average" \
+        --n_shot ${n_shot} \
+        --sample ${sample} \
+        # --push_data_to_hub 
+    done
 done
