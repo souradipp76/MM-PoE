@@ -103,7 +103,7 @@ def preprocess_function_vqa(examples, **kwargs):
     images = [Image.open(image_path).convert('RGB') for image_path in image_paths]
     images = [[image] * len(ending_names) for image in images]
     images = sum(images, [])
-    images = image_processor(images, return_tensors='pt')
+    images = image_processor(images, return_tensors='pt').data
 
     max_len = max(len(header + ending) for header, ending in zip(tokenized_headers['input_ids'], tokenized_endings['input_ids']))
     input_ids = torch.full((len(tokenized_headers['input_ids']), max_len), tokenizer.pad_token_id, dtype=torch.long)
@@ -115,7 +115,7 @@ def preprocess_function_vqa(examples, **kwargs):
         ending_attention_mask[i, len(header):len(header)+len(ending)] = torch.tensor(1)
         labels[i, len(header):len(header)+len(ending)] = torch.tensor(ending)
 
-    flatten_dict = {"input_ids": input_ids, "labels": labels, "ending_attention_mask": ending_attention_mask, "images": images}
+    flatten_dict = {"input_ids": input_ids, "labels": labels, "ending_attention_mask": ending_attention_mask, "images": images["pixel_values"]}
     return_dict = {f"{k}": [v[i : i + num_choice] for i in range(0, len(v), num_choice)] for k, v in flatten_dict.items()}
     return return_dict
 
@@ -208,7 +208,7 @@ def preprocess_function_vqa_channel(examples, **kwargs):
     images = [Image.open(image_path).convert('RGB') for image_path in image_paths]
     images = [[image] * len(ending_names) for image in images]
     images = sum(images, [])
-    images = image_processor(images, return_tensors='pt')
+    images = image_processor(images, return_tensors='pt').data
 
     max_len = max(len(header + ending) for header, ending in zip(tokenized_headers['input_ids'], tokenized_endings['input_ids']))
     input_ids = torch.full((len(tokenized_headers['input_ids']), max_len), tokenizer.pad_token_id, dtype=torch.long)
@@ -220,7 +220,7 @@ def preprocess_function_vqa_channel(examples, **kwargs):
         ending_attention_mask[i, len(header):len(header)+len(ending)] = torch.tensor(1)
         labels[i, len(header):len(header)+len(ending)] = torch.tensor(ending)
 
-    flatten_dict = {"input_ids": input_ids, "labels": labels, "ending_attention_mask": ending_attention_mask, "images": images}
+    flatten_dict = {"input_ids": input_ids, "labels": labels, "ending_attention_mask": ending_attention_mask, "images": images["pixel_values"]}
     return_dict = {f"{k}": [v[i : i + num_choice] for i in range(0, len(v), num_choice)] for k, v in flatten_dict.items()}
     return return_dict
 

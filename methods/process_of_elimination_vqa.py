@@ -97,6 +97,7 @@ def main():
         preprocess_func_channel = preprocess_function_vqa_channel
         remove_columns = ['input_ids',
                           'labels',
+                          'pixel_values',
                           'ending_attention_mask']
     else:
         raise NotImplementedError
@@ -111,16 +112,28 @@ def main():
         args.dataset = dataset
         # multiple_choice_prompt = args.multiple_choice_prompt
         args.multiple_choice_prompt = None
-        ending_names, header_name, raw_dataset, n_shot_dataset = load_data(args)
+        if args.model_family in ["VILT"]:
+            ending_names, header_name, image_header_name, raw_dataset, n_shot_dataset = load_data(args)
+        else:
+            ending_names, header_name, raw_dataset, n_shot_dataset = load_data(args)
         raw_dataset, n_shot_dataset, n_shot_demonstrations = create_n_shot_splits(raw_dataset, n_shot_dataset, args)    
         
         mcp_args = copy.deepcopy(args)
         mcp_args.multiple_choice_prompt = multiple_choice_prompt
-        _, _, raw_mcp_dataset, n_shot_mcp_dataset = load_data(mcp_args)
+        if args.model_family in ["VILT"]:
+            _, _, _, raw_mcp_dataset, n_shot_mcp_dataset = load_data(mcp_args)
+        else:
+            _, _, raw_mcp_dataset, n_shot_mcp_dataset = load_data(mcp_args)
         raw_mcp_dataset, n_shot_mcp_dataset, _ = create_n_shot_splits(raw_mcp_dataset, n_shot_mcp_dataset, args)    
         
         logger.info(f"Preprocess data: {args.dataset}.")
-        fn_kwargs = {"ending_names": ending_names, 
+        if args.model_family in ["VILT"]:
+            fn_kwargs = {"ending_names": ending_names, 
+                        "header_name": header_name, 
+                        "processor": tokenizer,
+                        "image_header_name": image_header_name}
+        else:
+            fn_kwargs = {"ending_names": ending_names, 
                     "header_name": header_name, 
                     "tokenizer": tokenizer,}
         num_of_options = len(ending_names)
@@ -136,9 +149,15 @@ def main():
             eval_channel_dataloader = DataLoader(tokenized_channel_dataset, batch_size=args.batch_size, shuffle=False)
             avg_log_probs, _, _ = inference_language_modeling(model, eval_channel_dataloader, device, compute_func, tokenizer.pad_token_id)
         elif scoring_method == "calibration":
-            fn_kwargs = {"ending_names": ending_names, 
-                        "header_name": "uncond_premise", # the difference is here
-                        "tokenizer": tokenizer,}
+            if args.model_family in ["VILT"]:
+                fn_kwargs = {"ending_names": ending_names, 
+                            "header_name": "uncond_premise", # the difference is here
+                            "processor": tokenizer,
+                            "image_header_name": image_header_name}
+            else:
+                fn_kwargs = {"ending_names": ending_names, 
+                            "header_name": "uncond_premise", # the difference is here
+                            "tokenizer": tokenizer,}
             tokenized_calibration_dataset = raw_dataset.map(preprocess_func, fn_kwargs=fn_kwargs, batched=True, batch_size=args.batch_size)
             eval_calibration_dataloader = DataLoader(tokenized_calibration_dataset, batch_size=args.batch_size, shuffle=False)    
             avg_log_probs, _, _ = inference_calibration(model, eval_dataloader, eval_calibration_dataloader,device, compute_func, tokenizer.pad_token_id)
