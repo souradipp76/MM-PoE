@@ -1,8 +1,8 @@
 #!/bin/bash
 seeds=(0)
-model_family="VILT"  
-checkpoints=("dandelin/vilt-b32-mlm")
-loading_precision="FP16" 
+model_family="BLIP2"  
+checkpoints=("Salesforce/blip2-opt-2.7b")
+loading_precision="INT8"
 datasets="vqa"
 batch_size=16
 sample=100

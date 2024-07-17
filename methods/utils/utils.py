@@ -14,8 +14,8 @@ from transformers import(
     AutoTokenizer, 
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
-    AutoProcessor,
-    AutoModelForVisualQuestionAnswering
+    Blip2Processor,
+    Blip2ForConditionalGeneration
 )
 from datasets import Dataset
 
@@ -53,7 +53,7 @@ def parse_args():
     parser.add_argument(
         "--model_family",
         type=str,
-        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "VILT"],
+        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2"],
         default=None,
         required=True,
         help="The moddel family, as checkpoints under the same model family use same codes to download.",
@@ -385,7 +385,11 @@ def load_data(args):
         train_file_path = [path.replace("dev", "train") for path in file_path]
         loader = anli_loader
     elif args.dataset in ["vqa"]:
+<<<<<<< Updated upstream
         args.num_options = 18
+=======
+        args.num_options = 17
+>>>>>>> Stashed changes
         file_path = os.path.join("/content/data", args.dataset)
         train_file_path = os.path.join("/content/data", args.dataset)
         ending_names = [f"hypothesis{i}" for i in range(args.num_options)]
@@ -415,9 +419,9 @@ def load_model(device, model_path, args):
     elif args.model_family in ["T5", "FLAN-T5"]:
         tokenizer_func = AutoTokenizer
         model_func = AutoModelForSeq2SeqLM
-    elif args.model_family in ["VILT"]:
-        tokenizer_func = AutoProcessor
-        model_func = AutoModelForVisualQuestionAnswering
+    elif args.model_family in ["BLIP2"]:
+        tokenizer_func = Blip2Processor
+        model_func = Blip2ForConditionalGeneration
     else:
         print(f"{args.model_family}: downloader not implemented.")
         return

@@ -9,8 +9,8 @@ from transformers import (
     AutoTokenizer, 
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
-    AutoProcessor,
-    AutoModelForVisualQuestionAnswering
+    Blip2Processor,
+    Blip2ForConditionalGeneration
 )
 
 all_checkpoints = {
@@ -22,7 +22,7 @@ all_checkpoints = {
     "FLAN-T5": ["google/flan-t5-small", "google/flan-t5-base", "google/flan-t5-large", "google/flan-t5-xl", "google/flan-t5-xxl"],
     "MPT": ["mosaicml/mpt-7b", "mosaicml/mpt-7b-instruct", "mosaicml/mpt-7b-chat", "mosaicml/mpt-7b-storywriter"],
     "Dolly": ["databricks/dolly-v2-7b"],
-    "VILT": ["dandelin/vilt-b32-mlm"]
+    "BLIP2": ["Salesforce/blip2-opt-2.7b"]
 }
 
 def parse_args():
@@ -31,7 +31,7 @@ def parse_args():
     parser.add_argument(
         "--model_family",
         type=str,
-        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "VILT"],
+        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2"],
         default=None,
         help="The moddel family, as checkpoints under the same model family use same codes to download."
         )
@@ -71,9 +71,9 @@ def main():
     elif args.model_family in ["T5", "FLAN-T5"]:
         tokenizer_func = AutoTokenizer
         model_func = AutoModelForSeq2SeqLM
-    elif args.model_family in ["VILT"]:
-        tokenizer_func = AutoProcessor
-        model_func = AutoModelForVisualQuestionAnswering
+    elif args.model_family in ["BLIP2"]:
+        tokenizer_func = Blip2Processor
+        model_func = Blip2ForConditionalGeneration
     else:
         print(f"{args.model_family}: downloader not implemented.")
         return
@@ -104,6 +104,14 @@ def main():
                 device_map="auto", 
                 # torch_dtype=torch.float16,
                 # load_in_8bit=True,
+            )
+        elif args.model_family == "BLIP2":
+            tokenizer = tokenizer_func.from_pretrained(checkpoint)
+            model = model_func.from_pretrained(
+                checkpoint,
+                torch_dtype=torch.float16,
+                device_map="auto",
+                load_in_8bit=True
             )
             
         else:
