@@ -96,6 +96,9 @@ def preprocess_function_vqa(examples, **kwargs):
     first_sentences = sum(first_sentences, [])
     second_sentences = sum(second_sentences, [])
 
+    print(first_sentences)
+    print(second_sentences)
+
     tokenized_headers = tokenizer(first_sentences, truncation=True)
     tokenized_endings = tokenizer(second_sentences, truncation=True)  
 
