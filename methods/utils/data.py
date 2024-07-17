@@ -773,11 +773,11 @@ def vqa_loader(path, args):
             options = "\n".join([f"{i}. {ans}" for i, ans in enumerate(mc_ans)])
             premise = f"{args.multiple_choice_prompt} Question: {question}\n{options}\nAnswer:"
         else:
-            hypotheses = options
-            premise = premise + uncond_premise
+            hypotheses = mc_ans
+            premise = question + uncond_premise
 
         example = [{
-            'premise': question, 
+            'premise': premise, 
             'image_path': image_path, 
             'uncond_premise': uncond_premise,  
             'label': label
