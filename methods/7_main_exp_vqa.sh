@@ -1,5 +1,5 @@
 #!/bin/bash
-seeds=(0 1 2 3 4)
+seeds=(0)
 model_family="VILT"  
 checkpoints=("dandelin/vilt-b32-mlm")
 loading_precision="FP16" 

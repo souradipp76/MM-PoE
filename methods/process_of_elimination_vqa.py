@@ -35,11 +35,11 @@ from utils.data import(
 from utils.methods import(
     compute_conditional_score_seq2seq,
     compute_conditional_score_causal,
+    compute_conditional_score_vqa,
     compute_mask_process_of_elimination,
     inference_process_of_elimination,
     inference_language_modeling,
-    inference_calibration,
-    compute_conditional_score_seq2seq_vqa
+    inference_calibration
 )
 from utils.utils import(
     load_data,
@@ -92,7 +92,7 @@ def main():
                         'ending_input_ids', 
                         'ending_attention_mask', ]
     elif args.model_family in ["VILT"]:
-        compute_func = compute_conditional_score_seq2seq_vqa
+        compute_func = compute_conditional_score_vqa
         preprocess_func = preprocess_function_vqa
         preprocess_func_channel = preprocess_function_vqa_channel
         remove_columns = ['input_ids',

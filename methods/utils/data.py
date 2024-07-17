@@ -759,18 +759,35 @@ def vqa_loader(path, args):
 
         question = train_ques['questions'][i]['question']
         mc_ans = train_ques['questions'][i]['multiple_choices']
+        label = mc_ans.index(ans)
 
-        # examples.append({'ques_id': question_id, 'image_path': image_path, 'question': question, 'MC_ans': mc_ans, 'ans': ans})
+        if getattr(args, 'multiple_choice_prompt', None) is not None:
+            hypotheses = mc_ans
+            # Question: How does a bishop move from one place to another?
+            # 1. chess game
+            # 2. church
+            # 3. in a car
+            # 4. queen
+            # 5. cathedral
+            # Answer:
+            options = "\n".join([f"{i}. {ans}" for i, ans in enumerate(mc_ans)])
+            premise = f"{args.multiple_choice_prompt} Question: {question}\n{options}\nAnswer:"
+        else:
+            hypotheses = options
+            premise = premise + uncond_premise
 
         example = [{
             'premise': question, 
             'image_path': image_path, 
             'uncond_premise': uncond_premise,  
-            'label': ans
+            'label': label
             }]
-        
+    
         for idx, ans in enumerate(mc_ans):
             example[0][f'hypothesis{idx}'] = ans
+
+        if i==0:
+            print(example)
 
         examples+=example
     

@@ -125,7 +125,7 @@ def main():
         # step 5: (evaluation) inference on data, and compute accuracy.
         logger.info(f"Start inference (method: {args.method}) on {args.dataset} using {args.model_family} model: {args.checkpoint}.")
         if args.method in ["vision_language_modeling", "multiple_choice_prompt"]:
-            _, lm_accuracy, avg_lm_accuracy = inference_language_modeling(model, eval_dataloader, device, compute_func, tokenizer.pad_token_id)
+            _, lm_accuracy, avg_lm_accuracy = inference_language_modeling(model, eval_dataloader, device, compute_func, tokenizer.tokenizer.pad_token_id)
         elif args.method == "contrastive_decoding":
             logger.info(f"Load {args.model_family} amateur model: {args.amateur_checkpoint}.")
             # get model path: ../models/args.model_family/args.checkpoint
