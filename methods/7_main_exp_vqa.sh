@@ -15,15 +15,15 @@ process_of_elimination_prompt="Select the most suitable option to answer the que
 for seed in "${seeds[@]}"; do
     for checkpoint in "${checkpoints[@]}"; do
     # language modeling and average language modeling
-    python vision_language_modeling.py \
-        --seed ${seed} \
-        --model_family ${model_family} \
-        --checkpoint ${checkpoint} \
-        --datasets "$datasets" \
-        --batch_size  ${batch_size} \
-        --loading_precision ${loading_precision} \
-        --n_shot ${n_shot} \
-        --sample ${sample} \
+    # python vision_language_modeling.py \
+    #     --seed ${seed} \
+    #     --model_family ${model_family} \
+    #     --checkpoint ${checkpoint} \
+    #     --datasets "$datasets" \
+    #     --batch_size  ${batch_size} \
+    #     --loading_precision ${loading_precision} \
+    #     --n_shot ${n_shot} \
+    #     --sample ${sample} \
     #     --push_data_to_hub \
         
     # # channel

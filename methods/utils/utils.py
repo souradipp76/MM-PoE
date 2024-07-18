@@ -385,11 +385,7 @@ def load_data(args):
         train_file_path = [path.replace("dev", "train") for path in file_path]
         loader = anli_loader
     elif args.dataset in ["vqa"]:
-<<<<<<< Updated upstream
-        args.num_options = 18
-=======
         args.num_options = 17
->>>>>>> Stashed changes
         file_path = os.path.join("/content/data", args.dataset)
         train_file_path = os.path.join("/content/data", args.dataset)
         ending_names = [f"hypothesis{i}" for i in range(args.num_options)]

@@ -96,8 +96,8 @@ def preprocess_function_vqa(examples, **kwargs):
     first_sentences = sum(first_sentences, [])
     second_sentences = sum(second_sentences, [])
 
-    print(first_sentences)
-    print(second_sentences)
+    # print(first_sentences)
+    # print(second_sentences)
 
     tokenized_headers = tokenizer(first_sentences, truncation=True)
     tokenized_endings = tokenizer(second_sentences, truncation=True)  
@@ -789,8 +789,8 @@ def vqa_loader(path, args):
         for idx, ans in enumerate(mc_ans):
             example[0][f'hypothesis{idx}'] = ans
 
-        if i==0:
-            print(example)
+        # if i==0:
+        #     print(example)
 
         examples+=example
     
