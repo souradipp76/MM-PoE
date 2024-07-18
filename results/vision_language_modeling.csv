@@ -1,0 +1,3 @@
+model_family,checkpoint,loading_precision,dataset,batch_size,method,seed,n_shot,sample,accuracy
+BLIP2,Salesforce/blip2-opt-2.7b,INT8,vqa,16,vision_language_modeling,0,0,100,0.0600
+BLIP2,Salesforce/blip2-opt-2.7b,INT8,vqa,16,vision_language_modeling,0,0,100,0.0600
