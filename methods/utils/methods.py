@@ -348,7 +348,8 @@ def compute_conditional_score_vqa(batch, model, device, pad_token_id):
     _, logits = outputs.loss, outputs.logits
     # print(logits.shape)
     # e.g., (batch_size * #option, ending_seq_len, #vocab): (64, 18, 32128)
-    logits = logits.view(-1, logits.shape[-1], logits.shape[-2])
+    # logits = logits.view(-1, logits.shape[-1], logits.shape[-2])
+    logits = torch.permute(logits, (0, 2, 1))
     # print(logits.shape)
     # e.g., (batch_size * #option, #vocab, ending_seq_len): (64, 32128, 18)
     # ignore padding token: 50256
