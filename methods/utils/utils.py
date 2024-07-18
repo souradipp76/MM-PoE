@@ -15,7 +15,8 @@ from transformers import(
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
     Blip2Processor,
-    Blip2ForConditionalGeneration
+    Blip2ForConditionalGeneration,
+    BitsAndBytesConfig
 )
 from datasets import Dataset
 
@@ -433,7 +434,11 @@ def load_model(device, model_path, args):
     elif args.loading_precision == "BF16":
         model = model_func.from_pretrained(model_path, device_map="auto", torch_dtype=torch.bfloat16)
     elif args.loading_precision == "INT8":
-        model = model_func.from_pretrained(model_path, device_map="auto", load_in_8bit=True)
+        quantization_config = BitsAndBytesConfig(load_in_8bit=True, 
+                                        llm_int8_threshold=200.0)
+        model = model_func.from_pretrained(model_path, device_map="auto", 
+                                        torch_dtype=torch.float16,
+                                        quantization_config=quantization_config)
     else: # FP32
         model = model_func.from_pretrained(model_path)
         model.to(device)

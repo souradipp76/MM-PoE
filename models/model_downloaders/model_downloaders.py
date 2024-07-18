@@ -10,7 +10,8 @@ from transformers import (
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
     Blip2Processor,
-    Blip2ForConditionalGeneration
+    Blip2ForConditionalGeneration,
+    BitsAndBytesConfig
 )
 
 all_checkpoints = {
@@ -107,11 +108,13 @@ def main():
             )
         elif args.model_family == "BLIP2":
             tokenizer = tokenizer_func.from_pretrained(checkpoint)
+            quantization_config = BitsAndBytesConfig(load_in_8bit=True, 
+                                        llm_int8_threshold=200.0)
             model = model_func.from_pretrained(
                 checkpoint,
                 torch_dtype=torch.float16,
                 device_map="auto",
-                load_in_8bit=True
+                lquantization_config=quantization_config
             )
             
         else:
