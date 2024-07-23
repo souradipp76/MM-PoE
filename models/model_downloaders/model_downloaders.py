@@ -114,7 +114,7 @@ def main():
                 checkpoint,
                 torch_dtype=torch.float16,
                 device_map="auto",
-                lquantization_config=quantization_config
+                quantization_config=quantization_config
             )
             
         else:
