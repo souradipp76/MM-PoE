@@ -96,10 +96,8 @@ cd /content/data/
 mkdir scienceqa
 cd scienceqa
 echo "Downloading scienceqa dataset..."
-wget -q https://drive.google.com/drive/folders/1w8imCXWYn2LxajmGeGH_g5DaL2rabHev
-unzip -j ScienceQA_DATA.zip
-rm ScienceQA_DATA.zip
+gdown --folder https://drive.google.com/drive/folders/1w8imCXWYn2LxajmGeGH_g5DaL2rabHev
 cd ScienceQA_DATA
-unzip -j train.zip
+unzip train.zip
 cd /content/data
 echo "Done."
