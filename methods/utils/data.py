@@ -802,7 +802,7 @@ def scienceqa_loader(path, args):
     print('Loading annotations and images...')
     anno = json.load(open(annFile, 'r'))
     train_test_split = json.load(open(traintestFile, 'r'))
-    train_ids = train_test_split['train']
+    train_ids = train_test_split['minitrain']
     train_anno = {id: anno[id] for id in train_ids}
 
     if args.calibration_prompt is not None:
