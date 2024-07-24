@@ -810,7 +810,7 @@ def scienceqa_loader(path, args):
     else:
         uncond_premise = " the answer is:"
 
-    for i, (id, value) in enumerate(train_anno):
+    for i, (id, value) in enumerate(train_anno.items()):
         img_id = id
         image_path = os.path.join(os.path.join(imgDir, img_id), 'image.png')
 
