@@ -796,15 +796,15 @@ def vqa_loader(path, args):
 
 def scienceqa_loader(path, args):
     annFile = '%s/ScienceQA_DATA/problems.json'%(path)
-    traintestFile = '%s/ScienceQA_DATA/pid_splits.json'%(path)
+    # traintestFile = '%s/ScienceQA_DATA/pid_splits.json'%(path)
     imgDir = '%s/ScienceQA_DATA/train' %(path)
 
     examples = []
 
     print('Loading annotations and images...')
     anno = json.load(open(annFile, 'r'))
-    train_test_split = json.load(open(traintestFile, 'r'))
-    train_ids = train_test_split['minitrain']
+    # train_test_split = json.load(open(traintestFile, 'r'))
+    train_ids = os.listdir(imgDir)
     train_anno = {id: anno[id] for id in train_ids}
 
     if args.calibration_prompt is not None:
