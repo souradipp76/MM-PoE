@@ -1,9 +1,9 @@
 #!/bin/bash
 seeds=(0)
-model_family="BLIP2"  
-checkpoints=("Salesforce/blip2-opt-2.7b")
-loading_precision="INT8"
-datasets="scienceqa" # "vqa scienceqa"
+model_family="GIT"  
+checkpoints=("microsoft/git-base-textvqa")
+loading_precision="FP16"
+datasets="vqa" # "vqa scienceqa"
 batch_size=16
 sample=100
 n_shot=0

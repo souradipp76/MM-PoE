@@ -9,6 +9,7 @@ from transformers import (
     AutoTokenizer, 
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
+    AutoProcessor,
     Blip2Processor,
     Blip2Model,
     BitsAndBytesConfig
@@ -23,7 +24,8 @@ all_checkpoints = {
     "FLAN-T5": ["google/flan-t5-small", "google/flan-t5-base", "google/flan-t5-large", "google/flan-t5-xl", "google/flan-t5-xxl"],
     "MPT": ["mosaicml/mpt-7b", "mosaicml/mpt-7b-instruct", "mosaicml/mpt-7b-chat", "mosaicml/mpt-7b-storywriter"],
     "Dolly": ["databricks/dolly-v2-7b"],
-    "BLIP2": ["Salesforce/blip2-opt-2.7b"]
+    "BLIP2": ["Salesforce/blip2-opt-2.7b"],
+    "GIT": ["microsoft/git-base-textvqa"]
 }
 
 def parse_args():
@@ -32,7 +34,7 @@ def parse_args():
     parser.add_argument(
         "--model_family",
         type=str,
-        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2"],
+        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2", "GIT"],
         default=None,
         help="The moddel family, as checkpoints under the same model family use same codes to download."
         )
@@ -75,6 +77,9 @@ def main():
     elif args.model_family in ["BLIP2"]:
         tokenizer_func = Blip2Processor
         model_func = Blip2Model
+    elif args.model_family in ["GIT"]:
+        tokenizer_func = AutoProcessor
+        model_func = AutoModelForCausalLM
     else:
         print(f"{args.model_family}: downloader not implemented.")
         return

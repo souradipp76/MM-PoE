@@ -14,6 +14,7 @@ from transformers import(
     AutoTokenizer, 
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
+    AutoProcessor,
     Blip2Processor,
     Blip2Model,
     BitsAndBytesConfig
@@ -55,7 +56,7 @@ def parse_args():
     parser.add_argument(
         "--model_family",
         type=str,
-        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2"],
+        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2", "GIT"],
         default=None,
         required=True,
         help="The moddel family, as checkpoints under the same model family use same codes to download.",
@@ -428,6 +429,9 @@ def load_model(device, model_path, args):
     elif args.model_family in ["BLIP2"]:
         tokenizer_func = Blip2Processor
         model_func = Blip2Model
+    elif args.model_family in ["GIT"]:
+        tokenizer_func = AutoProcessor
+        model_func = AutoModelForCausalLM
     else:
         print(f"{args.model_family}: downloader not implemented.")
         return
@@ -448,6 +452,18 @@ def load_model(device, model_path, args):
         model = model_func.from_pretrained(
             model_path,
             torch_dtype=torch.float16,
+            device_map="auto",
+            quantization_config=quantization_config
+        )
+    elif args.loading_precision == "INT4":
+        quantization_config = BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_use_double_quant=True,
+                bnb_4bit_compute_dtype=torch.bfloat16
+            )
+        model = model_func.from_pretrained(
+            model_path,
             device_map="auto",
             quantization_config=quantization_config
         )
