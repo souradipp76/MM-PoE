@@ -86,7 +86,8 @@ def preprocess_function_vqa(examples, **kwargs):
     tokenizer = processor.tokenizer
     image_processor = processor.image_processor
 
-    num_choice = len([k for k in examples.keys() if k.startswith('hypothesis')])
+    ending_names = [k for k in examples.keys() if k.startswith('hypothesis')]
+    num_choice = len(ending_names)
     question_headers = examples[header_name]
     first_sentences = [[context] * num_choice for context in examples[header_name]]
     second_sentences = [
@@ -104,7 +105,7 @@ def preprocess_function_vqa(examples, **kwargs):
 
     image_paths = examples[image_header_name]
     images = [Image.open(image_path).convert('RGB') for image_path in image_paths]
-    images = [[image] * num_choice for image in images]
+    images = [[image] * len(ending_names) for image in images]
     images = sum(images, [])
     images = image_processor(images, return_tensors='pt').data
 
@@ -191,6 +192,7 @@ def preprocess_function_vqa_channel(examples, **kwargs):
     tokenizer = processor.tokenizer
     image_processor = processor.image_processor
 
+    ending_names = [k for k in examples.keys() if k.startswith('hypothesis')]
     num_choice = len(ending_names)
     question_headers = examples[header_name]
     first_sentences = [[context] * len(ending_names) for context in examples[header_name]]
