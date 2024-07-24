@@ -91,7 +91,7 @@ def main():
                         'header_attention_mask', 
                         'ending_input_ids', 
                         'ending_attention_mask', ]
-    elif args.model_family in ["BLIP2"]:
+    elif args.model_family in ["BLIP2", "GIT"]:
         compute_func = compute_conditional_score_vqa
         preprocess_func = preprocess_function_vqa
         preprocess_func_channel = preprocess_function_vqa_channel
@@ -112,7 +112,7 @@ def main():
         args.dataset = dataset
         # multiple_choice_prompt = args.multiple_choice_prompt
         args.multiple_choice_prompt = None
-        if args.model_family in ["BLIP2"]:
+        if args.model_family in ["BLIP2", "GIT"]:
             ending_names, header_name, image_header_name, raw_dataset, n_shot_dataset = load_data(args)
         else:
             ending_names, header_name, raw_dataset, n_shot_dataset = load_data(args)
@@ -120,14 +120,14 @@ def main():
         
         mcp_args = copy.deepcopy(args)
         mcp_args.multiple_choice_prompt = multiple_choice_prompt
-        if args.model_family in ["BLIP2"]:
+        if args.model_family in ["BLIP2", "GIT"]:
             _, _, _, raw_mcp_dataset, n_shot_mcp_dataset = load_data(mcp_args)
         else:
             _, _, raw_mcp_dataset, n_shot_mcp_dataset = load_data(mcp_args)
         raw_mcp_dataset, n_shot_mcp_dataset, _ = create_n_shot_splits(raw_mcp_dataset, n_shot_mcp_dataset, args)    
         
         logger.info(f"Preprocess data: {args.dataset}.")
-        if args.model_family in ["BLIP2"]:
+        if args.model_family in ["BLIP2", "GIT"]:
             fn_kwargs = {"ending_names": ending_names, 
                         "header_name": header_name, 
                         "processor": tokenizer,
@@ -149,7 +149,7 @@ def main():
             eval_channel_dataloader = DataLoader(tokenized_channel_dataset, batch_size=args.batch_size, shuffle=False)
             avg_log_probs, _, _ = inference_language_modeling(model, eval_channel_dataloader, device, compute_func, tokenizer.pad_token_id)
         elif scoring_method == "calibration":
-            if args.model_family in ["BLIP2"]:
+            if args.model_family in ["BLIP2", "GIT"]:
                 fn_kwargs = {"ending_names": ending_names, 
                             "header_name": "uncond_premise", # the difference is here
                             "processor": tokenizer,
@@ -170,7 +170,7 @@ def main():
             # raw_mcp_dataset, n_shot_mcp_dataset = create_n_shot_splits(raw_mcp_dataset, n_shot_mcp_dataset, args)    
             tokenized_dataset = raw_mcp_dataset.map(preprocess_func, fn_kwargs=fn_kwargs, batched=True, batch_size=args.batch_size)
             eval_mcp_dataloader = DataLoader(tokenized_dataset, batch_size=args.batch_size, shuffle=False)
-            if args.model_family in ["BLIP2"]:
+            if args.model_family in ["BLIP2", "GIT"]:
                 avg_log_probs, _, _ = inference_language_modeling(model, eval_mcp_dataloader, device, compute_func, tokenizer.tokenizer.pad_token_id)
             else:
                 avg_log_probs, _, _ = inference_language_modeling(model, eval_mcp_dataloader, device, compute_func, tokenizer.pad_token_id)
