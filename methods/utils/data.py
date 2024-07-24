@@ -786,12 +786,61 @@ def vqa_loader(path, args):
             'label': label
             }]
     
-        for idx, ans in enumerate(mc_ans):
+        for idx, ans in enumerate(hypotheses):
             example[0][f'hypothesis{idx}'] = ans
+        examples+=example
+    
+    return examples
 
-        # if i==0:
-        #     print(example)
+def scienceqa_loader(path, args):
+    annFile = '%s/problems.json'%(path)
+    traintestFile = '%s/pid_splits.json'%(path)
+    imgDir = '%s/train' %(path)
 
+    examples = []
+
+    print('Loading annotations and images...')
+    anno = json.load(open(annFile, 'r'))
+    train_test_split = json.load(open(traintestFile, 'r'))
+    train_ids = train_test_split['train']
+    train_anno = {id: anno[id] for id in train_ids}
+
+    if args.calibration_prompt is not None:
+        uncond_premise = args.calibration_prompt
+    else:
+        uncond_premise = " the answer is:"
+
+    for i, (id, value) in enumerate(train_anno):
+        img_id = id
+        image_path = os.path.join(os.path.join(imgDir, img_id), 'image.png')
+
+        question = value['question']
+        mc_ans = value['choices']
+        label = int(value['answer'])
+
+        if getattr(args, 'multiple_choice_prompt', None) is not None:
+            hypotheses = mc_ans
+            # Question: How does a bishop move from one place to another?
+            # 1. chess game
+            # 2. church
+            # 3. in a car
+            # 4. queen
+            # Answer:
+            options = "\n".join([f"{i}. {ans}" for i, ans in enumerate(mc_ans)])
+            premise = f"{args.multiple_choice_prompt} Question: {question}\n{options}\nAnswer:"
+        else:
+            hypotheses = mc_ans
+            premise = question + uncond_premise
+
+        example = [{
+            'premise': premise, 
+            'image_path': image_path, 
+            'uncond_premise': uncond_premise,  
+            'label': label
+            }]
+    
+        for idx, ans in enumerate(hypotheses):
+            example[0][f'hypothesis{idx}'] = ans
         examples+=example
     
     return examples

@@ -10,7 +10,7 @@ from transformers import (
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
     Blip2Processor,
-    Blip2ForConditionalGeneration,
+    Blip2Model,
     BitsAndBytesConfig
 )
 
@@ -74,7 +74,7 @@ def main():
         model_func = AutoModelForSeq2SeqLM
     elif args.model_family in ["BLIP2"]:
         tokenizer_func = Blip2Processor
-        model_func = Blip2ForConditionalGeneration
+        model_func = Blip2Model
     else:
         print(f"{args.model_family}: downloader not implemented.")
         return
@@ -131,7 +131,7 @@ def main():
 
         # delete cached files
         # https://huggingface.co/docs/transformers/installation#cache-setup
-        cache_dir = "/root/.cache/huggingface/hub"
+        cache_dir = "~/.cache/huggingface/hub"
 
         folders_to_delete = glob.glob(os.path.join(cache_dir, "models*"))
         for folder in folders_to_delete:

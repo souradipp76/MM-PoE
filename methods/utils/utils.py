@@ -15,7 +15,7 @@ from transformers import(
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
     Blip2Processor,
-    Blip2ForConditionalGeneration,
+    Blip2Model,
     BitsAndBytesConfig
 )
 from datasets import Dataset
@@ -32,7 +32,8 @@ from .data import(
     winogrande_loader,
     date_understanding_loader,
     anli_loader,
-    vqa_loader
+    vqa_loader,
+    scienceqa_loader
 )
 
 def set_seed(seed):
@@ -393,6 +394,14 @@ def load_data(args):
         header_name = "premise"
         image_header_name = "image_path"
         loader = vqa_loader
+    elif args.dataset in ["scienceqa"]:
+        args.num_options = 4
+        file_path = os.path.join("/content/data", args.dataset)
+        train_file_path = os.path.join("/content/data", args.dataset)
+        ending_names = [f"hypothesis{i}" for i in range(args.num_options)]
+        header_name = "premise"
+        image_header_name = "image_path"
+        loader = scienceqa_loader
     else:
         print(f"{args.dataset}: downloader not implemented.")
         return
@@ -405,7 +414,7 @@ def load_data(args):
         train_dataset = Dataset.from_list(train_data).with_format("torch")
     else: # BB tasks have no train set. 
         train_dataset = dev_dataset
-    if args.dataset in ["vqa"]:
+    if args.dataset in ["vqa", "scienceqa"]:
         return ending_names, header_name, image_header_name, dev_dataset, train_dataset
     return ending_names, header_name, dev_dataset, train_dataset
 
@@ -418,7 +427,7 @@ def load_model(device, model_path, args):
         model_func = AutoModelForSeq2SeqLM
     elif args.model_family in ["BLIP2"]:
         tokenizer_func = Blip2Processor
-        model_func = Blip2ForConditionalGeneration
+        model_func = Blip2Model
     else:
         print(f"{args.model_family}: downloader not implemented.")
         return
@@ -436,9 +445,12 @@ def load_model(device, model_path, args):
     elif args.loading_precision == "INT8":
         quantization_config = BitsAndBytesConfig(load_in_8bit=True, 
                                         llm_int8_threshold=200.0)
-        model = model_func.from_pretrained(model_path, device_map="auto", 
-                                        torch_dtype=torch.float16,
-                                        quantization_config=quantization_config)
+        model = model_func.from_pretrained(
+            model_path,
+            torch_dtype=torch.float16,
+            device_map="auto",
+            quantization_config=quantization_config
+        )
     else: # FP32
         model = model_func.from_pretrained(model_path)
         model.to(device)
