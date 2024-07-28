@@ -744,6 +744,7 @@ def vqa_loader(path, args):
     annFile = '%s/Annotations/%s%s_%s_annotations.json'%(path, versionType, dataType, dataSubType)
     quesFile = '%s/Questions/%s%s_%s_%s_questions.json'%(path, versionType, taskType, dataType, dataSubType)
     imgDir = '%s/Images/%s/%s' %(path, dataType, dataSubType)
+    alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     examples = []
 
@@ -765,17 +766,18 @@ def vqa_loader(path, args):
         question = train_ques['questions'][i]['question']
         mc_ans = train_ques['questions'][i]['multiple_choices']
         label = mc_ans.index(ans)
+        num_options = args.num_options
 
         if getattr(args, 'multiple_choice_prompt', None) is not None:
-            hypotheses = mc_ans
+            hypotheses = [f"{option}" for option in alphabets[:num_options]]
             # Question: How does a bishop move from one place to another?
-            # 1. chess game
-            # 2. church
-            # 3. in a car
-            # 4. queen
-            # 5. cathedral
+            # A. chess game
+            # B. church
+            # C. in a car
+            # D. queen
+            # E. cathedral
             # Answer:
-            options = "\n".join([f"{i}. {ans}" for i, ans in enumerate(mc_ans)])
+            options = "\n".join([f"{alphabets[i]}. {ans}" for i, ans in enumerate(mc_ans)])
             premise = f"{args.multiple_choice_prompt} Question: {question}\n{options}\nAnswer:"
         else:
             hypotheses = mc_ans
@@ -798,6 +800,7 @@ def scienceqa_loader(path, args):
     annFile = '%s/ScienceQA_DATA/problems.json'%(path)
     # traintestFile = '%s/ScienceQA_DATA/pid_splits.json'%(path)
     imgDir = '%s/ScienceQA_DATA/train' %(path)
+    alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     examples = []
 
@@ -823,12 +826,12 @@ def scienceqa_loader(path, args):
         if getattr(args, 'multiple_choice_prompt', None) is not None:
             hypotheses = mc_ans
             # Question: How does a bishop move from one place to another?
-            # 1. chess game
-            # 2. church
-            # 3. in a car
-            # 4. queen
+            # A. chess game
+            # B. church
+            # C. in a car
+            # D. queen
             # Answer:
-            options = "\n".join([f"{i}. {ans}" for i, ans in enumerate(mc_ans)])
+            options = "\n".join([f"{alphabets[i]}. {ans}" for i, ans in enumerate(mc_ans)])
             premise = f"{args.multiple_choice_prompt} Question: {question}\n{options}\nAnswer:"
         else:
             hypotheses = mc_ans

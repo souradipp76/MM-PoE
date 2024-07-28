@@ -206,6 +206,7 @@ def main():
         # if args.prompting_method_for_process_of_elimination
         # mcp_kwargs = {"multiple_choice_prompt": multiple_choice_prompt,}
         mask_token = args.mask_token
+        print(mask_token)
         if mask_token is not None:
             if mask_token == "":
                 args.process_of_elimination_prompt = args.process_of_elimination_prompt.replace("[MASK]", "empty")   
@@ -227,7 +228,10 @@ def main():
         logger.info(f"Step 3: Final Inference")
         mcp_dataset = mcp_dataset.map(preprocess_func, fn_kwargs=fn_kwargs, batched=True, batch_size=args.batch_size)
         eval_mcp_dataloader = DataLoader(mcp_dataset, batch_size=args.batch_size, shuffle=False)
-        poe_avg_log_probs,  lm_accuracy, _ = inference_process_of_elimination(model, eval_mcp_dataloader, device, compute_func, tokenizer.pad_token_id)
+        if args.model_family in ["BLIP2", "GIT"]:
+            poe_avg_log_probs,  lm_accuracy, _ = inference_process_of_elimination(model, eval_mcp_dataloader, device, compute_func, tokenizer.tokenizer.pad_token_id)
+        else:
+            poe_avg_log_probs,  lm_accuracy, _ = inference_process_of_elimination(model, eval_mcp_dataloader, device, compute_func, tokenizer.pad_token_id)
 
         # step 6: some postprocessing, including saving and displyaing output.
         save_path = os.path.join("../results", f"{args.method}.csv")

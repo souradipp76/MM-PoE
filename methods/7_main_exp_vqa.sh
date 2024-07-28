@@ -4,11 +4,11 @@ model_family="BLIP2"
 checkpoints=("Salesforce/blip2-opt-2.7b")
 loading_precision="INT8"
 datasets="vqa" # "vqa scienceqa"
-batch_size=4
+batch_size=1
 sample=100
 n_shot=0
 
-multiple_choice_prompt=""
+multiple_choice_prompt="Multiple Choice"
 calibration_prompt=" the answer is:"
 process_of_elimination_prompt="Select the most suitable option to answer the question. Ignore [MASK] options."
 
