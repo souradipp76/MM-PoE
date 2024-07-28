@@ -72,32 +72,32 @@ cp socialiqa-train-dev/train* .
 # vqa
 mkdir /content/data/
 cd /content/data/
-# mkdir vqa
-# cd vqa
-# mkdir Annotations
-# cd Annotations
-# wget https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/Annotations_Train_mscoco.zip
-# unzip Annotations_Train_mscoco.zip
-# rm Annotations_Train_mscoco.zip
-# mkdir ../Questions
-# cd ../Questions
-# wget https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/Questions_Train_mscoco.zip
-# unzip Questions_Train_mscoco.zip
-# rm Questions_Train_mscoco.zip
-# mkdir ../Images
-# cd ../Images
-# mkdir mscoco
-# cd mscoco
-# wget http://images.cocodataset.org/zips/train2014.zip
-# unzip train2014.zip
-# rm train2014.zip
-# cd /content/data
-
-mkdir scienceqa
-cd scienceqa
-echo "Downloading scienceqa dataset..."
-gdown --folder https://drive.google.com/drive/folders/1w8imCXWYn2LxajmGeGH_g5DaL2rabHev
-cd ScienceQA_DATA
-unzip train.zip
+mkdir vqa
+cd vqa
+mkdir Annotations
+cd Annotations
+wget https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/Annotations_Train_mscoco.zip
+unzip Annotations_Train_mscoco.zip
+rm Annotations_Train_mscoco.zip
+mkdir ../Questions
+cd ../Questions
+wget https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/Questions_Train_mscoco.zip
+unzip Questions_Train_mscoco.zip
+rm Questions_Train_mscoco.zip
+mkdir ../Images
+cd ../Images
+mkdir mscoco
+cd mscoco
+wget http://images.cocodataset.org/zips/train2014.zip
+unzip train2014.zip
+rm train2014.zip
 cd /content/data
-echo "Done."
+
+# mkdir scienceqa
+# cd scienceqa
+# echo "Downloading scienceqa dataset..."
+# gdown --folder https://drive.google.com/drive/folders/1w8imCXWYn2LxajmGeGH_g5DaL2rabHev
+# cd ScienceQA_DATA
+# unzip train.zip
+# cd /content/data
+# echo "Done."

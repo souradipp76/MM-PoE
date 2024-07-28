@@ -89,7 +89,7 @@ def main():
         compute_func = compute_conditional_score_seq2seq
         preprocess_func = preprocess_function_seq2seq
         preprocess_func_channel = preprocess_function_seq2seq_channel
-    elif args.model_family in ["BLIP2"]:
+    elif args.model_family in ["BLIP2", "GIT"]:
         compute_func = compute_conditional_score_vqa
         preprocess_func = preprocess_function_vqa
         preprocess_func_channel = preprocess_function_vqa_channel
@@ -103,7 +103,7 @@ def main():
     # evaluate on each dataset
     for dataset in args.datasets:
         args.dataset = dataset
-        if args.model_family in ["BLIP2"]:
+        if args.model_family in ["BLIP2", "GIT"]:
             ending_names, header_name, image_header_name, raw_dataset, n_shot_dataset = load_data(args)
         else:
             ending_names, header_name, raw_dataset, n_shot_dataset = load_data(args)
@@ -113,7 +113,7 @@ def main():
         fn_kwargs = {"ending_names": ending_names, 
                     "header_name": header_name, 
                     "tokenizer": tokenizer,}
-        if args.model_family in ["BLIP2"]:
+        if args.model_family in ["BLIP2", "GIT"]:
             fn_kwargs = {"ending_names": ending_names, 
                     "header_name": header_name, 
                     "processor": tokenizer,

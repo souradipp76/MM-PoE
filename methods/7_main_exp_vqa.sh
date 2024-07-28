@@ -1,10 +1,10 @@
 #!/bin/bash
 seeds=(0)
-model_family="GIT"  
-checkpoints=("microsoft/git-base-textvqa")
-loading_precision="FP16"
+model_family="BLIP2"  
+checkpoints=("Salesforce/blip2-opt-2.7b")
+loading_precision="INT8"
 datasets="vqa" # "vqa scienceqa"
-batch_size=16
+batch_size=4
 sample=100
 n_shot=0
 
@@ -24,7 +24,7 @@ for seed in "${seeds[@]}"; do
     #     --loading_precision ${loading_precision} \
     #     --n_shot ${n_shot} \
     #     --sample ${sample} \
-    #     --push_data_to_hub \
+    #     # --push_data_to_hub \
         
     # # channel
     # python visual_language_modeling.py \
@@ -65,7 +65,7 @@ for seed in "${seeds[@]}"; do
     #     --sample ${sample} \
     #     # --push_data_to_hub \
 
-    # process of elimination
+    # # process of elimination
     python process_of_elimination_vqa.py \
         --seed ${seed} \
         --model_family ${model_family} \

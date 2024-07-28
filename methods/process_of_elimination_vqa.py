@@ -97,7 +97,7 @@ def main():
         preprocess_func_channel = preprocess_function_vqa_channel
         remove_columns = ['input_ids',
                           'labels',
-                          'pixel_values',
+                          'images',
                           'ending_attention_mask']
     else:
         raise NotImplementedError

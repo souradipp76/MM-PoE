@@ -109,7 +109,7 @@ def parse_args():
     parser.add_argument(
         "--loading_precision",
         type=str,
-        choices=["FP32", "FP16", "BF16", "INT8"],
+        choices=["FP32", "FP16", "BF16", "INT8", "INT4"],
         default="FP32",
         help="The precision of the model to be loaded."
     )
@@ -387,7 +387,7 @@ def load_data(args):
         #     file_path.append(os.path.join("../data", f"{args.dataset}", f"{prefix}_dev.jsonl"))
         train_file_path = [path.replace("dev", "train") for path in file_path]
         loader = anli_loader
-    elif args.dataset in ["vqa"]:
+    elif args.dataset == "vqa":
         args.num_options = 17
         file_path = os.path.join("/content/data", args.dataset)
         train_file_path = os.path.join("/content/data", args.dataset)
@@ -395,7 +395,7 @@ def load_data(args):
         header_name = "premise"
         image_header_name = "image_path"
         loader = vqa_loader
-    elif args.dataset in ["scienceqa"]:
+    elif args.dataset == "scienceqa":
         args.num_options = 4
         file_path = os.path.join("/content/data", args.dataset)
         train_file_path = os.path.join("/content/data", args.dataset)
@@ -441,6 +441,8 @@ def load_model(device, model_path, args):
         tokenizer = tokenizer_func.from_pretrained(model_path)
     if args.model_family in ["GPT2", "Pythia", "Dolly"]:
         tokenizer.pad_token = tokenizer.eos_token
+    elif args.model_family in ["GIT"]:
+        tokenizer.tokenizer.pad_token_id = tokenizer.tokenizer.cls_token_id
     # load with different precision
     if args.loading_precision == "FP16":
         model = model_func.from_pretrained(model_path, device_map="auto", torch_dtype=torch.float16)
