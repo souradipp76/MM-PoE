@@ -156,7 +156,6 @@ def main():
                         "tokenizer": tokenizer,
                         "processor": processor,
                         "image_header_name": image_header_name}
-                tokenizer = tokenizer.tokenizer
             tokenized_calibration_dataset = raw_dataset.map(preprocess_func, fn_kwargs=fn_kwargs, batched=True, batch_size=args.batch_size)
             eval_calibration_dataloader = DataLoader(tokenized_calibration_dataset, batch_size=args.batch_size, shuffle=False)    
             _, lm_accuracy, avg_lm_accuracy = inference_calibration(model, eval_dataloader, eval_calibration_dataloader,device, compute_func, tokenizer.pad_token_id)

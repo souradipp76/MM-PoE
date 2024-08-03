@@ -14,7 +14,7 @@ process_of_elimination_prompt="Select the most suitable option to answer the que
 
 for seed in "${seeds[@]}"; do
     for checkpoint in "${checkpoints[@]}"; do
-    # language modeling and average language modeling
+    # vision language modeling and average vision language modeling
     python vision_language_modeling.py \
         --seed ${seed} \
         --model_family ${model_family} \
@@ -24,7 +24,7 @@ for seed in "${seeds[@]}"; do
         --loading_precision ${loading_precision} \
         --n_shot ${n_shot} \
         --sample ${sample} \
-        --push_data_to_hub \
+        # --push_data_to_hub \
         
     # channel
     python vision_language_modeling.py \
@@ -50,7 +50,7 @@ for seed in "${seeds[@]}"; do
         --multiple_choice_prompt "$multiple_choice_prompt" \
         --n_shot ${n_shot} \
         --sample ${sample} \
-    #     --push_data_to_hub \
+        # --push_data_to_hub \
     
     # calibration, i.e., PMI and PMI_DC.
     python vision_language_modeling.py \
@@ -79,6 +79,6 @@ for seed in "${seeds[@]}"; do
         --mask_strategy_for_process_of_elimination "below_average" \
         --n_shot ${n_shot} \
         --sample ${sample} \
-        # --push_data_to_hub 
+        # --push_data_to_hub \
     done
 done

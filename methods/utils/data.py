@@ -817,15 +817,17 @@ def scienceqa_loader(path, args):
 
     for i, (id, value) in enumerate(train_anno.items()):
         img_id = id
-        image_path = os.path.join(os.path.join(imgDir, img_id), 'image.png')
+        
 
         question = value['question']
         mc_ans = value['choices']
         label = int(value['answer'])
+        image_file = value["image"]
 
-        if not len(mc_ans) == args.num_options:
+        if (not len(mc_ans) == args.num_options) or (image_file == None):
             continue
 
+        image_path = os.path.join(os.path.join(imgDir, img_id), image_file)
         if getattr(args, 'multiple_choice_prompt', None) is not None:
             hypotheses = mc_ans
             # Question: How does a bishop move from one place to another?
@@ -850,5 +852,5 @@ def scienceqa_loader(path, args):
         for idx, ans in enumerate(hypotheses):
             example[0][f'hypothesis{idx}'] = ans
         examples+=example
-    print("Dataset Length: "+len(examples))
+    print("Dataset Length: ",len(examples))
     return examples
