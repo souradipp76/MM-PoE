@@ -10,9 +10,7 @@ from transformers import (
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
     AutoProcessor,
-    Blip2Processor,
-    Blip2Model,
-    BitsAndBytesConfig
+    AutoModel
 )
 
 all_checkpoints = {
@@ -75,8 +73,8 @@ def main():
         tokenizer_func = AutoTokenizer
         model_func = AutoModelForSeq2SeqLM
     elif args.model_family in ["BLIP2"]:
-        tokenizer_func = Blip2Processor
-        model_func = Blip2Model
+        tokenizer_func = AutoProcessor
+        model_func = AutoModel
     elif args.model_family in ["GIT"]:
         tokenizer_func = AutoProcessor
         model_func = AutoModelForCausalLM
@@ -111,17 +109,6 @@ def main():
                 # torch_dtype=torch.float16,
                 # load_in_8bit=True,
             )
-        elif args.model_family == "BLIP2":
-            tokenizer = tokenizer_func.from_pretrained(checkpoint)
-            quantization_config = BitsAndBytesConfig(load_in_8bit=True, 
-                                        llm_int8_threshold=200.0)
-            model = model_func.from_pretrained(
-                checkpoint,
-                torch_dtype=torch.float16,
-                device_map="auto",
-                quantization_config=quantization_config
-            )
-            
         else:
             model = model_func.from_pretrained(checkpoint)
             tokenizer = tokenizer_func.from_pretrained(checkpoint)
