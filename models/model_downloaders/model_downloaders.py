@@ -109,6 +109,13 @@ def main():
                 # torch_dtype=torch.float16,
                 # load_in_8bit=True,
             )
+        elif args.model_family == "BLIP2":
+            tokenizer = tokenizer_func.from_pretrained(checkpoint)
+            model = model_func.from_pretrained(
+                checkpoint,
+                torch_dtype=torch.float16,
+                device_map="auto"
+            )
         else:
             model = model_func.from_pretrained(checkpoint)
             tokenizer = tokenizer_func.from_pretrained(checkpoint)
