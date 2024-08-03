@@ -81,15 +81,45 @@ def preprocess_function_causal(examples, **kwargs):
     return_dict = {f"{k}": [v[i : i + num_choice] for i in range(0, len(v), num_choice)] for k, v in flatten_dict.items()}
     return return_dict
 
-def preprocess_function_vqa(examples, **kwargs):
+def preprocess_function_seq2seq_vqa(examples, **kwargs):
     ending_names, header_name, image_header_name, processor = kwargs['ending_names'], kwargs['header_name'], kwargs['image_header_name'], kwargs['processor']
     tokenizer = processor.tokenizer
     image_processor = processor.image_processor
 
-    ending_names = [k for k in examples.keys() if k.startswith('hypothesis')]
     num_choice = len(ending_names)
     question_headers = examples[header_name]
-    first_sentences = [[context] * num_choice for context in examples[header_name]]
+    # the tokenizer handles multiple spaces.
+    first_sentences = [[context] * len(ending_names) for context in examples[header_name]]
+    second_sentences = [
+        [f"{examples[end][i]}" for end in ending_names] for i, header in enumerate(question_headers)
+    ]
+
+    first_sentences = sum(first_sentences, [])
+    second_sentences = sum(second_sentences, [])
+
+    # tokenized_examples = tokenizer(first_sentences, second_sentences, truncation=True)
+    tokenized_headers = tokenizer(first_sentences, padding=True, truncation=True)
+    tokenized_endings = tokenizer(second_sentences, padding=True, truncation=True)
+
+    image_paths = examples[image_header_name]
+    images = [Image.open(image_path).convert('RGB') for image_path in image_paths]
+    images = [[image] * len(ending_names) for image in images]
+    images = sum(images, [])
+    images = image_processor(images, return_tensors='pt').data
+
+    image_dict = {"images": images["pixel_values"]}
+    header_dict = {f"header_{k}": [v[i : i + num_choice] for i in range(0, len(v), num_choice)] for k, v in tokenized_headers.items()}
+    ending_dict = {f"ending_{k}": [v[i : i + num_choice] for i in range(0, len(v), num_choice)] for k, v in tokenized_endings.items()}
+    return {**header_dict, **ending_dict, **image_dict}
+
+def preprocess_function_causal_vqa(examples, **kwargs):
+    ending_names, header_name, image_header_name, processor = kwargs['ending_names'], kwargs['header_name'], kwargs['image_header_name'], kwargs['processor']
+    tokenizer = processor.tokenizer
+    image_processor = processor.image_processor
+
+    num_choice = len(ending_names)
+    question_headers = examples[header_name]
+    first_sentences = [[context] * len(ending_names) for context in examples[header_name]]
     second_sentences = [
         [f"{examples[end][i]}" for end in ending_names] for i, header in enumerate(question_headers)
     ]
@@ -187,7 +217,41 @@ def preprocess_function_causal_channel(examples, **kwargs):
     return_dict = {f"{k}": [v[i : i + num_choice] for i in range(0, len(v), num_choice)] for k, v in flatten_dict.items()}
     return return_dict
 
-def preprocess_function_vqa_channel(examples, **kwargs):
+def preprocess_function_seq2seq_vqa_channel(examples, **kwargs):
+    ending_names, header_name, image_header_name, processor = kwargs['ending_names'], kwargs['header_name'], kwargs['image_header_name'], kwargs['processor']
+    tokenizer = processor.tokenizer
+    image_processor = processor.image_processor
+
+    num_choice = len(ending_names)
+    question_headers = examples[header_name]
+    # the tokenizer handles multiple spaces.
+    first_sentences = [[context] * len(ending_names) for context in examples[header_name]]
+    second_sentences = [
+        [f"{examples[end][i]}" for end in ending_names] for i, header in enumerate(question_headers)
+    ]
+
+    first_sentences = sum(first_sentences, [])
+    second_sentences = sum(second_sentences, [])
+
+    # swap first_sentences and second_sentences
+    first_sentences, second_sentences = second_sentences, first_sentences
+
+    # tokenized_examples = tokenizer(first_sentences, second_sentences, truncation=True)
+    tokenized_headers = tokenizer(first_sentences, padding=True, truncation=True)
+    tokenized_endings = tokenizer(second_sentences, padding=True, truncation=True)
+
+    image_paths = examples[image_header_name]
+    images = [Image.open(image_path).convert('RGB') for image_path in image_paths]
+    images = [[image] * len(ending_names) for image in images]
+    images = sum(images, [])
+    images = image_processor(images, return_tensors='pt').data
+
+    image_dict = {"images": images["pixel_values"]}
+    header_dict = {f"header_{k}": [v[i : i + num_choice] for i in range(0, len(v), num_choice)] for k, v in tokenized_headers.items()}
+    ending_dict = {f"ending_{k}": [v[i : i + num_choice] for i in range(0, len(v), num_choice)] for k, v in tokenized_endings.items()}
+    return {**header_dict, **ending_dict, **image_dict}
+
+def preprocess_function_causal_vqa_channel(examples, **kwargs):
     ending_names, header_name, image_header_name, processor = kwargs['ending_names'], kwargs['header_name'], kwargs['image_header_name'], kwargs['processor']
     tokenizer = processor.tokenizer
     image_processor = processor.image_processor
@@ -817,8 +881,6 @@ def scienceqa_loader(path, args):
 
     for i, (id, value) in enumerate(train_anno.items()):
         img_id = id
-        
-
         question = value['question']
         mc_ans = value['choices']
         label = int(value['answer'])
@@ -852,5 +914,60 @@ def scienceqa_loader(path, args):
         for idx, ans in enumerate(hypotheses):
             example[0][f'hypothesis{idx}'] = ans
         examples+=example
+    print("Dataset Length: ",len(examples))
+    return examples
+
+def ai2d_loader(path, args):
+    questionDir = '%s/ai2d_all/questions' %(path)
+    imgDir = '%s/ai2d_all/images' %(path)
+    alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+    examples = []
+
+    print('Loading annotations and images...')
+    train_files = os.listdir(questionDir)
+
+    if args.calibration_prompt is not None:
+        uncond_premise = args.calibration_prompt
+    else:
+        uncond_premise = " the answer is:"
+
+    for i, file in enumerate(train_files.items()):
+        anno = json.load(open(file, 'r'))
+        questions = anno["questions"]
+        imageName = anno["imageName"]
+        for question, value in questions:
+            mc_ans = value['answerTexts']
+            label = int(value['correctAnswer'])
+            abcLabel = value['abcLabel']
+
+            if (not len(mc_ans) == args.num_options) or (imageName == None) or abcLabel == True:
+                continue
+
+            image_path = os.path.join(imgDir, imageName)
+            if getattr(args, 'multiple_choice_prompt', None) is not None:
+                hypotheses = mc_ans
+                # Question: How does a bishop move from one place to another?
+                # A. chess game
+                # B. church
+                # C. in a car
+                # D. queen
+                # Answer:
+                options = "\n".join([f"{alphabets[i]}. {ans}" for i, ans in enumerate(mc_ans)])
+                premise = f"{args.multiple_choice_prompt} Question: {question}\n{options}\nAnswer:"
+            else:
+                hypotheses = mc_ans
+                premise = question + uncond_premise
+
+            example = [{
+                'premise': premise, 
+                'image_path': image_path, 
+                'uncond_premise': uncond_premise,  
+                'label': label
+                }]
+        
+            for idx, ans in enumerate(hypotheses):
+                example[0][f'hypothesis{idx}'] = ans
+            examples+=example
     print("Dataset Length: ",len(examples))
     return examples

@@ -17,6 +17,7 @@ from transformers import(
     AutoProcessor,
     Blip2ForConditionalGeneration,
     PaliGemmaForConditionalGeneration,
+    ViltForMaskedLM,
     BitsAndBytesConfig
 )
 from datasets import Dataset
@@ -34,7 +35,8 @@ from .data import(
     date_understanding_loader,
     anli_loader,
     vqa_loader,
-    scienceqa_loader
+    scienceqa_loader,
+    ai2d_loader
 )
 
 def set_seed(seed):
@@ -403,6 +405,14 @@ def load_data(args):
         header_name = "premise"
         image_header_name = "image_path"
         loader = scienceqa_loader
+    elif args.dataset == "ai2d":
+        args.num_options = 4
+        file_path = os.path.join("/content/data", args.dataset)
+        train_file_path = os.path.join("/content/data", args.dataset)
+        ending_names = [f"hypothesis{i}" for i in range(args.num_options)]
+        header_name = "premise"
+        image_header_name = "image_path"
+        loader = ai2d_loader
     else:
         print(f"{args.dataset}: downloader not implemented.")
         return
@@ -435,6 +445,9 @@ def load_model(device, model_path, args):
     elif args.model_family in ["PaliGemma"]:
         tokenizer_func = AutoProcessor
         model_func = PaliGemmaForConditionalGeneration
+    elif args.model_family in ["ViLT"]:
+        tokenizer_func = AutoProcessor
+        model_func = ViltForMaskedLM
     else:
         print(f"{args.model_family}: downloader not implemented.")
         return

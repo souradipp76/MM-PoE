@@ -25,7 +25,8 @@ all_checkpoints = {
     "Dolly": ["databricks/dolly-v2-7b"],
     "BLIP2": ["Salesforce/blip2-opt-2.7b", "Salesforce/blip2-flan-t5-xl"],
     "GIT": ["microsoft/git-base-vqav2"],
-    "PaliGemma": ["paligemma-3b-ft-science-qa-448", "google/paligemma-3b-ft-vqav2-448", "google/paligemma-3b-ft-ai2d-448"]
+    "PaliGemma": ["paligemma-3b-ft-science-qa-448", "google/paligemma-3b-ft-vqav2-448", "google/paligemma-3b-ft-ai2d-448"],
+    "ViLT": ["dandelin/vilt-b32-mlm"]
 }
 
 def parse_args():
@@ -34,7 +35,7 @@ def parse_args():
     parser.add_argument(
         "--model_family",
         type=str,
-        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2", "GIT", "PaliGemma"],
+        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2", "GIT", "PaliGemma", "ViLT"],
         default=None,
         help="The moddel family, as checkpoints under the same model family use same codes to download."
         )

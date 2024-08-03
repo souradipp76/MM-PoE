@@ -18,10 +18,12 @@ from utils.data import(
     upload_to_huggingface_hub,
     preprocess_function_seq2seq,
     preprocess_function_causal,
-    preprocess_function_vqa,
     preprocess_function_causal_channel,
     preprocess_function_seq2seq_channel,
-    preprocess_function_vqa_channel,
+    preprocess_function_seq2seq_vqa,
+    preprocess_function_seq2seq_vqa_channel,
+    preprocess_function_causal_vqa,
+    preprocess_function_causal_vqa_channel,
     create_synonym_dataset,
     generate_n_shot_demonstrations,
     create_n_shot_splits,
@@ -29,7 +31,8 @@ from utils.data import(
 from utils.methods import(
     compute_conditional_score_seq2seq,
     compute_conditional_score_causal,
-    compute_conditional_score_vqa,
+    compute_conditional_score_seq2seq_vqa,
+    compute_conditional_score_causal_vqa,
     inference_language_modeling,
     inference_calibration,
     inference_generate_synonyms,
@@ -90,9 +93,15 @@ def main():
         preprocess_func = preprocess_function_seq2seq
         preprocess_func_channel = preprocess_function_seq2seq_channel
     elif args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
-        compute_func = compute_conditional_score_vqa
-        preprocess_func = preprocess_function_vqa
-        preprocess_func_channel = preprocess_function_vqa_channel
+        compute_func = compute_conditional_score_causal_vqa
+        preprocess_func = preprocess_function_causal_vqa
+        preprocess_func_channel = preprocess_function_causal_vqa_channel
+        processor = tokenizer
+        tokenizer = processor.tokenizer
+    elif args.model_family in ["ViLT"]:
+        compute_func = compute_conditional_score_seq2seq_vqa
+        preprocess_func = preprocess_function_seq2seq_vqa
+        preprocess_func_channel = preprocess_function_seq2seq_vqa_channel
         processor = tokenizer
         tokenizer = processor.tokenizer
     else:
@@ -105,7 +114,7 @@ def main():
     # evaluate on each dataset
     for dataset in args.datasets:
         args.dataset = dataset
-        if args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
+        if args.dataset in ["vqa", "scienceqa", "ai2d"]:
             ending_names, header_name, image_header_name, raw_dataset, n_shot_dataset = load_data(args)
         else:
             ending_names, header_name, raw_dataset, n_shot_dataset = load_data(args)
@@ -115,7 +124,7 @@ def main():
         fn_kwargs = {"ending_names": ending_names, 
                     "header_name": header_name, 
                     "tokenizer": tokenizer,}
-        if args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
+        if args.model_family in ["BLIP2", "GIT", "PaliGemma", "ViLT"]:
             fn_kwargs = {"ending_names": ending_names, 
                     "header_name": header_name, 
                     "tokenizer": tokenizer,
@@ -150,7 +159,7 @@ def main():
             fn_kwargs = {"ending_names": ending_names, 
                         "header_name": "uncond_premise", # the difference is here
                         "tokenizer": tokenizer,}
-            if args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
+            if args.model_family in ["BLIP2", "GIT", "PaliGemma", "ViLT"]:
                 fn_kwargs = {"ending_names": ending_names, 
                         "header_name": "uncond_premise", 
                         "tokenizer": tokenizer,
@@ -180,7 +189,7 @@ def main():
             fn_kwargs = {"ending_names": synonyms_ending_names, 
                         "header_name": header_name, 
                         "tokenizer": tokenizer,}
-            if args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
+            if args.model_family in ["BLIP2", "GIT", "PaliGemma", "ViLT"]:
                 fn_kwargs = {"ending_names": synonyms_ending_names, 
                             "header_name": header_name, 
                             "tokenizer": tokenizer,

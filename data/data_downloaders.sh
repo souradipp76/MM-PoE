@@ -100,4 +100,12 @@ gdown --folder https://drive.google.com/drive/folders/1w8imCXWYn2LxajmGeGH_g5DaL
 cd ScienceQA_DATA
 unzip train.zip
 cd /content/data
+
+mkdir ai2d
+cd ai2d
+echo "Downloading ai2d dataset..."
+wget http://ai2-website.s3.amazonaws.com/data/ai2d-all.zip
+unzip ai2d-all.zip
+rm ai2d-all.zip
+cd /content/data
 echo "Done."

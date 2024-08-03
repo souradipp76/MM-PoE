@@ -29,13 +29,16 @@ from utils.data import(
     create_multiple_choice_prompt,
     generate_n_shot_poe_demonstrations,
     create_n_shot_splits,
-    preprocess_function_vqa,
-    preprocess_function_vqa_channel
+    preprocess_function_seq2seq_vqa,
+    preprocess_function_seq2seq_vqa_channel,
+    preprocess_function_causal_vqa,
+    preprocess_function_causal_vqa_channel
 )
 from utils.methods import(
     compute_conditional_score_seq2seq,
     compute_conditional_score_causal,
-    compute_conditional_score_vqa,
+    compute_conditional_score_seq2seq_vqa,
+    compute_conditional_score_causal_vqa,
     compute_mask_process_of_elimination,
     inference_process_of_elimination,
     inference_language_modeling,
@@ -92,13 +95,24 @@ def main():
                         'ending_input_ids', 
                         'ending_attention_mask', ]
     elif args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
-        compute_func = compute_conditional_score_vqa
-        preprocess_func = preprocess_function_vqa
-        preprocess_func_channel = preprocess_function_vqa_channel
+        compute_func = compute_conditional_score_causal_vqa
+        preprocess_func = preprocess_function_causal_vqa
+        preprocess_func_channel = preprocess_function_causal_vqa_channel
         remove_columns = ['input_ids',
                           'labels',
                           'images',
                           'ending_attention_mask']
+        processor = tokenizer
+        tokenizer = processor.tokenizer
+    elif args.model_family in ["ViLT"]:
+        compute_func = compute_conditional_score_seq2seq_vqa
+        preprocess_func = preprocess_function_seq2seq_vqa
+        preprocess_func_channel = preprocess_function_seq2seq_vqa_channel
+        remove_columns=['header_input_ids', 
+                        'header_attention_mask', 
+                        'ending_input_ids', 
+                        'ending_attention_mask', 
+                        'images']
         processor = tokenizer
         tokenizer = processor.tokenizer
     else:
@@ -114,7 +128,7 @@ def main():
         args.dataset = dataset
         # multiple_choice_prompt = args.multiple_choice_prompt
         args.multiple_choice_prompt = None
-        if args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
+        if args.dataset in ["vqa", "scienceqa", "ai2d"]:
             ending_names, header_name, image_header_name, raw_dataset, n_shot_dataset = load_data(args)
         else:
             ending_names, header_name, raw_dataset, n_shot_dataset = load_data(args)
@@ -122,14 +136,14 @@ def main():
         
         mcp_args = copy.deepcopy(args)
         mcp_args.multiple_choice_prompt = multiple_choice_prompt
-        if args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
+        if args.dataset in ["vqa", "scienceqa", "ai2d"]:
             _, _, _, raw_mcp_dataset, n_shot_mcp_dataset = load_data(mcp_args)
         else:
             _, _, raw_mcp_dataset, n_shot_mcp_dataset = load_data(mcp_args)
         raw_mcp_dataset, n_shot_mcp_dataset, _ = create_n_shot_splits(raw_mcp_dataset, n_shot_mcp_dataset, args)    
         
         logger.info(f"Preprocess data: {args.dataset}.")
-        if args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
+        if args.model_family in ["BLIP2", "GIT", "PaliGemma", "ViLT"]:
             fn_kwargs = {"ending_names": ending_names, 
                         "header_name": header_name, 
                         "tokenizer": tokenizer,
@@ -152,7 +166,7 @@ def main():
             eval_channel_dataloader = DataLoader(tokenized_channel_dataset, batch_size=args.batch_size, shuffle=False)
             avg_log_probs, _, _ = inference_language_modeling(model, eval_channel_dataloader, device, compute_func, tokenizer.pad_token_id)
         elif scoring_method == "calibration":
-            if args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
+            if args.model_family in ["BLIP2", "GIT", "PaliGemma", "ViLT"]:
                 fn_kwargs = {"ending_names": ending_names, 
                             "header_name": "uncond_premise", # the difference is here
                             "tokenizer": tokenizer,
