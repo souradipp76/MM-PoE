@@ -1,7 +1,7 @@
 #!/bin/bash
 seeds=(0)
-model_family="BLIP2"  
-checkpoints=("Salesforce/blip2-opt-2.7b")
+model_family="PaliGemma"  
+checkpoints=("paligemma-3b-ft-science-qa-448")
 loading_precision="FP16"
 datasets="scienceqa" # "vqa scienceqa"
 batch_size=2

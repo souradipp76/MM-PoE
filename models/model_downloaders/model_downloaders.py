@@ -10,7 +10,8 @@ from transformers import (
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
     AutoProcessor,
-    AutoModel
+    Blip2ForConditionalGeneration,
+    PaliGemmaForConditionalGeneration,
 )
 
 all_checkpoints = {
@@ -22,8 +23,9 @@ all_checkpoints = {
     "FLAN-T5": ["google/flan-t5-small", "google/flan-t5-base", "google/flan-t5-large", "google/flan-t5-xl", "google/flan-t5-xxl"],
     "MPT": ["mosaicml/mpt-7b", "mosaicml/mpt-7b-instruct", "mosaicml/mpt-7b-chat", "mosaicml/mpt-7b-storywriter"],
     "Dolly": ["databricks/dolly-v2-7b"],
-    "BLIP2": ["Salesforce/blip2-opt-2.7b"],
-    "GIT": ["microsoft/git-base-textvqa"]
+    "BLIP2": ["Salesforce/blip2-opt-2.7b", "Salesforce/blip2-flan-t5-xl"],
+    "GIT": ["microsoft/git-base-vqav2"],
+    "PaliGemma": ["paligemma-3b-ft-science-qa-448", "google/paligemma-3b-ft-vqav2-448", "google/paligemma-3b-ft-ai2d-448"]
 }
 
 def parse_args():
@@ -32,7 +34,7 @@ def parse_args():
     parser.add_argument(
         "--model_family",
         type=str,
-        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2", "GIT"],
+        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2", "GIT", "PaliGemma"],
         default=None,
         help="The moddel family, as checkpoints under the same model family use same codes to download."
         )
@@ -74,10 +76,13 @@ def main():
         model_func = AutoModelForSeq2SeqLM
     elif args.model_family in ["BLIP2"]:
         tokenizer_func = AutoProcessor
-        model_func = AutoModel
+        model_func = Blip2ForConditionalGeneration
     elif args.model_family in ["GIT"]:
         tokenizer_func = AutoProcessor
         model_func = AutoModelForCausalLM
+    elif args.model_family in ["PaliGemma"]:
+        tokenizer_func = AutoProcessor
+        model_func = PaliGemmaForConditionalGeneration
     else:
         print(f"{args.model_family}: downloader not implemented.")
         return

@@ -195,7 +195,7 @@ def inference_contrastive_decoding(method, model, **kwargs):
     fn_kwargs = {"ending_names": ending_names, 
                     "header_name": header_name, 
                     "tokenizer": tokenizer,}
-    if args.model_family in ["BLIP2", "GIT"]:
+    if args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
         fn_kwargs = {"ending_names": ending_names, 
                     "header_name": header_name, 
                     "tokenizer": tokenizer,
@@ -210,7 +210,7 @@ def inference_contrastive_decoding(method, model, **kwargs):
         fn_kwargs = {"ending_names": ending_names, 
                     "header_name": "uncond_premise", # the difference is here
                     "tokenizer": tokenizer,}
-        if args.model_family in ["BLIP2", "GIT"]:
+        if args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
             fn_kwargs = {"ending_names": ending_names, 
                         "header_name": "uncond_premise", 
                         "tokenizer": tokenizer,
@@ -349,6 +349,7 @@ def compute_conditional_score_vqa(batch, model, device, pad_token_id):
     input_ids = batch["input_ids"].view(-1, batch["input_ids"].shape[-1]).to(device)
     labels = batch["labels"].view(-1, batch["labels"].shape[-1]).to(device)
     images = batch["images"].view(-1, batch["images"].shape[-3], batch["images"].shape[-2], batch["images"].shape[-1]).to(device)
+    print(input_ids.shape, images.shape, labels.shape)
 
     # adding this line of code takes me more than an hour.
     # without adding torch.no_grad, GPU usage will muiltply by 4.
@@ -356,6 +357,8 @@ def compute_conditional_score_vqa(batch, model, device, pad_token_id):
         outputs = model(input_ids=input_ids, pixel_values=images, labels=labels)
     
     _, logits = outputs.loss, outputs.logits
+    print(logits.shape)
+
     # shift
     logits = logits[:, :-1].contiguous()
     labels = labels[:, 1:].contiguous()

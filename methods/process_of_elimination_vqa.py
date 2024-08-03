@@ -91,7 +91,7 @@ def main():
                         'header_attention_mask', 
                         'ending_input_ids', 
                         'ending_attention_mask', ]
-    elif args.model_family in ["BLIP2", "GIT"]:
+    elif args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
         compute_func = compute_conditional_score_vqa
         preprocess_func = preprocess_function_vqa
         preprocess_func_channel = preprocess_function_vqa_channel
@@ -114,7 +114,7 @@ def main():
         args.dataset = dataset
         # multiple_choice_prompt = args.multiple_choice_prompt
         args.multiple_choice_prompt = None
-        if args.model_family in ["BLIP2", "GIT"]:
+        if args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
             ending_names, header_name, image_header_name, raw_dataset, n_shot_dataset = load_data(args)
         else:
             ending_names, header_name, raw_dataset, n_shot_dataset = load_data(args)
@@ -122,14 +122,14 @@ def main():
         
         mcp_args = copy.deepcopy(args)
         mcp_args.multiple_choice_prompt = multiple_choice_prompt
-        if args.model_family in ["BLIP2", "GIT"]:
+        if args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
             _, _, _, raw_mcp_dataset, n_shot_mcp_dataset = load_data(mcp_args)
         else:
             _, _, raw_mcp_dataset, n_shot_mcp_dataset = load_data(mcp_args)
         raw_mcp_dataset, n_shot_mcp_dataset, _ = create_n_shot_splits(raw_mcp_dataset, n_shot_mcp_dataset, args)    
         
         logger.info(f"Preprocess data: {args.dataset}.")
-        if args.model_family in ["BLIP2", "GIT"]:
+        if args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
             fn_kwargs = {"ending_names": ending_names, 
                         "header_name": header_name, 
                         "tokenizer": tokenizer,
@@ -152,7 +152,7 @@ def main():
             eval_channel_dataloader = DataLoader(tokenized_channel_dataset, batch_size=args.batch_size, shuffle=False)
             avg_log_probs, _, _ = inference_language_modeling(model, eval_channel_dataloader, device, compute_func, tokenizer.pad_token_id)
         elif scoring_method == "calibration":
-            if args.model_family in ["BLIP2", "GIT"]:
+            if args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
                 fn_kwargs = {"ending_names": ending_names, 
                             "header_name": "uncond_premise", # the difference is here
                             "tokenizer": tokenizer,

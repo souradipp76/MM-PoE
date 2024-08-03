@@ -15,7 +15,8 @@ from transformers import(
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
     AutoProcessor,
-    AutoModel,
+    Blip2ForConditionalGeneration,
+    PaliGemmaForConditionalGeneration,
     BitsAndBytesConfig
 )
 from datasets import Dataset
@@ -55,7 +56,7 @@ def parse_args():
     parser.add_argument(
         "--model_family",
         type=str,
-        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2", "GIT"],
+        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2", "GIT", "PaliGemma"],
         default=None,
         required=True,
         help="The moddel family, as checkpoints under the same model family use same codes to download.",
@@ -427,10 +428,13 @@ def load_model(device, model_path, args):
         model_func = AutoModelForSeq2SeqLM
     elif args.model_family in ["BLIP2"]:
         tokenizer_func = AutoProcessor
-        model_func = AutoModel
+        model_func = Blip2ForConditionalGeneration
     elif args.model_family in ["GIT"]:
         tokenizer_func = AutoProcessor
         model_func = AutoModelForCausalLM
+    elif args.model_family in ["PaliGemma"]:
+        tokenizer_func = AutoProcessor
+        model_func = PaliGemmaForConditionalGeneration
     else:
         print(f"{args.model_family}: downloader not implemented.")
         return
