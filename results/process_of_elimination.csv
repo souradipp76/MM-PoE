@@ -1,3 +1,4 @@
 model_family,checkpoint,loading_precision,dataset,batch_size,method,scoring_method,prompting_method,mask_strategy,mask_token,seed,n_shot,sample,mask_accuracy,accuracy
 BLIP2,Salesforce/blip2-opt-2.7b,INT8,vqa,1,process_of_elimination,multiple_choice_prompt,multiple_choice_prompt,below_average,,0,0,100,0.4700,0.0700
 BLIP2,Salesforce/blip2-opt-2.7b,FP16,scienceqa,2,process_of_elimination,multiple_choice_prompt,multiple_choice_prompt,below_average,,0,0,100,0.5100,0.1800
+BLIP2,Salesforce/blip2-opt-2.7b,FP16,scienceqa,2,process_of_elimination,multiple_choice_prompt,multiple_choice_prompt,below_average,,0,0,100,0.5100,0.1800
