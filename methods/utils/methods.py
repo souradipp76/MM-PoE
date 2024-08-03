@@ -185,14 +185,22 @@ def inference_contrastive_decoding(method, model, **kwargs):
     device = kwargs["device"]
     compute_func = kwargs["compute_func"]
     tokenizer = kwargs["tokenizer"]
+    processor = kwargs["processor"]
     ending_names = kwargs["ending_names"]
     header_name = kwargs["header_name"]
+    image_header_name = kwargs["image_header_name"]
     preprocess_func = kwargs["preprocess_func"]
     preprocess_func_channel = kwargs["preprocess_func_channel"]
 
     fn_kwargs = {"ending_names": ending_names, 
                     "header_name": header_name, 
                     "tokenizer": tokenizer,}
+    if args.model_family in ["BLIP2", "GIT"]:
+        fn_kwargs = {"ending_names": ending_names, 
+                    "header_name": header_name, 
+                    "tokenizer": tokenizer,
+                    "processor": processor,
+                    "image_header_name": image_header_name}
     num_of_options = len(ending_names)
     tokenized_dataset = raw_dataset.map(preprocess_func, fn_kwargs=fn_kwargs, batched=True, batch_size=args.batch_size)
     eval_dataloader = DataLoader(tokenized_dataset, batch_size=args.batch_size, shuffle=False)
@@ -202,6 +210,12 @@ def inference_contrastive_decoding(method, model, **kwargs):
         fn_kwargs = {"ending_names": ending_names, 
                     "header_name": "uncond_premise", # the difference is here
                     "tokenizer": tokenizer,}
+        if args.model_family in ["BLIP2", "GIT"]:
+            fn_kwargs = {"ending_names": ending_names, 
+                        "header_name": "uncond_premise", 
+                        "tokenizer": tokenizer,
+                        "processor": processor,
+                        "image_header_name": image_header_name}
         tokenized_calibration_dataset = raw_dataset.map(preprocess_func, fn_kwargs=fn_kwargs, batched=True, batch_size=args.batch_size)
         eval_calibration_dataloader = DataLoader(tokenized_calibration_dataset, batch_size=args.batch_size, shuffle=False)    
         avg_log_probs, lm_accuracy, avg_lm_accuracy = inference_calibration(model, eval_dataloader, eval_calibration_dataloader,device, compute_func, tokenizer.pad_token_id)
@@ -345,7 +359,6 @@ def compute_conditional_score_vqa(batch, model, device, pad_token_id):
     # shift
     logits = logits[:, :-1].contiguous()
     labels = labels[:, 1:].contiguous()
-    print(logits.shape, labels.shape)
     # e.g., (batch_size * #option, ending_seq_len, #vocab): (64, 18, 32128)
     # logits = logits.view(-1, logits.shape[-1])
     logits = torch.permute(logits, (0, 2, 1))

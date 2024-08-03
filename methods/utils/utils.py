@@ -15,8 +15,7 @@ from transformers import(
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
     AutoProcessor,
-    Blip2Processor,
-    Blip2Model,
+    AutoModel,
     BitsAndBytesConfig
 )
 from datasets import Dataset
@@ -427,8 +426,8 @@ def load_model(device, model_path, args):
         tokenizer_func = AutoTokenizer
         model_func = AutoModelForSeq2SeqLM
     elif args.model_family in ["BLIP2"]:
-        tokenizer_func = Blip2Processor
-        model_func = Blip2Model
+        tokenizer_func = AutoProcessor
+        model_func = AutoModel
     elif args.model_family in ["GIT"]:
         tokenizer_func = AutoProcessor
         model_func = AutoModelForCausalLM
@@ -441,16 +440,14 @@ def load_model(device, model_path, args):
         tokenizer = tokenizer_func.from_pretrained(model_path)
     if args.model_family in ["GPT2", "Pythia", "Dolly"]:
         tokenizer.pad_token = tokenizer.eos_token
-    elif args.model_family in ["GIT"]:
-        tokenizer.tokenizer.pad_token_id = tokenizer.tokenizer.cls_token_id
+    
     # load with different precision
     if args.loading_precision == "FP16":
         model = model_func.from_pretrained(model_path, device_map="auto", torch_dtype=torch.float16)
     elif args.loading_precision == "BF16":
         model = model_func.from_pretrained(model_path, device_map="auto", torch_dtype=torch.bfloat16)
     elif args.loading_precision == "INT8":
-        quantization_config = BitsAndBytesConfig(load_in_8bit=True, 
-                                        llm_int8_threshold=200.0)
+        quantization_config = BitsAndBytesConfig(load_in_8bit=True, llm_int8_threshold=200.0)
         model = model_func.from_pretrained(
             model_path,
             torch_dtype=torch.float16,

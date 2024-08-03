@@ -823,6 +823,9 @@ def scienceqa_loader(path, args):
         mc_ans = value['choices']
         label = int(value['answer'])
 
+        if not len(mc_ans) == args.num_options:
+            continue
+
         if getattr(args, 'multiple_choice_prompt', None) is not None:
             hypotheses = mc_ans
             # Question: How does a bishop move from one place to another?
@@ -847,5 +850,5 @@ def scienceqa_loader(path, args):
         for idx, ans in enumerate(hypotheses):
             example[0][f'hypothesis{idx}'] = ans
         examples+=example
-    
+    print("Dataset Length: "+len(examples))
     return examples

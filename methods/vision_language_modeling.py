@@ -93,6 +93,8 @@ def main():
         compute_func = compute_conditional_score_vqa
         preprocess_func = preprocess_function_vqa
         preprocess_func_channel = preprocess_function_vqa_channel
+        processor = tokenizer
+        tokenizer = processor.tokenizer
     else:
         raise NotImplementedError
 
@@ -116,7 +118,8 @@ def main():
         if args.model_family in ["BLIP2", "GIT"]:
             fn_kwargs = {"ending_names": ending_names, 
                     "header_name": header_name, 
-                    "processor": tokenizer,
+                    "tokenizer": tokenizer,
+                    "processor": processor,
                     "image_header_name": image_header_name}
         num_of_options = len(ending_names)
         tokenized_dataset = raw_dataset.map(preprocess_func, fn_kwargs=fn_kwargs, batched=True, batch_size=args.batch_size)
@@ -125,7 +128,7 @@ def main():
         # step 5: (evaluation) inference on data, and compute accuracy.
         logger.info(f"Start inference (method: {args.method}) on {args.dataset} using {args.model_family} model: {args.checkpoint}.")
         if args.method in ["vision_language_modeling", "multiple_choice_prompt"]:
-            _, lm_accuracy, avg_lm_accuracy = inference_language_modeling(model, eval_dataloader, device, compute_func, tokenizer.tokenizer.pad_token_id)
+            _, lm_accuracy, avg_lm_accuracy = inference_language_modeling(model, eval_dataloader, device, compute_func, tokenizer.pad_token_id)
         elif args.method == "contrastive_decoding":
             logger.info(f"Load {args.model_family} amateur model: {args.amateur_checkpoint}.")
             # get model path: ../models/args.model_family/args.checkpoint
@@ -147,6 +150,13 @@ def main():
             fn_kwargs = {"ending_names": ending_names, 
                         "header_name": "uncond_premise", # the difference is here
                         "tokenizer": tokenizer,}
+            if args.model_family in ["BLIP2", "GIT"]:
+                fn_kwargs = {"ending_names": ending_names, 
+                        "header_name": "uncond_premise", 
+                        "tokenizer": tokenizer,
+                        "processor": processor,
+                        "image_header_name": image_header_name}
+                tokenizer = tokenizer.tokenizer
             tokenized_calibration_dataset = raw_dataset.map(preprocess_func, fn_kwargs=fn_kwargs, batched=True, batch_size=args.batch_size)
             eval_calibration_dataloader = DataLoader(tokenized_calibration_dataset, batch_size=args.batch_size, shuffle=False)    
             _, lm_accuracy, avg_lm_accuracy = inference_calibration(model, eval_dataloader, eval_calibration_dataloader,device, compute_func, tokenizer.pad_token_id)
@@ -171,6 +181,12 @@ def main():
             fn_kwargs = {"ending_names": synonyms_ending_names, 
                         "header_name": header_name, 
                         "tokenizer": tokenizer,}
+            if args.model_family in ["BLIP2", "GIT"]:
+                fn_kwargs = {"ending_names": synonyms_ending_names, 
+                            "header_name": header_name, 
+                            "tokenizer": tokenizer,
+                            "processor": processor,
+                            "image_header_name": image_header_name}
             tokenized_synonyms_dataset = synonyms_dataset.map(preprocess_func, fn_kwargs=fn_kwargs, batched=True, batch_size=args.batch_size)
             eval_synonyms_dataloader = DataLoader(tokenized_synonyms_dataset, batch_size=args.batch_size, shuffle=False)
             _, lm_accuracy, avg_lm_accuracy = inference_generate_synonyms(model, eval_synonyms_dataloader, device, compute_func, tokenizer.pad_token_id, num_of_options, args.number_of_synonyms)
