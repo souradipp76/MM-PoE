@@ -376,7 +376,7 @@ def compute_conditional_score_causal_vqa(batch, model, device, pad_token_id):
     # and preprocess_function_causal
     # padding_token = 50256
     input_ids = batch["input_ids"].view(-1, batch["input_ids"].shape[-1]).to(device)
-    # attention_mask = torch.zeros_like(input_ids).to(device)
+    attention_mask = torch.zeros_like(input_ids).to(device)
     labels = batch["labels"].view(-1, batch["labels"].shape[-1]).to(device)
     images = batch["images"].view(-1, batch["images"].shape[-3], batch["images"].shape[-2], batch["images"].shape[-1]).to(device)
     # print(input_ids.shape, images.shape, labels.shape)
@@ -386,7 +386,7 @@ def compute_conditional_score_causal_vqa(batch, model, device, pad_token_id):
     with torch.no_grad():
         outputs = model(input_ids=input_ids, 
                         pixel_values=images,
-                        # attention_mask = attention_mask, 
+                        attention_mask = attention_mask, # for PaliGemma 
                         labels=labels)
     
     _, logits = outputs.loss, outputs.logits
