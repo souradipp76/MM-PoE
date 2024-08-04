@@ -25,7 +25,7 @@ all_checkpoints = {
     "Dolly": ["databricks/dolly-v2-7b"],
     "BLIP2": ["Salesforce/blip2-opt-2.7b", "Salesforce/blip2-flan-t5-xl"],
     "GIT": ["microsoft/git-base-vqav2"],
-    "PaliGemma": ["paligemma-3b-ft-science-qa-448", "google/paligemma-3b-ft-vqav2-448", "google/paligemma-3b-ft-ai2d-448"],
+    "PaliGemma": ["google/paligemma-3b-ft-science-qa-448", "google/paligemma-3b-ft-vqav2-448", "google/paligemma-3b-ft-ai2d-448"],
     "ViLT": ["dandelin/vilt-b32-mlm"]
 }
 
@@ -115,7 +115,7 @@ def main():
                 # torch_dtype=torch.float16,
                 # load_in_8bit=True,
             )
-        elif args.model_family == "BLIP2":
+        elif args.model_family in ["BLIP2", "PaliGemma"]:
             tokenizer = tokenizer_func.from_pretrained(checkpoint)
             model = model_func.from_pretrained(
                 checkpoint,

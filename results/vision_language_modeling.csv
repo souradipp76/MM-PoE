@@ -5,3 +5,4 @@ BLIP2,Salesforce/blip2-opt-2.7b,INT4,vqa,4,vision_language_modeling,0,0,100,0.43
 BLIP2,Salesforce/blip2-opt-2.7b,FP16,scienceqa,2,vision_language_modeling,0,0,100,0.3800
 BLIP2,Salesforce/blip2-opt-2.7b,FP16,scienceqa,2,vision_language_modeling,0,0,100,0.3800
 BLIP2,Salesforce/blip2-opt-2.7b,BF16,scienceqa,2,vision_language_modeling,0,0,100,0.2200
+BLIP2,Salesforce/blip2-flan-t5-xl,FP16,scienceqa,2,vision_language_modeling,0,0,100,0.3600
