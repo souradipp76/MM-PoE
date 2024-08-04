@@ -12,6 +12,7 @@ from transformers import (
     AutoProcessor,
     Blip2ForConditionalGeneration,
     PaliGemmaForConditionalGeneration,
+    ViltForMaskedLM
 )
 
 all_checkpoints = {
@@ -84,6 +85,9 @@ def main():
     elif args.model_family in ["PaliGemma"]:
         tokenizer_func = AutoProcessor
         model_func = PaliGemmaForConditionalGeneration
+    elif args.model_family in ["ViLT"]:
+        tokenizer_func = AutoProcessor
+        model_func = ViltForMaskedLM
     else:
         print(f"{args.model_family}: downloader not implemented.")
         return

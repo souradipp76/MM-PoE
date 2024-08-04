@@ -1,7 +1,7 @@
 #!/bin/bash
 seeds=(0)
-model_family="BLIP2"  
-checkpoints=("Salesforce/blip2-flan-t5-xl")
+model_family="ViLT"  
+checkpoints=("dandelin/vilt-b32-mlm")
 loading_precision="FP16"
 datasets="scienceqa" # "vqa scienceqa"
 batch_size=2
