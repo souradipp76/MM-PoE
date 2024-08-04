@@ -107,9 +107,10 @@ def preprocess_function_seq2seq_vqa(examples, **kwargs):
     images = sum(images, [])
     images = image_processor(images, return_tensors='pt').data
 
-    image_dict = {"images": images["pixel_values"]}
+    flatten_image_dict = {"images": images["pixel_values"]}
     header_dict = {f"header_{k}": [v[i : i + num_choice] for i in range(0, len(v), num_choice)] for k, v in tokenized_headers.items()}
     ending_dict = {f"ending_{k}": [v[i : i + num_choice] for i in range(0, len(v), num_choice)] for k, v in tokenized_endings.items()}
+    image_dict = {f"{k}": [v[i : i + num_choice] for i in range(0, len(v), num_choice)] for k, v in flatten_image_dict.items()}
     return {**header_dict, **ending_dict, **image_dict}
 
 def preprocess_function_causal_vqa(examples, **kwargs):
