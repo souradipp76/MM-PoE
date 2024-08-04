@@ -1,6 +1,6 @@
 # you may specify model families and checkpoints here
-model_families=("BLIP2")
-checkpoints=("Salesforce/blip2-opt-2.7b")
+model_families=("PaliGemma")
+checkpoints=("google/paligemma-3b-ft-ai2d-448")
 
 for model_family in "${model_families[@]}"
 do

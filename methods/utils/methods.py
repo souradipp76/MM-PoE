@@ -376,27 +376,28 @@ def compute_conditional_score_causal_vqa(batch, model, device, pad_token_id):
     # and preprocess_function_causal
     # padding_token = 50256
     input_ids = batch["input_ids"].view(-1, batch["input_ids"].shape[-1]).to(device)
+    # attention_mask = torch.zeros_like(input_ids).to(device)
     labels = batch["labels"].view(-1, batch["labels"].shape[-1]).to(device)
     images = batch["images"].view(-1, batch["images"].shape[-3], batch["images"].shape[-2], batch["images"].shape[-1]).to(device)
-    print(input_ids.shape, images.shape, labels.shape)
+    # print(input_ids.shape, images.shape, labels.shape)
 
     # adding this line of code takes me more than an hour.
     # without adding torch.no_grad, GPU usage will muiltply by 4.
     with torch.no_grad():
         outputs = model(input_ids=input_ids, 
-                        pixel_values=images, 
+                        pixel_values=images,
+                        # attention_mask = attention_mask, 
                         labels=labels)
     
     _, logits = outputs.loss, outputs.logits
-    print(logits.shape)
+    # print(logits.shape)
 
     # shift
     logits = logits[:, :-1].contiguous()
     labels = labels[:, 1:].contiguous()
     # e.g., (batch_size * #option, ending_seq_len, #vocab): (64, 18, 32128)
     logits = logits.view(-1, logits.shape[-1])
-    # logits = torch.permute(logits, (0, 2, 1))
-    print(logits.shape)
+    # print(logits.shape)
     # e.g., (batch_size * #option, #vocab, ending_seq_len): (64, 32128, 18)
     # ignore padding token: 50256
     ce_loss = F.cross_entropy(logits, labels.view(-1), reduction="none", ignore_index=pad_token_id).detach().cpu()
