@@ -4,3 +4,4 @@ BLIP2,Salesforce/blip2-opt-2.7b,FP16,scienceqa,2,process_of_elimination,multiple
 BLIP2,Salesforce/blip2-opt-2.7b,FP16,scienceqa,2,process_of_elimination,multiple_choice_prompt,multiple_choice_prompt,below_average,,0,0,100,0.5100,0.1800
 BLIP2,Salesforce/blip2-opt-2.7b,BF16,scienceqa,2,process_of_elimination,multiple_choice_prompt,multiple_choice_prompt,below_average,,0,0,100,0.5600,0.2700
 BLIP2,Salesforce/blip2-flan-t5-xl,FP16,scienceqa,2,process_of_elimination,multiple_choice_prompt,multiple_choice_prompt,below_average,,0,0,100,0.5700,0.2700
+BLIP2,Salesforce/blip2-opt-2.7b,FP16,ai2d,2,process_of_elimination,multiple_choice_prompt,multiple_choice_prompt,below_average,,0,0,100,0.5300,0.2500

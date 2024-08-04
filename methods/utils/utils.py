@@ -425,7 +425,7 @@ def load_data(args):
         train_dataset = Dataset.from_list(train_data).with_format("torch")
     else: # BB tasks have no train set. 
         train_dataset = dev_dataset
-    if args.dataset in ["vqa", "scienceqa"]:
+    if args.dataset in ["vqa", "scienceqa", "ai2d"]:
         return ending_names, header_name, image_header_name, dev_dataset, train_dataset
     return ending_names, header_name, dev_dataset, train_dataset
 

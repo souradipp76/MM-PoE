@@ -919,8 +919,8 @@ def scienceqa_loader(path, args):
     return examples
 
 def ai2d_loader(path, args):
-    questionDir = '%s/ai2d_all/questions' %(path)
-    imgDir = '%s/ai2d_all/images' %(path)
+    questionDir = '%s/ai2d/questions' %(path)
+    imgDir = '%s/ai2d/images' %(path)
     alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     examples = []
@@ -933,11 +933,11 @@ def ai2d_loader(path, args):
     else:
         uncond_premise = " the answer is:"
 
-    for i, file in enumerate(train_files.items()):
-        anno = json.load(open(file, 'r'))
+    for i, file in enumerate(train_files):
+        anno = json.load(open(os.path.join(questionDir, file), 'r'))
         questions = anno["questions"]
         imageName = anno["imageName"]
-        for question, value in questions:
+        for question, value in questions.items():
             mc_ans = value['answerTexts']
             label = int(value['correctAnswer'])
             abcLabel = value['abcLabel']

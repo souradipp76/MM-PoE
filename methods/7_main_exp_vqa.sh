@@ -1,9 +1,9 @@
 #!/bin/bash
 seeds=(0)
-model_family="ViLT"  
-checkpoints=("dandelin/vilt-b32-mlm")
+model_family="BLIP2"  
+checkpoints=("Salesforce/blip2-opt-2.7b")
 loading_precision="FP16"
-datasets="scienceqa" # "vqa scienceqa"
+datasets="ai2d" # "vqa scienceqa ai2d"
 batch_size=2
 sample=100
 n_shot=0

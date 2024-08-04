@@ -221,7 +221,6 @@ def main():
         # if args.prompting_method_for_process_of_elimination
         # mcp_kwargs = {"multiple_choice_prompt": multiple_choice_prompt,}
         mask_token = args.mask_token
-        print(mask_token)
         if mask_token is not None:
             if mask_token == "":
                 args.process_of_elimination_prompt = args.process_of_elimination_prompt.replace("[MASK]", "empty")   
