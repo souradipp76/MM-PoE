@@ -1,8 +1,8 @@
 #!/bin/bash
 seeds=(0)
-model_family="PaliGemma"  
-checkpoints=("google/paligemma-3b-ft-ai2d-448")
-loading_precision="FP16"
+model_family="GIT"  
+checkpoints=("microsoft/git-base-vqav2")
+loading_precision="FP32"
 datasets="ai2d" # "vqa scienceqa ai2d"
 batch_size=2
 sample=100
