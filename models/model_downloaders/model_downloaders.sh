@@ -1,6 +1,6 @@
 # you may specify model families and checkpoints here
-model_families=("GIT")
-checkpoints=("microsoft/git-base-vqav2")
+model_families=("InstructBLIP")
+checkpoints=("Salesforce/instructblip-vicuna-7b")
 
 for model_family in "${model_families[@]}"
 do

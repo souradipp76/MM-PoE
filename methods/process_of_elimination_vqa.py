@@ -94,7 +94,7 @@ def main():
                         'header_attention_mask', 
                         'ending_input_ids', 
                         'ending_attention_mask', ]
-    elif args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
+    elif args.model_family in ["BLIP2", "InstructBLIP", "GIT", "PaliGemma", "Idefics2"]:
         compute_func = compute_conditional_score_causal_vqa
         preprocess_func = preprocess_function_causal_vqa
         preprocess_func_channel = preprocess_function_causal_vqa_channel
@@ -102,17 +102,6 @@ def main():
                           'labels',
                           'images',
                           'ending_attention_mask']
-        processor = tokenizer
-        tokenizer = processor.tokenizer
-    elif args.model_family in ["ViLT"]:
-        compute_func = compute_conditional_score_seq2seq_vqa
-        preprocess_func = preprocess_function_seq2seq_vqa
-        preprocess_func_channel = preprocess_function_seq2seq_vqa_channel
-        remove_columns=['header_input_ids', 
-                        'header_attention_mask', 
-                        'ending_input_ids', 
-                        'ending_attention_mask', 
-                        'images']
         processor = tokenizer
         tokenizer = processor.tokenizer
     else:
@@ -143,7 +132,7 @@ def main():
         raw_mcp_dataset, n_shot_mcp_dataset, _ = create_n_shot_splits(raw_mcp_dataset, n_shot_mcp_dataset, args)    
         
         logger.info(f"Preprocess data: {args.dataset}.")
-        if args.model_family in ["BLIP2", "GIT", "PaliGemma", "ViLT"]:
+        if args.model_family in ["BLIP2", "InstructBLIP", "GIT", "PaliGemma", "Idefics2"]:
             fn_kwargs = {"ending_names": ending_names, 
                         "header_name": header_name, 
                         "tokenizer": tokenizer,
@@ -166,7 +155,7 @@ def main():
             eval_channel_dataloader = DataLoader(tokenized_channel_dataset, batch_size=args.batch_size, shuffle=False)
             avg_log_probs, _, _ = inference_language_modeling(model, eval_channel_dataloader, device, compute_func, tokenizer.pad_token_id)
         elif scoring_method == "calibration":
-            if args.model_family in ["BLIP2", "GIT", "PaliGemma", "ViLT"]:
+            if args.model_family in ["BLIP2", "InstructBLIP", "GIT", "PaliGemma", "Idefics2"]:
                 fn_kwargs = {"ending_names": ending_names, 
                             "header_name": "uncond_premise", # the difference is here
                             "tokenizer": tokenizer,

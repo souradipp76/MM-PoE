@@ -15,9 +15,10 @@ from transformers import(
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
     AutoProcessor,
+    AutoModelForVision2Seq,
     Blip2ForConditionalGeneration,
     PaliGemmaForConditionalGeneration,
-    ViltForMaskedLM,
+    InstructBlipForConditionalGeneration,
     BitsAndBytesConfig
 )
 from datasets import Dataset
@@ -58,7 +59,7 @@ def parse_args():
     parser.add_argument(
         "--model_family",
         type=str,
-        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2", "GIT", "PaliGemma", "ViLT"],
+        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2", "instructBLIP", "GIT", "PaliGemma", "Idefics2"],
         default=None,
         required=True,
         help="The moddel family, as checkpoints under the same model family use same codes to download.",
@@ -439,20 +440,25 @@ def load_model(device, model_path, args):
     elif args.model_family in ["BLIP2"]:
         tokenizer_func = AutoProcessor
         model_func = Blip2ForConditionalGeneration
+    elif args.model_family in ["InstructBLIP"]:
+        tokenizer_func = AutoProcessor
+        model_func = InstructBlipForConditionalGeneration
     elif args.model_family in ["GIT"]:
         tokenizer_func = AutoProcessor
         model_func = AutoModelForCausalLM
     elif args.model_family in ["PaliGemma"]:
         tokenizer_func = AutoProcessor
         model_func = PaliGemmaForConditionalGeneration
-    elif args.model_family in ["ViLT"]:
+    elif args.model_family in ["Idefics2"]:
         tokenizer_func = AutoProcessor
-        model_func = ViltForMaskedLM
+        model_func = AutoModelForVision2Seq
     else:
         print(f"{args.model_family}: downloader not implemented.")
         return
     if args.model_family == "Dolly":
         tokenizer = tokenizer_func.from_pretrained(model_path, padding_side="left")
+    elif args.model_family == "Idefics2":
+        tokenizer = tokenizer_func.from_pretrained(model_path, do_image_splitting=False)
     else:
         tokenizer = tokenizer_func.from_pretrained(model_path)
     if args.model_family in ["GPT2", "Pythia", "Dolly"]:

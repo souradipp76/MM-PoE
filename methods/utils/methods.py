@@ -195,7 +195,7 @@ def inference_contrastive_decoding(method, model, **kwargs):
     fn_kwargs = {"ending_names": ending_names, 
                     "header_name": header_name, 
                     "tokenizer": tokenizer,}
-    if args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
+    if args.model_family in ["BLIP2", "InstructBLIP", "GIT", "PaliGemma", "Idefics2"]:
         fn_kwargs = {"ending_names": ending_names, 
                     "header_name": header_name, 
                     "tokenizer": tokenizer,
@@ -210,7 +210,7 @@ def inference_contrastive_decoding(method, model, **kwargs):
         fn_kwargs = {"ending_names": ending_names, 
                     "header_name": "uncond_premise", # the difference is here
                     "tokenizer": tokenizer,}
-        if args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
+        if args.model_family in ["BLIP2", "InstructBLIP", "GIT", "PaliGemma", "Idefics2"]:
             fn_kwargs = {"ending_names": ending_names, 
                         "header_name": "uncond_premise", 
                         "tokenizer": tokenizer,

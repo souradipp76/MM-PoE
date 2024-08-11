@@ -92,16 +92,10 @@ def main():
         compute_func = compute_conditional_score_seq2seq
         preprocess_func = preprocess_function_seq2seq
         preprocess_func_channel = preprocess_function_seq2seq_channel
-    elif args.model_family in ["BLIP2", "GIT", "PaliGemma"]:
+    elif args.model_family in ["BLIP2", "InstructBLIP", "GIT", "PaliGemma", "Idefics2"]:
         compute_func = compute_conditional_score_causal_vqa
         preprocess_func = preprocess_function_causal_vqa
         preprocess_func_channel = preprocess_function_causal_vqa_channel
-        processor = tokenizer
-        tokenizer = processor.tokenizer
-    elif args.model_family in ["ViLT"]:
-        compute_func = compute_conditional_score_seq2seq_vqa
-        preprocess_func = preprocess_function_seq2seq_vqa
-        preprocess_func_channel = preprocess_function_seq2seq_vqa_channel
         processor = tokenizer
         tokenizer = processor.tokenizer
     else:
@@ -124,7 +118,7 @@ def main():
         fn_kwargs = {"ending_names": ending_names, 
                     "header_name": header_name, 
                     "tokenizer": tokenizer,}
-        if args.model_family in ["BLIP2", "GIT", "PaliGemma", "ViLT"]:
+        if args.model_family in ["BLIP2", "InstructBLIP", "GIT", "PaliGemma", "Idefics2"]:
             fn_kwargs = {"ending_names": ending_names, 
                     "header_name": header_name, 
                     "tokenizer": tokenizer,
@@ -159,7 +153,7 @@ def main():
             fn_kwargs = {"ending_names": ending_names, 
                         "header_name": "uncond_premise", # the difference is here
                         "tokenizer": tokenizer,}
-            if args.model_family in ["BLIP2", "GIT", "PaliGemma", "ViLT"]:
+            if args.model_family in ["BLIP2", "InstructBLIP", "GIT", "PaliGemma", "Idefics2"]:
                 fn_kwargs = {"ending_names": ending_names, 
                         "header_name": "uncond_premise", 
                         "tokenizer": tokenizer,
@@ -189,7 +183,7 @@ def main():
             fn_kwargs = {"ending_names": synonyms_ending_names, 
                         "header_name": header_name, 
                         "tokenizer": tokenizer,}
-            if args.model_family in ["BLIP2", "GIT", "PaliGemma", "ViLT"]:
+            if args.model_family in ["BLIP2", "InstructBLIP", "GIT", "PaliGemma", "Idefics2"]:
                 fn_kwargs = {"ending_names": synonyms_ending_names, 
                             "header_name": header_name, 
                             "tokenizer": tokenizer,

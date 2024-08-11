@@ -9,10 +9,11 @@ from transformers import (
     AutoTokenizer, 
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
+    AutoModelForVision2Seq,
     AutoProcessor,
     Blip2ForConditionalGeneration,
     PaliGemmaForConditionalGeneration,
-    ViltForMaskedLM
+    InstructBlipForConditionalGeneration
 )
 
 all_checkpoints = {
@@ -25,9 +26,10 @@ all_checkpoints = {
     "MPT": ["mosaicml/mpt-7b", "mosaicml/mpt-7b-instruct", "mosaicml/mpt-7b-chat", "mosaicml/mpt-7b-storywriter"],
     "Dolly": ["databricks/dolly-v2-7b"],
     "BLIP2": ["Salesforce/blip2-opt-2.7b", "Salesforce/blip2-flan-t5-xl"],
-    "GIT": ["microsoft/git-base-vqav2"],
+    "InstructBLIP": ["Salesforce/instructblip-vicuna-7b"],
+    "GIT": ["microsoft/git-base-vqav2", "microsoft/git-base-textvqa"],
     "PaliGemma": ["google/paligemma-3b-ft-science-qa-448", "google/paligemma-3b-ft-vqav2-448", "google/paligemma-3b-ft-ai2d-448"],
-    "ViLT": ["dandelin/vilt-b32-mlm"]
+    "Idefics2": ["HuggingFaceM4/idefics2-8b"]
 }
 
 def parse_args():
@@ -36,7 +38,7 @@ def parse_args():
     parser.add_argument(
         "--model_family",
         type=str,
-        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2", "GIT", "PaliGemma", "ViLT"],
+        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2", "InstructBLIP", "GIT", "PaliGemma", "Idefics2"],
         default=None,
         help="The moddel family, as checkpoints under the same model family use same codes to download."
         )
@@ -79,15 +81,18 @@ def main():
     elif args.model_family in ["BLIP2"]:
         tokenizer_func = AutoProcessor
         model_func = Blip2ForConditionalGeneration
+    elif args.model_family in ["InstructBLIP"]:
+        tokenizer_func = AutoProcessor
+        model_func = InstructBlipForConditionalGeneration
     elif args.model_family in ["GIT"]:
         tokenizer_func = AutoProcessor
         model_func = AutoModelForCausalLM
     elif args.model_family in ["PaliGemma"]:
         tokenizer_func = AutoProcessor
         model_func = PaliGemmaForConditionalGeneration
-    elif args.model_family in ["ViLT"]:
+    elif args.model_family in ["Idefics2"]:
         tokenizer_func = AutoProcessor
-        model_func = ViltForMaskedLM
+        model_func = AutoModelForVision2Seq
     else:
         print(f"{args.model_family}: downloader not implemented.")
         return
@@ -119,7 +124,7 @@ def main():
                 # torch_dtype=torch.float16,
                 # load_in_8bit=True,
             )
-        elif args.model_family in ["BLIP2", "PaliGemma"]:
+        elif args.model_family in ["BLIP2", "InstructBLIP", "PaliGemma", "Idefics2"]:
             tokenizer = tokenizer_func.from_pretrained(checkpoint)
             model = model_func.from_pretrained(
                 checkpoint,

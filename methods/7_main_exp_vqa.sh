@@ -1,14 +1,14 @@
 #!/bin/bash
 seeds=(0)
-model_family="GIT"  
-checkpoints=("microsoft/git-base-vqav2")
-loading_precision="FP32"
+model_family="InstructBLIP"  
+checkpoints=("Salesforce/instructblip-vicuna-7b")
+loading_precision="FP16"
 datasets="ai2d" # "vqa scienceqa ai2d"
 batch_size=2
 sample=100
 n_shot=0
 
-multiple_choice_prompt="Select the most suitable option to answer the question."
+multiple_choice_prompt=""
 calibration_prompt=" the answer is:"
 process_of_elimination_prompt="Select the most suitable option to answer the question. Ignore [MASK] options."
 
