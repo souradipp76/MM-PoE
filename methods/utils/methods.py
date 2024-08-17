@@ -390,7 +390,7 @@ def compute_conditional_score_causal_vqa(batch, model, device, pad_token_id):
                         labels=labels)
     
     _, logits = outputs.loss, outputs.logits
-    # logits = logits[:, -input_ids.shape[-1]:, :] # for GIT
+    logits = logits[:, -input_ids.shape[-1]:, :] # for GIT
     # print(logits.shape)
 
     # shift
