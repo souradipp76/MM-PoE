@@ -1,9 +1,9 @@
 #!/bin/bash
-seeds=(0 1 2 3 4)
+seeds=(0)
 model_family="BLIP2"
 checkpoints=("Salesforce/blip2-opt-2.7b")
 loading_precision="FP16"
-datasets="vqa scienceqa ai2d" 
+datasets="ai2d" # vqa scienceqa ai2d
 batch_size=2
 sample=100
 n_shots=(0 3)
@@ -17,7 +17,7 @@ for seed in "${seeds[@]}"; do
         for n_shot in "${n_shots[@]}"; do
     
         # multiple choice prompt, using the same script as language modeling
-        python language_modeling.py \
+        python vision_language_modeling.py \
             --seed ${seed} \
             --model_family ${model_family} \
             --checkpoint ${checkpoint} \

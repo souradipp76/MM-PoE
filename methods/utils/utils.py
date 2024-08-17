@@ -16,9 +16,6 @@ from transformers import(
     AutoModelForSeq2SeqLM,
     AutoProcessor,
     AutoModelForVision2Seq,
-    Blip2ForConditionalGeneration,
-    PaliGemmaForConditionalGeneration,
-    InstructBlipForConditionalGeneration,
     BitsAndBytesConfig
 )
 from datasets import Dataset
@@ -59,7 +56,7 @@ def parse_args():
     parser.add_argument(
         "--model_family",
         type=str,
-        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2", "instructBLIP", "GIT", "PaliGemma", "Idefics2"],
+        choices=["GPT2", "T5", "FLAN-T5", "Pythia", "OPT-IML", "Dolly", "BLIP2", "InstructBLIP", "GIT", "PaliGemma", "Idefics2"],
         default=None,
         required=True,
         help="The moddel family, as checkpoints under the same model family use same codes to download.",
@@ -437,19 +434,7 @@ def load_model(device, model_path, args):
     elif args.model_family in ["T5", "FLAN-T5"]:
         tokenizer_func = AutoTokenizer
         model_func = AutoModelForSeq2SeqLM
-    elif args.model_family in ["BLIP2"]:
-        tokenizer_func = AutoProcessor
-        model_func = Blip2ForConditionalGeneration
-    elif args.model_family in ["InstructBLIP"]:
-        tokenizer_func = AutoProcessor
-        model_func = InstructBlipForConditionalGeneration
-    elif args.model_family in ["GIT"]:
-        tokenizer_func = AutoProcessor
-        model_func = AutoModelForCausalLM
-    elif args.model_family in ["PaliGemma"]:
-        tokenizer_func = AutoProcessor
-        model_func = PaliGemmaForConditionalGeneration
-    elif args.model_family in ["Idefics2"]:
+    elif args.model_family in ["BLIP2", "InstructBLIP", "GIT", "PaliGemma", "Idefics2"]:
         tokenizer_func = AutoProcessor
         model_func = AutoModelForVision2Seq
     else:

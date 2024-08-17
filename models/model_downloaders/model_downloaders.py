@@ -9,11 +9,8 @@ from transformers import (
     AutoTokenizer, 
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
-    AutoModelForVision2Seq,
     AutoProcessor,
-    Blip2ForConditionalGeneration,
-    PaliGemmaForConditionalGeneration,
-    InstructBlipForConditionalGeneration
+    AutoModelForVision2Seq
 )
 
 all_checkpoints = {
@@ -78,19 +75,7 @@ def main():
     elif args.model_family in ["T5", "FLAN-T5"]:
         tokenizer_func = AutoTokenizer
         model_func = AutoModelForSeq2SeqLM
-    elif args.model_family in ["BLIP2"]:
-        tokenizer_func = AutoProcessor
-        model_func = Blip2ForConditionalGeneration
-    elif args.model_family in ["InstructBLIP"]:
-        tokenizer_func = AutoProcessor
-        model_func = InstructBlipForConditionalGeneration
-    elif args.model_family in ["GIT"]:
-        tokenizer_func = AutoProcessor
-        model_func = AutoModelForCausalLM
-    elif args.model_family in ["PaliGemma"]:
-        tokenizer_func = AutoProcessor
-        model_func = PaliGemmaForConditionalGeneration
-    elif args.model_family in ["Idefics2"]:
+    elif args.model_family in ["BLIP2", "InstructBLIP", "GIT", "PaliGemma", "Idefics2"]:
         tokenizer_func = AutoProcessor
         model_func = AutoModelForVision2Seq
     else:
