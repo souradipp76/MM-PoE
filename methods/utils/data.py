@@ -145,10 +145,16 @@ def preprocess_function_causal_vqa(examples, **kwargs):
     labels = tokenizer.pad_token_id * torch.ones((len(tokenized_headers['input_ids']), max_len), dtype=torch.long)
     ending_attention_mask = torch.zeros((len(tokenized_headers['input_ids']), max_len), dtype=torch.long)
     for i, (header, ending) in enumerate(zip(tokenized_headers['input_ids'], tokenized_endings['input_ids'])):
-        input_ids[i, :len(header)] = torch.tensor(header)
-        input_ids[i, len(header):len(header)+len(ending)] = torch.tensor(ending)
-        ending_attention_mask[i, len(header):len(header)+len(ending)] = torch.tensor(1)
-        labels[i, len(header):len(header)+len(ending)] = torch.tensor(ending)
+        if tokenizer.padding_side == 'right':
+            input_ids[i, :len(header)] = torch.tensor(header)
+            input_ids[i, len(header):len(header)+len(ending)] = torch.tensor(ending)
+            ending_attention_mask[i, len(header):len(header)+len(ending)] = torch.tensor(1)
+            labels[i, len(header):len(header)+len(ending)] = torch.tensor(ending)
+        else:
+            input_ids[i, -len(ending):] = torch.tensor(ending)
+            input_ids[i, -len(header)-len(ending):-len(ending)] = torch.tensor(header)
+            ending_attention_mask[i, -len(ending):] = torch.tensor(1)
+            labels[i, -len(ending):] = torch.tensor(ending)
 
     flatten_dict = {"input_ids": input_ids, "labels": labels, "ending_attention_mask": ending_attention_mask, "images": images["pixel_values"]}
     return_dict = {f"{k}": [v[i : i + num_choice] for i in range(0, len(v), num_choice)] for k, v in flatten_dict.items()}
