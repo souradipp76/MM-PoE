@@ -448,7 +448,7 @@ def load_model(device, model_path, args):
         tokenizer = tokenizer_func.from_pretrained(model_path)
     if args.model_family in ["GPT2", "Pythia", "Dolly"]:
         tokenizer.pad_token = tokenizer.eos_token
-    elif args.model_family == "GIT":
+    elif args.model_family in ["PaliGemma", "GIT"]:
         tokenizer.tokenizer.padding_side = "left"
     
     # load with different precision

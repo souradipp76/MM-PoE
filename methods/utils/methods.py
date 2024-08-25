@@ -361,6 +361,7 @@ def compute_conditional_score_seq2seq_vqa(batch, model, device, pad_token_id):
                         labels = ending_input_ids)
     
     _, logits = outputs.loss, outputs.logits
+    logits = logits.contiguous()
     # e.g., (batch_size * #option, ending_seq_len, #vocab): (64, 18, 32128)
     logits = logits.view(-1, logits.shape[-1])
     # ignore padding token: 0
@@ -379,7 +380,6 @@ def compute_conditional_score_causal_vqa(batch, model, device, pad_token_id):
     attention_mask = batch["ending_attention_mask"].view(-1, batch["ending_attention_mask"].shape[-1]).to(device)
     labels = batch["labels"].view(-1, batch["labels"].shape[-1]).to(device)
     images = batch["images"].view(-1, batch["images"].shape[-3], batch["images"].shape[-2], batch["images"].shape[-1]).to(device)
-    # print(input_ids.shape, images.shape, labels.shape)
 
     # adding this line of code takes me more than an hour.
     # without adding torch.no_grad, GPU usage will muiltply by 4.
@@ -391,11 +391,11 @@ def compute_conditional_score_causal_vqa(batch, model, device, pad_token_id):
     
     _, logits = outputs.loss, outputs.logits
     logits = logits[:, -input_ids.shape[-1]:, :] # for GIT
-    # print(logits.shape)
 
     # shift
     logits = logits[:, :-1].contiguous()
     labels = labels[:, 1:].contiguous()
+
     # e.g., (batch_size * #option, ending_seq_len, #vocab): (64, 18, 32128)
     logits = logits.view(-1, logits.shape[-1])
     # print(logits.shape)

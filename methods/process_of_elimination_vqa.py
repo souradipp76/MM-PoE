@@ -94,7 +94,18 @@ def main():
                         'header_attention_mask', 
                         'ending_input_ids', 
                         'ending_attention_mask', ]
-    elif args.model_family in ["BLIP2", "InstructBLIP", "GIT", "PaliGemma", "Idefics2"]:
+    elif args.model_family in ["BLIP2", "InstructBLIP", "PaliGemma", "Idefics2"]:
+        compute_func = compute_conditional_score_seq2seq_vqa
+        preprocess_func = preprocess_function_seq2seq_vqa
+        preprocess_func_channel = preprocess_function_seq2seq_vqa_channel
+        remove_columns = ['header_input_ids', 
+                        'header_attention_mask', 
+                        'ending_input_ids', 
+                        'ending_attention_mask',
+                        'images',]
+        processor = tokenizer
+        tokenizer = processor.tokenizer
+    elif args.model_family in ["GIT"]:
         compute_func = compute_conditional_score_causal_vqa
         preprocess_func = preprocess_function_causal_vqa
         preprocess_func_channel = preprocess_function_causal_vqa_channel
