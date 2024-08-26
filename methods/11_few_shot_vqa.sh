@@ -1,5 +1,5 @@
 #!/bin/bash
-seeds=(0)
+seeds=(0 1 2 3 4)
 model_family="BLIP2"
 checkpoints=("Salesforce/blip2-opt-2.7b")
 loading_precision="FP16"

@@ -361,9 +361,8 @@ def compute_conditional_score_seq2seq_vqa(batch, model, device, pad_token_id):
                         labels = ending_input_ids)
     
     _, logits = outputs.loss, outputs.logits
-    logits = logits.contiguous()
     # e.g., (batch_size * #option, ending_seq_len, #vocab): (64, 18, 32128)
-    logits = logits.view(-1, logits.shape[-1])
+    logits = logits.contiguous().view(-1, logits.shape[-1])
     # ignore padding token: 0
     ce_loss = F.cross_entropy(logits, ending_input_ids.view(-1), reduction="none", ignore_index=pad_token_id).detach().cpu()
     # each score is the negative log-likelihood of a ending given a header.
@@ -377,7 +376,8 @@ def compute_conditional_score_causal_vqa(batch, model, device, pad_token_id):
     # and preprocess_function_causal
     # padding_token = 50256
     input_ids = batch["input_ids"].view(-1, batch["input_ids"].shape[-1]).to(device)
-    attention_mask = batch["ending_attention_mask"].view(-1, batch["ending_attention_mask"].shape[-1]).to(device)
+    header_attention_mask = batch["header_attention_mask"].view(-1, batch["header_attention_mask"].shape[-1]).to(device)
+    ending_attention_mask = batch["ending_attention_mask"].view(-1, batch["ending_attention_mask"].shape[-1]).to(device)
     labels = batch["labels"].view(-1, batch["labels"].shape[-1]).to(device)
     images = batch["images"].view(-1, batch["images"].shape[-3], batch["images"].shape[-2], batch["images"].shape[-1]).to(device)
 
@@ -386,7 +386,7 @@ def compute_conditional_score_causal_vqa(batch, model, device, pad_token_id):
     with torch.no_grad():
         outputs = model(input_ids=input_ids, 
                         pixel_values=images,
-                        attention_mask = attention_mask,
+                        attention_mask = header_attention_mask,
                         labels=labels)
     
     _, logits = outputs.loss, outputs.logits
