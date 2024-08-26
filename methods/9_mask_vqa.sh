@@ -19,7 +19,7 @@ for seed in "${seeds[@]}"; do
         for mask_strategy in "${mask_strategy_for_process_of_elimination[@]}"; do
 
         # process of elimination
-        python process_of_elimination.py \
+        python process_of_elimination_vqa.py \
             --seed ${seed} \
             --model_family ${model_family} \
             --checkpoint ${checkpoint} \
