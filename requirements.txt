@@ -4,3 +4,4 @@ torch
 huggingface_hub
 bitsandbytes
 accelerate
+gdown

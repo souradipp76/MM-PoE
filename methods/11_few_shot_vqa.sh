@@ -3,10 +3,10 @@ seeds=(0 1 2 3 4)
 model_family="BLIP2"
 checkpoints=("Salesforce/blip2-opt-2.7b")
 loading_precision="FP16"
-datasets="ai2d" # vqa scienceqa ai2d
+datasets="vqa scienceqa ai2d" # vqa scienceqa ai2d
 batch_size=2
 sample=100
-n_shots=(0 3)
+n_shots=(0 1 3)
 
 multiple_choice_prompt="Select the most suitable option to answer the question."
 calibration_prompt=" the answer is:"

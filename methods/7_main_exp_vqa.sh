@@ -1,9 +1,9 @@
 #!/bin/bash
-seeds=(0)
-model_family="InstructBLIP"  
-checkpoints=("Salesforce/instructblip-vicuna-7b")
+seeds=(0 1 2 3 4)
+model_family="BLIP2"  
+checkpoints=("Salesforce/blip2-opt-2.7b")
 loading_precision="FP16"
-datasets="ai2d" # "vqa scienceqa ai2d"
+datasets="vqa scienceqa ai2d" # "vqa scienceqa ai2d"
 batch_size=2
 sample=100
 n_shot=0
