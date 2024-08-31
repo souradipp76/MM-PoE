@@ -1,6 +1,6 @@
 # you may specify model families and checkpoints here
-model_families=("BLIP2")
-checkpoints=("Salesforce/blip2-opt-2.7b")
+model_families=("Idefics2")
+checkpoints=("HuggingFaceM4/idefics2-8b")
 
 for model_family in "${model_families[@]}"
 do
@@ -9,7 +9,7 @@ do
         python models/model_downloaders/model_downloaders.py \
             --model_family ${model_family} \
             --checkpoint ${checkpoint} \
-            --output_dir "/content/models"
+            --output_dir "~/models"
             # --download_all_checkpoints  
     done
 done

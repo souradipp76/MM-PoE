@@ -1,10 +1,10 @@
 #!/bin/bash
 seeds=(0 1 2 3 4)
-model_family="BLIP2"  
-checkpoints=("Salesforce/blip2-opt-2.7b")
-loading_precision="FP16"
+model_family="Idefics2"  
+checkpoints=("HuggingFaceM4/idefics2-8b")
+loading_precision="FP32"
 datasets="vqa scienceqa ai2d" # "vqa scienceqa ai2d"
-batch_size=2
+batch_size=8
 sample=100
 n_shot=0
 

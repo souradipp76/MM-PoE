@@ -1,10 +1,10 @@
 #!/bin/bash
 seeds=(0 1 2 3 4)
-model_family="BLIP2"  # "BLIP2" "InstructBLIP" "GIT" "PaliGemma" "Idefics2"
-checkpoint="Salesforce/blip2-opt-2.7b" # "Salesforce/blip2-opt-2.7b" "Salesforce/blip2-flan-t5-xl" "google/paligemma-3b-ft-science-qa-448" "google/paligemma-3b-ft-vqav2-448" "google/paligemma-3b-ft-ai2d-448"
-loading_precision="FP16" # FP32 FP16 BF16(for 7b models) INT8
+model_family="Idefics2"  # "BLIP2" "InstructBLIP" "GIT" "PaliGemma" "Idefics2"
+checkpoint="HuggingFaceM4/idefics2-8b" # "Salesforce/blip2-opt-2.7b" "Salesforce/blip2-flan-t5-xl" "google/paligemma-3b-ft-science-qa-448" "google/paligemma-3b-ft-vqav2-448" "google/paligemma-3b-ft-ai2d-448"
+loading_precision="FP32" # FP32 FP16 BF16(for 7b models) INT8
 datasets="vqa scienceqa ai2d" # vqa scienceqa ai2d
-batch_size=2
+batch_size=8
 sample=100
 n_shot=0
 

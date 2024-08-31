@@ -76,7 +76,7 @@ def main():
     logger.info(f"Load {args.model_family} model: {args.checkpoint}.")
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     # get model path: ../models/args.model_family/args.checkpoint
-    model_path = os.path.join("/content/models", args.model_family, args.checkpoint)
+    model_path = os.path.join("~/models", args.model_family, args.checkpoint)
     model, tokenizer = load_model(device, model_path, args)
     if args.model_family in ["GPT2", "Pythia", "OPT-IML", "Dolly"]:
         compute_func = compute_conditional_score_causal
@@ -114,7 +114,7 @@ def main():
         elif args.method == "contrastive_decoding":
             logger.info(f"Load {args.model_family} amateur model: {args.amateur_checkpoint}.")
             # get model path: ../models/args.model_family/args.checkpoint
-            amateur_model_path = os.path.join("/content/models", args.model_family, args.amateur_checkpoint)
+            amateur_model_path = os.path.join("~/models", args.model_family, args.amateur_checkpoint)
             amateur_model, _ = load_model(device, amateur_model_path, args)
             # we want to integrate contrastive decoding with other methods, so we need separate output from each model.
             # compute log probs on each model        
