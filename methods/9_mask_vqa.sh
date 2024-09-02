@@ -8,7 +8,7 @@ batch_size=8
 sample=100
 n_shot=0
 
-multiple_choice_prompt="Select the most suitable option to answer the question."
+multiple_choice_prompt=""
 calibration_prompt=" the answer is:"
 process_of_elimination_prompt="Select the most suitable option to answer the question. Ignore [MASK] options."
 scoring_method_for_process_of_elimination=("channel" "calibration" "language_modeling" "multiple_choice_prompt")
