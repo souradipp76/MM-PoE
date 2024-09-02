@@ -146,8 +146,6 @@ def inference_generate_synonyms(model, eval_dataloader, device, compute_func, pa
     avg_log_probs = torch.cat(avg_log_probs, dim=0)
     return avg_log_probs, lm_accuracy, avg_lm_accuracy
 
-
-
 def inference_calibration(model, eval_dataloader, eval_calibration_dataloader, device, compute_func, pad_token_id):
     model.eval()
     lm_predictions = torch.zeros(0)
@@ -390,7 +388,7 @@ def compute_conditional_score_causal_vqa(batch, model, device, pad_token_id):
                         labels=labels)
     
     _, logits = outputs.loss, outputs.logits
-    logits = logits[:, -input_ids.shape[-1]:, :] # for GIT
+    logits = logits[:, -input_ids.shape[-1]-1:-1, :] # for GIT
 
     # shift
     logits = logits[:, :-1].contiguous()
@@ -450,4 +448,3 @@ def aggregate_optionw_with_synonyms(tensor, num_of_options, num_of_synonyms):
     # aggregated_index = options_index + [i for i in old_index if i not in options_index]
     tensor[:, old_index] = tensor[:, aggregated_index]
     return tensor
-
