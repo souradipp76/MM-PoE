@@ -385,18 +385,17 @@ def compute_conditional_score_causal_vqa(batch, model, device, pad_token_id):
         outputs = model(input_ids=input_ids, 
                         pixel_values=images,
                         attention_mask = header_attention_mask,
-                        labels=labels)
+                        labels=labels)    
     
-    _, logits = outputs.loss, outputs.logits
+    loss, logits = outputs.loss, outputs.logits
     logits = logits[:, -labels.shape[-1]:, :] # for GIT
 
     # shift
     logits = logits[:, :-1].contiguous()
     labels = labels[:, 1:].contiguous()
-
+    
     # e.g., (batch_size * #option, ending_seq_len, #vocab): (64, 18, 32128)
     logits = logits.view(-1, logits.shape[-1])
-    # print(logits.shape)
     # ignore padding token: 50256
     ce_loss = F.cross_entropy(logits, labels.view(-1), reduction="none", ignore_index=pad_token_id).detach().cpu()
     # each score is the negative log-likelihood of a ending given a header.
