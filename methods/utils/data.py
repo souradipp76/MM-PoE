@@ -355,7 +355,6 @@ def create_multiple_choice_prompt(example, **kwargs):
                 # consider other null strings.
                 premise = premise.replace(option, f"{alphabets[idx]}. {null_string}\n")
     mcp_example['premise'] = premise
-    print(mcp_example)
     return mcp_example
 
 def create_synonym_dataset(examples, **kwargs):
