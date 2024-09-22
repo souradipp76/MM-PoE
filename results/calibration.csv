@@ -4,3 +4,13 @@ GIT,microsoft/git-base-vqav2,FP32,ai2d,2,calibration,1,0,100,0.2900
 GIT,microsoft/git-base-vqav2,FP32,ai2d,2,calibration,2,0,100,0.2400
 GIT,microsoft/git-base-vqav2,FP32,ai2d,2,calibration,3,0,100,0.2800
 GIT,microsoft/git-base-vqav2,FP32,ai2d,2,calibration,4,0,100,0.2800
+GIT,microsoft/git-base-textvqa,FP32,scienceqa,2,calibration,0,0,100,0.2900
+GIT,microsoft/git-base-textvqa,FP32,ai2d,2,calibration,0,0,100,0.2400
+GIT,microsoft/git-base-textvqa,FP32,scienceqa,2,calibration,1,0,100,0.2800
+GIT,microsoft/git-base-textvqa,FP32,ai2d,2,calibration,1,0,100,0.2300
+GIT,microsoft/git-base-textvqa,FP32,scienceqa,2,calibration,2,0,100,0.2400
+GIT,microsoft/git-base-textvqa,FP32,ai2d,2,calibration,2,0,100,0.1800
+GIT,microsoft/git-base-textvqa,FP32,scienceqa,2,calibration,3,0,100,0.2400
+GIT,microsoft/git-base-textvqa,FP32,ai2d,2,calibration,3,0,100,0.2200
+GIT,microsoft/git-base-textvqa,FP32,scienceqa,2,calibration,4,0,100,0.2400
+GIT,microsoft/git-base-textvqa,FP32,ai2d,2,calibration,4,0,100,0.1700
