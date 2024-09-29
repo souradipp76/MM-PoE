@@ -821,20 +821,20 @@ def generate_n_shot_poe_demonstrations(n_shot_dataset, num_of_options):
     return n_shot_demonstrations, n_shot_poe_demonstrations
 
 def vqa_loader(path, args):
-    versionType = '' # this should be '' when using VQA v2.0 dataset
-    taskType = 'MultipleChoice' # 'OpenEnded' only for v2.0. 'OpenEnded' or 'MultipleChoice' for v1.0
-    dataType = 'mscoco'  # 'mscoco' only for v1.0. 'mscoco' for real and 'abstract_v002' for abstract for v1.0.
-    dataSubType = 'train2014'
-    annFile = '%s/Annotations/%s%s_%s_annotations.json'%(path, versionType, dataType, dataSubType)
-    quesFile = '%s/Questions/%s%s_%s_%s_questions.json'%(path, versionType, taskType, dataType, dataSubType)
-    imgDir = '%s/Images/%s/%s' %(path, dataType, dataSubType)
+    version_type = '' # this should be '' when using VQA v2.0 dataset
+    task_type = 'MultipleChoice' # 'OpenEnded' only for v2.0. 'OpenEnded' or 'MultipleChoice' for v1.0
+    data_type = 'mscoco'  # 'mscoco' only for v1.0. 'mscoco' for real and 'abstract_v002' for abstract for v1.0.
+    data_subtype = 'train2014'
+    ann_file = '%s/Annotations/%s%s_%s_annotations.json'%(path, version_type, data_type, data_subtype)
+    question_file = '%s/Questions/%s%s_%s_%s_questions.json'%(path, version_type, task_type, data_type, data_subtype)
+    img_dir = '%s/Images/%s/%s' %(path, data_type, data_subtype)
     alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     examples = []
 
     print('Loading annotations and questions...')
-    train_anno = json.load(open(annFile, 'r'))
-    train_ques = json.load(open(quesFile, 'r'))
+    train_anno = json.load(open(ann_file, 'r'))
+    train_ques = json.load(open(question_file, 'r'))
 
     if args.calibration_prompt is not None:
         uncond_premise = args.calibration_prompt
@@ -845,7 +845,7 @@ def vqa_loader(path, args):
         ans = train_anno['annotations'][i]['multiple_choice_answer']
         img_id = train_anno['annotations'][i]['image_id']
         # question_id = train_anno['annotations'][i]['question_id']
-        image_path = os.path.join(imgDir, 'COCO_train2014_' + '%012d.jpg' % img_id)
+        image_path = os.path.join(img_dir, 'COCO_train2014_' + '%012d.jpg' % img_id)
 
         question = train_ques['questions'][i]['question']
         mc_ans = train_ques['questions'][i]['multiple_choices']
@@ -881,17 +881,16 @@ def vqa_loader(path, args):
     return examples
 
 def scienceqa_loader(path, args):
-    annFile = '%s/ScienceQA_DATA/problems.json'%(path)
-    # traintestFile = '%s/ScienceQA_DATA/pid_splits.json'%(path)
-    imgDir = '%s/ScienceQA_DATA/train' %(path)
+    ann_file = '%s/ScienceQA_DATA/problems.json'%(path)
+    img_dir = '%s/ScienceQA_DATA/train' %(path)
     alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     examples = []
 
     print('Loading annotations and images...')
-    anno = json.load(open(annFile, 'r'))
+    anno = json.load(open(ann_file, 'r'))
     # train_test_split = json.load(open(traintestFile, 'r'))
-    train_ids = os.listdir(imgDir)
+    train_ids = os.listdir(img_dir)
     train_anno = {id: anno[id] for id in train_ids}
 
     if args.calibration_prompt is not None:
@@ -909,7 +908,7 @@ def scienceqa_loader(path, args):
         if (not len(mc_ans) == args.num_options) or (image_file == None):
             continue
 
-        image_path = os.path.join(os.path.join(imgDir, img_id), image_file)
+        image_path = os.path.join(os.path.join(img_dir, img_id), image_file)
         if getattr(args, 'multiple_choice_prompt', None) is not None:
             hypotheses = mc_ans
             # Question: How does a bishop move from one place to another?
@@ -938,14 +937,14 @@ def scienceqa_loader(path, args):
     return examples
 
 def ai2d_loader(path, args):
-    questionDir = '%s/ai2d/questions' %(path)
+    question_dir = '%s/ai2d/questions' %(path)
     imgDir = '%s/ai2d/images' %(path)
     alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     examples = []
 
     print('Loading annotations and images...')
-    train_files = os.listdir(questionDir)
+    train_files = os.listdir(question_dir)
 
     if args.calibration_prompt is not None:
         uncond_premise = args.calibration_prompt
@@ -953,7 +952,7 @@ def ai2d_loader(path, args):
         uncond_premise = " the answer is:"
 
     for i, file in enumerate(train_files):
-        anno = json.load(open(os.path.join(questionDir, file), 'r'))
+        anno = json.load(open(os.path.join(question_dir, file), 'r'))
         questions = anno["questions"]
         imageName = anno["imageName"]
         for question, value in questions.items():
@@ -989,5 +988,48 @@ def ai2d_loader(path, args):
             for idx, ans in enumerate(hypotheses):
                 example[0][f'hypothesis{idx}'] = ans
             examples+=example
+    print("Dataset Length: ",len(examples))
+    return examples
+
+def single_inference_loader(path, args):
+    alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+    examples = []
+
+    print('Loading single question and image...')
+    question = args.question
+    mc_ans = args.choices
+    label = args.label
+    image_path = path
+    
+    if args.calibration_prompt is not None:
+        uncond_premise = args.calibration_prompt
+    else:
+        uncond_premise = " the answer is:"
+
+    if getattr(args, 'multiple_choice_prompt', None) is not None:
+        hypotheses = mc_ans
+        # Question: How does a bishop move from one place to another?
+        # A. chess game
+        # B. church
+        # C. in a car
+        # D. queen
+        # Answer:
+        options = "\n".join([f"{alphabets[i]}. {ans}" for i, ans in enumerate(mc_ans)])
+        premise = f"{args.multiple_choice_prompt} Question: {question}\n{options}\nAnswer:"
+    else:
+        hypotheses = mc_ans
+        premise = question + uncond_premise
+
+    example = [{
+        'premise': premise, 
+        'image_path': image_path, 
+        'uncond_premise': uncond_premise,  
+        'label': label
+        }]
+
+    for idx, ans in enumerate(hypotheses):
+        example[0][f'hypothesis{idx}'] = ans
+    examples+=example
     print("Dataset Length: ",len(examples))
     return examples
