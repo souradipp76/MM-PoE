@@ -70,8 +70,9 @@ cp socialiqa-train-dev/train* .
 '
 
 # vqa
-mkdir ~/data/
-cd ~/data/
+mkdir /content/data/
+cd /content/data/
+
 mkdir vqa
 cd vqa
 mkdir Annotations
@@ -91,16 +92,16 @@ cd mscoco
 wget http://images.cocodataset.org/zips/train2014.zip
 unzip train2014.zip
 rm train2014.zip
-cd ~/data
+cd /content/data
 
 # scienceqa
 mkdir scienceqa
 cd scienceqa
 echo "Downloading scienceqa dataset..."
-gdown --folder https://drive.google.com/drive/folders/1w8imCXWYn2LxajmGeGH_g5DaL2rabHev
+gdown --folder https://drive.google.com/drive/folders/16kuhXdM-MOhYcFIyRj91WvnDnjnF-xHw
 cd ScienceQA_DATA
 unzip train.zip
-cd ~/data
+cd /content/data
 
 # ai2d
 mkdir ai2d
@@ -109,5 +110,5 @@ echo "Downloading ai2d dataset..."
 wget http://ai2-website.s3.amazonaws.com/data/ai2d-all.zip
 unzip ai2d-all.zip
 rm ai2d-all.zip
-cd ~/data
+cd /content/data
 echo "Done."

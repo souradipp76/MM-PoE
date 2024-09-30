@@ -63,3 +63,4 @@ GIT,microsoft/git-base-vqav2,FP32,scienceqa,2,multiple_choice_prompt,1,0,100,0.3
 GIT,microsoft/git-base-vqav2,FP32,scienceqa,2,multiple_choice_prompt,2,0,100,0.2700
 GIT,microsoft/git-base-vqav2,FP32,scienceqa,2,multiple_choice_prompt,3,0,100,0.2500
 GIT,microsoft/git-base-vqav2,FP32,scienceqa,2,multiple_choice_prompt,4,0,100,0.2200
+GIT,microsoft/git-base-vqav2,FP32,vqa,2,multiple_choice_prompt,0,0,100,0.0700
