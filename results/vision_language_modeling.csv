@@ -20,3 +20,4 @@ GIT,microsoft/git-base-vqav2,FP32,scienceqa,2,vision_language_modeling,1,0,100,0
 GIT,microsoft/git-base-vqav2,FP32,scienceqa,2,vision_language_modeling,2,0,100,0.2800
 GIT,microsoft/git-base-vqav2,FP32,scienceqa,2,vision_language_modeling,3,0,100,0.3100
 GIT,microsoft/git-base-vqav2,FP32,scienceqa,2,vision_language_modeling,4,0,100,0.2400
+GIT,microsoft/git-base-vqav2,FP32,vqa,2,vision_language_modeling,0,0,100,0.6000
