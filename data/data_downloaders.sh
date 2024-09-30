@@ -72,6 +72,7 @@ cp socialiqa-train-dev/train* .
 # vqa
 mkdir /content/data/
 cd /content/data/
+
 mkdir vqa
 cd vqa
 mkdir Annotations
@@ -97,7 +98,7 @@ cd /content/data
 mkdir scienceqa
 cd scienceqa
 echo "Downloading scienceqa dataset..."
-gdown --folder https://drive.google.com/drive/folders/1w8imCXWYn2LxajmGeGH_g5DaL2rabHev
+gdown --folder https://drive.google.com/drive/folders/16kuhXdM-MOhYcFIyRj91WvnDnjnF-xHw
 cd ScienceQA_DATA
 unzip train.zip
 cd /content/data
