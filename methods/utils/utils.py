@@ -34,7 +34,8 @@ from .data import(
     anli_loader,
     vqa_loader,
     scienceqa_loader,
-    ai2d_loader
+    ai2d_loader,
+    single_inference_loader
 )
 
 def set_seed(seed):
@@ -411,6 +412,12 @@ def load_data(args):
         header_name = "premise"
         image_header_name = "image_path"
         loader = ai2d_loader
+    elif args.dataset == "single_inference":
+        file_path = args.image_path
+        ending_names = [f"hypothesis{i}" for i in range(args.num_options)]
+        header_name = "premise"
+        image_header_name = "image_path"
+        loader = single_inference_loader
     else:
         print(f"{args.dataset}: downloader not implemented.")
         return
@@ -423,7 +430,7 @@ def load_data(args):
         train_dataset = Dataset.from_list(train_data).with_format("torch")
     else: # BB tasks have no train set. 
         train_dataset = dev_dataset
-    if args.dataset in ["vqa", "scienceqa", "ai2d"]:
+    if args.dataset in ["vqa", "scienceqa", "ai2d", "single_inference"]:
         return ending_names, header_name, image_header_name, dev_dataset, train_dataset
     return ending_names, header_name, dev_dataset, train_dataset
 
@@ -453,15 +460,15 @@ def load_model(device, model_path, args):
     
     # load with different precision
     if args.loading_precision == "FP16":
-        model = model_func.from_pretrained(model_path, device_map="auto", torch_dtype=torch.float16)
+        model = model_func.from_pretrained(model_path, device_map="cuda", torch_dtype=torch.float16)
     elif args.loading_precision == "BF16":
-        model = model_func.from_pretrained(model_path, device_map="auto", torch_dtype=torch.bfloat16)
+        model = model_func.from_pretrained(model_path, device_map="cuda", torch_dtype=torch.bfloat16)
     elif args.loading_precision == "INT8":
         quantization_config = BitsAndBytesConfig(load_in_8bit=True, llm_int8_threshold=200.0)
         model = model_func.from_pretrained(
             model_path,
             torch_dtype=torch.float16,
-            device_map="auto",
+            device_map="cuda",
             quantization_config=quantization_config
         )
     elif args.loading_precision == "INT4":
@@ -473,7 +480,7 @@ def load_model(device, model_path, args):
             )
         model = model_func.from_pretrained(
             model_path,
-            device_map="auto",
+            device_map="cuda",
             quantization_config=quantization_config
         )
     else: # FP32

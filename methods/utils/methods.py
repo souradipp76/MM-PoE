@@ -105,7 +105,7 @@ def inference_language_modeling(model, eval_dataloader, device, compute_func, pa
         avg_lm_accuracy = (avg_lm_predictions == labels).sum().item() / len(labels)
         pbar.set_description(f"Language modeling accuracy: {lm_accuracy:.4f}, Average language modeling accuracy: {avg_lm_accuracy:.4f}")
     avg_log_probs = torch.cat(avg_log_probs, dim=0)
-    return avg_log_probs, lm_accuracy, avg_lm_accuracy
+    return avg_log_probs, lm_accuracy, avg_lm_accuracy, lm_predictions
 
 def inference_generate_synonyms(model, eval_dataloader, device, compute_func, pad_token_id, num_of_options, num_of_synonyms):
     model.eval()
@@ -144,7 +144,7 @@ def inference_generate_synonyms(model, eval_dataloader, device, compute_func, pa
         avg_lm_accuracy = (avg_lm_predictions == labels).sum().item() / len(labels)
         pbar.set_description(f"Language modeling accuracy: {lm_accuracy:.4f}, Average language modeling accuracy: {avg_lm_accuracy:.4f}")
     avg_log_probs = torch.cat(avg_log_probs, dim=0)
-    return avg_log_probs, lm_accuracy, avg_lm_accuracy
+    return avg_log_probs, lm_accuracy, avg_lm_accuracy, lm_predictions
 
 def inference_calibration(model, eval_dataloader, eval_calibration_dataloader, device, compute_func, pad_token_id):
     model.eval()
@@ -175,7 +175,7 @@ def inference_calibration(model, eval_dataloader, eval_calibration_dataloader, d
         avg_lm_accuracy = (avg_lm_predictions == labels).sum().item() / len(labels)
         pbar.set_description(f"Calibration accuracy: {lm_accuracy:.4f}, Average calibration accuracy: {avg_lm_accuracy:.4f}")
     avg_log_probs = torch.cat(avg_log_probs, dim=0)
-    return avg_log_probs, lm_accuracy, avg_lm_accuracy
+    return avg_log_probs, lm_accuracy, avg_lm_accuracy, lm_predictions
 
 def inference_contrastive_decoding(method, model, **kwargs):
     args = kwargs["args"]
@@ -203,7 +203,7 @@ def inference_contrastive_decoding(method, model, **kwargs):
     tokenized_dataset = raw_dataset.map(preprocess_func, fn_kwargs=fn_kwargs, batched=True, batch_size=args.batch_size)
     eval_dataloader = DataLoader(tokenized_dataset, batch_size=args.batch_size, shuffle=False)
     if method in ["language_modeling", "multiple_choice_prompt"]:
-        avg_log_probs, lm_accuracy, avg_lm_accuracy = inference_language_modeling(model, eval_dataloader, device, compute_func, tokenizer.pad_token_id)
+        avg_log_probs, lm_accuracy, avg_lm_accuracy, lm_predictions = inference_language_modeling(model, eval_dataloader, device, compute_func, tokenizer.pad_token_id)
     elif method == "calibration":
         fn_kwargs = {"ending_names": ending_names, 
                     "header_name": "uncond_premise", # the difference is here
@@ -216,15 +216,15 @@ def inference_contrastive_decoding(method, model, **kwargs):
                         "image_header_name": image_header_name}
         tokenized_calibration_dataset = raw_dataset.map(preprocess_func, fn_kwargs=fn_kwargs, batched=True, batch_size=args.batch_size)
         eval_calibration_dataloader = DataLoader(tokenized_calibration_dataset, batch_size=args.batch_size, shuffle=False)    
-        avg_log_probs, lm_accuracy, avg_lm_accuracy = inference_calibration(model, eval_dataloader, eval_calibration_dataloader,device, compute_func, tokenizer.pad_token_id)
+        avg_log_probs, lm_accuracy, avg_lm_accuracy, lm_predictions = inference_calibration(model, eval_dataloader, eval_calibration_dataloader,device, compute_func, tokenizer.pad_token_id)
     elif method == "channel":
         # simple solution: swap first sentence and second sentence in both preprocessing functions
         tokenized_channel_dataset = raw_dataset.map(preprocess_func_channel, fn_kwargs=fn_kwargs, batched=True, batch_size=args.batch_size)
         eval_channel_dataloader = DataLoader(tokenized_channel_dataset, batch_size=args.batch_size, shuffle=False)
-        avg_log_probs, lm_accuracy, avg_lm_accuracy = inference_language_modeling(model, eval_channel_dataloader, device, compute_func, tokenizer.pad_token_id)
+        avg_log_probs, lm_accuracy, avg_lm_accuracy, lm_predictions = inference_language_modeling(model, eval_channel_dataloader, device, compute_func, tokenizer.pad_token_id)
     else:
         raise NotImplementedError
-    return avg_log_probs, lm_accuracy, avg_lm_accuracy
+    return avg_log_probs, lm_accuracy, avg_lm_accuracy, lm_predictions
 
 def compute_mask_process_of_elimination(avg_log_probs, mask_strategy, **kwargs):
     masks = torch.ones_like(avg_log_probs)
@@ -282,7 +282,7 @@ def inference_process_of_elimination(model, eval_dataloader, device, compute_fun
         avg_lm_accuracy = (avg_lm_predictions == labels).sum().item() / len(labels)
         pbar.set_description(f"Process of elimination accuracy: {lm_accuracy:.4f}, Average process of elimination accuracy: {avg_lm_accuracy:.4f}")
     avg_log_probs = torch.cat(avg_log_probs, dim=0)
-    return avg_log_probs, lm_accuracy, avg_lm_accuracy
+    return avg_log_probs, lm_accuracy, avg_lm_accuracy, lm_predictions
 
 def compute_conditional_score_seq2seq(batch, model, device, pad_token_id):
     # returns log_prob of p(y|x) for each batch

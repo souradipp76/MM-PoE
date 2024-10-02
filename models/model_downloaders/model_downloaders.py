@@ -105,7 +105,7 @@ def main():
             model = model_func.from_pretrained(
                 checkpoint,
                 torch_dtype=torch.bfloat16,
-                device_map="auto", 
+                device_map="cuda", 
                 # torch_dtype=torch.float16,
                 # load_in_8bit=True,
             )
@@ -114,7 +114,7 @@ def main():
             model = model_func.from_pretrained(
                 checkpoint,
                 torch_dtype=torch.float16,
-                device_map="auto"
+                device_map="cuda"
             )
         else:
             model = model_func.from_pretrained(checkpoint)
