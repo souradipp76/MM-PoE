@@ -853,7 +853,7 @@ def vqa_loader(path, args):
         num_options = args.num_options
 
         if getattr(args, 'multiple_choice_prompt', None) is not None:
-            hypotheses = [f"{option}" for option in alphabets[:num_options]]
+            hypotheses = mc_ans
             # Question: How does a bishop move from one place to another?
             # A. chess game
             # B. church
