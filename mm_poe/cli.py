@@ -65,7 +65,7 @@ def main():
     
     args.loading_precision = questionary.select(
         message="Select model checkpoint?",
-        choices=["FP32", "FP16", "BF16", "INT8"],
+        choices=["FP32", "FP16", "BF16", "INT8", "INT4"],
         default="FP32").ask()
     
     args.output_dir = questionary.path(

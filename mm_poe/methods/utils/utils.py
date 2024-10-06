@@ -460,15 +460,15 @@ def load_model(device, model_path, args):
     
     # load with different precision
     if args.loading_precision == "FP16":
-        model = model_func.from_pretrained(model_path, device_map="cuda", torch_dtype=torch.float16)
+        model = model_func.from_pretrained(model_path, device_map=device, torch_dtype=torch.float16)
     elif args.loading_precision == "BF16":
-        model = model_func.from_pretrained(model_path, device_map="cuda", torch_dtype=torch.bfloat16)
+        model = model_func.from_pretrained(model_path, device_map=device, torch_dtype=torch.bfloat16)
     elif args.loading_precision == "INT8":
         quantization_config = BitsAndBytesConfig(load_in_8bit=True, llm_int8_threshold=200.0)
         model = model_func.from_pretrained(
             model_path,
             torch_dtype=torch.float16,
-            device_map="cuda",
+            device_map=device,
             quantization_config=quantization_config
         )
     elif args.loading_precision == "INT4":
@@ -480,12 +480,12 @@ def load_model(device, model_path, args):
             )
         model = model_func.from_pretrained(
             model_path,
-            device_map="cuda",
+            device_map=device,
             quantization_config=quantization_config
         )
     else: # FP32
-        model = model_func.from_pretrained(model_path)
-        model.to(device)
+        model = model_func.from_pretrained(model_path, device_map=device)
+    model.to(device)
     print(f"Memory footprint: {model.get_memory_footprint() / 1024 **3:.2f} GB.")
     return model, tokenizer
 
