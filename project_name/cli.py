@@ -43,8 +43,11 @@ all_checkpoints = {
 logger = logging.getLogger(__name__)
 
 def main():
-
-    # step 1: collect arguments
+    """
+    The main function executes on commands:
+    `python -m MM-PoE` and `$ MM-PoE `.
+    """
+     # step 1: collect arguments
     args = Namespace()
     args.seed = 0
     
@@ -256,6 +259,3 @@ def main():
     poe_avg_log_probs,  lm_accuracy, _, lm_predictions = inference_process_of_elimination(model, eval_mcp_dataloader, device, compute_func, tokenizer.pad_token_id)
     option = int(lm_predictions.numpy()[0])
     logger.info(f"Answer: {option}")
-
-if __name__ == "__main__":
-    main()
