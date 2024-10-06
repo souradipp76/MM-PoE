@@ -71,7 +71,7 @@ def main():
     args.output_dir = questionary.path(
         message='Model output directory?',
         only_directories=True,
-        default=f"./models/").ask()
+        default="./models/").ask()
 
     args.dataset="single_inference"
     args.batch_size=1
@@ -99,7 +99,7 @@ def main():
     args.choices = questionary.text("Choices [comma seprated]:").ask()
     args.choices = args.choices.split(',')
     args.num_options = len(args.choices)
-    args.image_path = questionary.path("Image Path?").ask()
+    args.image_path = questionary.path("Image Path?", default="./images/image.png").ask()
     args.label = questionary.select(
         message="Answer:",
         choices=[str(x) for x in range(args.num_options)]).ask()
@@ -120,7 +120,10 @@ def main():
 
     # step 3: download model
     logger.info(f"Download {args.model_family} model: {args.checkpoint}.")
-    model_downloader_path = os.path.join(pathlib.Path(__file__).parent.resolve(), "models/model_downloaders/model_downloaders.py")
+    model_downloader_path = os.path.join(
+        pathlib.Path(__file__).parent.resolve(), 
+        "models/model_downloaders/model_downloaders.py"
+    )
     subprocess.call(f"python {model_downloader_path} \
             --model_family {args.model_family} \
             --checkpoint {args.checkpoint} \
