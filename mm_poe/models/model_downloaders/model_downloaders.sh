@@ -9,7 +9,7 @@ do
         python models/model_downloaders/model_downloaders.py \
             --model_family ${model_family} \
             --checkpoint ${checkpoint} \
-            --output_dir "/content/models"
+            --output_dir "./models"
             # --download_all_checkpoints  
     done
 done

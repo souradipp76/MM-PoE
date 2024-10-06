@@ -4,6 +4,7 @@ import copy
 import logging
 import os
 import subprocess
+import pathlib
 
 import questionary
 import numpy as np
@@ -11,14 +12,14 @@ import torch
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
-from methods.utils.data import(
+from mm_poe.methods.utils.data import(
     create_multiple_choice_prompt,
     preprocess_function_seq2seq_vqa,
     preprocess_function_seq2seq_vqa_channel,
     preprocess_function_causal_vqa,
     preprocess_function_causal_vqa_channel
 )
-from methods.utils.methods import(
+from mm_poe.methods.utils.methods import(
     compute_conditional_score_seq2seq_vqa,
     compute_conditional_score_causal_vqa,
     compute_mask_process_of_elimination,
@@ -26,7 +27,7 @@ from methods.utils.methods import(
     inference_language_modeling,
     inference_calibration
 )
-from methods.utils.utils import(
+from mm_poe.methods.utils.utils import(
     load_data,
     load_model,
     set_seed
@@ -45,7 +46,7 @@ logger = logging.getLogger(__name__)
 def main():
     """
     The main function executes on commands:
-    `python -m MM-PoE` and `$ MM-PoE `.
+    `python -m mm_poe` and `$ mm_poe `.
     """
      # step 1: collect arguments
     args = Namespace()
@@ -68,9 +69,9 @@ def main():
         default="FP32").ask()
     
     args.output_dir = questionary.path(
-        message='Output Directory?',
+        message='Model output directory?',
         only_directories=True,
-        default=f"/content/model/").ask()
+        default=f"./models/").ask()
 
     args.dataset="single_inference"
     args.batch_size=1
@@ -119,7 +120,8 @@ def main():
 
     # step 3: download model
     logger.info(f"Download {args.model_family} model: {args.checkpoint}.")
-    subprocess.call(f"python models/model_downloaders/model_downloaders.py \
+    model_downloader_path = os.path.join(pathlib.Path(__file__).parent.resolve(), "models/model_downloaders/model_downloaders.py")
+    subprocess.call(f"python {model_downloader_path} \
             --model_family {args.model_family} \
             --checkpoint {args.checkpoint} \
             --output_dir {args.output_dir}", shell=True)
