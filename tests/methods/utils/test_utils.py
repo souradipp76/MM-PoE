@@ -129,9 +129,23 @@ def test_parse_args_missing_required_arguments():
 @pytest.mark.parametrize("dataset_name,loader_name,ending_names,header_name", [
     ("copa", "copa_loader", ['hypothesis0', 'hypothesis1'], 'premise'),
     ("cqa", "cqa_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3', 'hypothesis4'], 'premise'),
+    ("obqa", "obqa_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3'], 'premise'),
     ("piqa", "piqa_loader", ['hypothesis0', 'hypothesis1'], 'premise'),
+    ("qasc", "qasc_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3', 'hypothesis4', 'hypothesis5', 'hypothesis6', 'hypothesis7'], 'premise'),
+    ("siqa", "siqa_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2'], 'premise'),
     ("winogrande", "winogrande_loader", ['hypothesis0', 'hypothesis1'], 'premise'),
     ("anli", "anli_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2'], 'premise'),
+    ("disambiguation_qa", "date_understanding_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2'], 'premise'),
+    ("conceptual_combinations", "date_understanding_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3'], 'premise'),
+    ("date_understanding", "date_understanding_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3', 'hypothesis4', 'hypothesis5'], 'premise'),
+    ("emoji_movie", "date_understanding_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3', 'hypothesis4'], 'premise'),
+    ("ruin_names", "date_understanding_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3'], 'premise'),
+    ("penguins_in_a_table", "date_understanding_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3', 'hypothesis4'], 'premise'),
+    ("strange_stories", "date_understanding_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3'], 'premise'),
+    ("reasoning_about_colored_objects", "date_understanding_loader", [f"hypothesis{i}" for i in range(18)], 'premise'),
+    ("symbol_interpretation", "date_understanding_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3', 'hypothesis4'], 'premise'),
+    ("tracking_shuffled_objects", "date_understanding_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3', 'hypothesis4'], 'premise'),
+    ("logical_deduction_three_objects", "date_understanding_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2'], 'premise'),
     ("vqa", "vqa_loader", [f"hypothesis{i}" for i in range(18)], 'premise'),
     ("scienceqa", "scienceqa_loader", [f"hypothesis{i}" for i in range(4)], 'premise'),
     ("ai2d", "ai2d_loader", [f"hypothesis{i}" for i in range(4)], 'premise'),
@@ -412,23 +426,6 @@ def test_parse_args_invalid_choice():
     with mock.patch.object(sys, 'argv', test_args):
         with pytest.raises(SystemExit):
             parse_args()
-
-# def test_load_model_invalid_loading_precision():
-#     device = 'cpu'
-#     model_path = 'some-model-path'
-
-#     # Create a mock args object
-#     class Args:
-#         model_family = "GPT2"
-#         loading_precision = "INVALID_PRECISION"
-
-#     args = Args()
-
-#     with mock.patch('builtins.print') as mock_print:
-#         with pytest.raises(AttributeError):
-#             # Since INVALID_PRECISION doesn't match any condition, it will attempt to load FP32
-#             load_model(device, model_path, args)
-#             # If it tries to proceed, it may cause an AttributeError due to missing methods
 
 def test_write_to_csv_no_method(tmp_path):
     save_path = tmp_path / "results.csv"
