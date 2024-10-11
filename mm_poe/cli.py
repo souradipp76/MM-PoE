@@ -212,7 +212,7 @@ def main():
         # raw_mcp_dataset, n_shot_mcp_dataset = create_n_shot_splits(raw_mcp_dataset, n_shot_mcp_dataset, args)    
         tokenized_dataset = raw_mcp_dataset.map(preprocess_func, fn_kwargs=fn_kwargs, batched=True, batch_size=args.batch_size)
         eval_mcp_dataloader = DataLoader(tokenized_dataset, batch_size=args.batch_size, shuffle=False)
-        avg_log_probs, _, lm_predictions = inference_language_modeling(model, eval_mcp_dataloader, device, compute_func, tokenizer.pad_token_id)
+        avg_log_probs, _, _, lm_predictions = inference_language_modeling(model, eval_mcp_dataloader, device, compute_func, tokenizer.pad_token_id)
     else:
         raise NotImplementedError # unlikely to happen.
     

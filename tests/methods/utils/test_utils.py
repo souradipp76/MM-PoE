@@ -123,52 +123,55 @@ def test_parse_args_missing_required_arguments():
         with pytest.raises(SystemExit):
             parse_args()
 
-# # Tests for load_data function
-# @pytest.mark.parametrize("dataset_name,loader_name,ending_names,header_name", [
-#     ("copa", "copa_loader", ['hypothesis0', 'hypothesis1'], 'premise'),
-#     ("cqa", "cqa_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3', 'hypothesis4'], 'premise'),
-#     ("piqa", "piqa_loader", ['hypothesis0', 'hypothesis1'], 'premise'),
-#     ("winogrande", "winogrande_loader", ['hypothesis0', 'hypothesis1'], 'premise'),
-#     ("anli", "anli_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2'], 'premise'),
-#     ("vqa", "vqa_loader", [f"hypothesis{i}" for i in range(18)], 'premise'),
-#     ("scienceqa", "scienceqa_loader", [f"hypothesis{i}" for i in range(4)], 'premise'),
-#     ("ai2d", "ai2d_loader", [f"hypothesis{i}" for i in range(4)], 'premise'),
-#     ("single_inference", "single_inference_loader", [f"hypothesis{i}" for i in range(4)], 'premise'),
-# ])
-# def test_load_data_datasets(dataset_name, loader_name, ending_names, header_name):
-#     # Create a mock args object
-#     class Args:
-#         dataset = dataset_name
-#         num_options = 2
-#         image_path = None
-#         sample = None
-#         n_shot = 0
 
-#     args = Args()
 
-#     # Mock the data loader function
-#     loader_path = f'mm_poe.methods.utils.utils.{loader_name}'
-#     with mock.patch(loader_path) as mock_loader:
-#         # Mock return value
-#         mock_loader.return_value = [
-#             {
-#                 header_name: 'Test premise',
-#                 ending_names[0]: 'Option A',
-#                 ending_names[1]: 'Option B',
-#                 'label': 0
-#             }
-#         ]
-#         # Mock os.path.join to prevent file system access
-#         with mock.patch('os.path.join', return_value='dummy_path'):
-#             if dataset_name in ["vqa", "scienceqa", "ai2d", "single_inference"]:
-#                 ending, header, image_header, dev_dataset, train_dataset = load_data(args)
-#                 assert image_header == 'image_path'
-#             else:
-#                 ending, header, dev_dataset, train_dataset = load_data(args)
-#             assert ending == ending_names
-#             assert header == header_name
-#             assert len(dev_dataset) == 1
-#             assert len(train_dataset) == 1
+# Tests for load_data function
+@pytest.mark.parametrize("dataset_name,loader_name,ending_names,header_name", [
+    ("copa", "copa_loader", ['hypothesis0', 'hypothesis1'], 'premise'),
+    ("cqa", "cqa_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3', 'hypothesis4'], 'premise'),
+    ("piqa", "piqa_loader", ['hypothesis0', 'hypothesis1'], 'premise'),
+    ("winogrande", "winogrande_loader", ['hypothesis0', 'hypothesis1'], 'premise'),
+    ("anli", "anli_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2'], 'premise'),
+    ("vqa", "vqa_loader", [f"hypothesis{i}" for i in range(18)], 'premise'),
+    ("scienceqa", "scienceqa_loader", [f"hypothesis{i}" for i in range(4)], 'premise'),
+    ("ai2d", "ai2d_loader", [f"hypothesis{i}" for i in range(4)], 'premise'),
+    ("single_inference", "single_inference_loader", [f"hypothesis{i}" for i in range(4)], 'premise'),
+])
+def test_load_data_datasets(dataset_name, loader_name, ending_names, header_name):
+    # Create a mock args object
+    class Args:
+        dataset = dataset_name
+        image_path = None
+        sample = None
+        n_shot = 0
+        num_options = len(ending_names)
+
+    args = Args()
+
+    # Mock the data loader function
+    loader_path = f'mm_poe.methods.utils.utils.{loader_name}'
+    with mock.patch(loader_path) as mock_loader:
+        # Mock return value
+        mock_value = {
+                'premise': 'Test premise',
+                'uncond_premise': 'Test premise',
+                'image_path': 'dummy_path',
+                'label': 0
+            }
+        for i, ending_name in enumerate(ending_names):
+            mock_value[ending_name] = f'answer {i}'
+        mock_loader.return_value = [mock_value]
+        # Mock os.path.join to prevent file system access
+        with mock.patch('os.path.join', return_value='dummy_path'):
+            if dataset_name in ["vqa", "scienceqa", "ai2d", "single_inference"]:
+                ending, header, image_header, dev_dataset, train_dataset = load_data(args)
+                assert image_header == 'image_path'
+            else:
+                ending, header, dev_dataset, train_dataset = load_data(args)
+            assert ending == ending_names
+            assert header == header_name
+            assert len(dev_dataset) == 1
+            assert len(train_dataset) == 1
 
 def test_load_data_invalid_dataset():
     class Args:
