@@ -146,6 +146,9 @@ def test_parse_args_missing_required_arguments():
     ("symbol_interpretation", "date_understanding_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3', 'hypothesis4'], 'premise'),
     ("tracking_shuffled_objects", "date_understanding_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3', 'hypothesis4'], 'premise'),
     ("logical_deduction_three_objects", "date_understanding_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2'], 'premise'),
+    ("logical_deduction_five_objects", "date_understanding_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3', 'hypothesis4'], 'premise'),
+    ("logical_deduction_seven_objects", "date_understanding_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2', 'hypothesis3', 'hypothesis4', 'hypothesis5', 'hypothesis6'], 'premise'),
+    ("anli_r1", "anli_loader", ['hypothesis0', 'hypothesis1', 'hypothesis2'], 'premise'),
     ("vqa", "vqa_loader", [f"hypothesis{i}" for i in range(18)], 'premise'),
     ("scienceqa", "scienceqa_loader", [f"hypothesis{i}" for i in range(4)], 'premise'),
     ("ai2d", "ai2d_loader", [f"hypothesis{i}" for i in range(4)], 'premise'),
@@ -265,7 +268,7 @@ def test_load_model_invalid_family():
         assert result is None
         mock_print.assert_called_with(f"{args.model_family}: downloader not implemented.")
 
-def test_load_model_loading_precision():
+def test_load_model_loading_precision_int8():
     device = 'cpu'
     model_path = 'some-model-path'
 
@@ -301,6 +304,111 @@ def test_load_model_loading_precision():
                     device_map=device,
                     quantization_config=mock_bnb_config
                 )
+
+def test_load_model_loading_precision_int4():
+    device = 'cpu'
+    model_path = 'some-model-path'
+
+    # Create a mock args object
+    class Args:
+        model_family = "GPT2"
+        loading_precision = "INT4"
+
+    args = Args()
+
+    # Mock the tokenizer and model loading functions
+    with mock.patch('mm_poe.methods.utils.utils.AutoTokenizer') as mock_tokenizer_class:
+        with mock.patch('mm_poe.methods.utils.utils.AutoModelForCausalLM') as mock_model_class:
+            with mock.patch('mm_poe.methods.utils.utils.BitsAndBytesConfig') as mock_bnb_config_class:
+                mock_tokenizer = MagicMock()
+                mock_model = MagicMock()
+                mock_bnb_config = MagicMock()
+                mock_tokenizer_class.from_pretrained.return_value = mock_tokenizer
+                mock_model_class.from_pretrained.return_value = mock_model
+                mock_bnb_config_class.return_value = mock_bnb_config
+
+                # Set the return value of get_memory_footprint to a numeric value
+                mock_model.get_memory_footprint.return_value = 2 * 1024 ** 3  # 2 GB in bytes
+
+                model, tokenizer = load_model(device, model_path, args)
+
+                # Check that BitsAndBytesConfig is called correctly
+                mock_bnb_config_class.assert_called_with(
+                    load_in_4bit=True, 
+                    bnb_4bit_quant_type="nf4",
+                    bnb_4bit_use_double_quant=True,
+                    bnb_4bit_compute_dtype=torch.bfloat16
+                )
+                # Check that model is loaded with quantization config
+                mock_model_class.from_pretrained.assert_called_with(
+                    model_path,
+                    device_map=device,
+                    quantization_config=mock_bnb_config
+                )
+
+def test_load_model_loading_precision_fp16():
+    device = 'cpu'
+    model_path = 'some-model-path'
+
+    # Create a mock args object
+    class Args:
+        model_family = "GPT2"
+        loading_precision = "FP16"
+
+    args = Args()
+
+    # Mock the tokenizer and model loading functions
+    with mock.patch('mm_poe.methods.utils.utils.AutoTokenizer') as mock_tokenizer_class:
+        with mock.patch('mm_poe.methods.utils.utils.AutoModelForCausalLM') as mock_model_class:
+            mock_tokenizer = MagicMock()
+            mock_model = MagicMock()
+            mock_bnb_config = MagicMock()
+            mock_tokenizer_class.from_pretrained.return_value = mock_tokenizer
+            mock_model_class.from_pretrained.return_value = mock_model
+
+            # Set the return value of get_memory_footprint to a numeric value
+            mock_model.get_memory_footprint.return_value = 2 * 1024 ** 3  # 2 GB in bytes
+
+            model, tokenizer = load_model(device, model_path, args)
+
+            # Check that model is loaded with quantization config
+            mock_model_class.from_pretrained.assert_called_with(
+                model_path,
+                torch_dtype=torch.float16,
+                device_map=device
+            )
+
+def test_load_model_loading_precision_bf16():
+    device = 'cpu'
+    model_path = 'some-model-path'
+
+    # Create a mock args object
+    class Args:
+        model_family = "GPT2"
+        loading_precision = "BF16"
+
+    args = Args()
+
+    # Mock the tokenizer and model loading functions
+    with mock.patch('mm_poe.methods.utils.utils.AutoTokenizer') as mock_tokenizer_class:
+        with mock.patch('mm_poe.methods.utils.utils.AutoModelForCausalLM') as mock_model_class:
+            mock_tokenizer = MagicMock()
+            mock_model = MagicMock()
+            mock_bnb_config = MagicMock()
+            mock_tokenizer_class.from_pretrained.return_value = mock_tokenizer
+            mock_model_class.from_pretrained.return_value = mock_model
+
+            # Set the return value of get_memory_footprint to a numeric value
+            mock_model.get_memory_footprint.return_value = 2 * 1024 ** 3  # 2 GB in bytes
+
+            model, tokenizer = load_model(device, model_path, args)
+
+            # Check that model is loaded with quantization config
+            mock_model_class.from_pretrained.assert_called_with(
+                model_path,
+                torch_dtype=torch.bfloat16,
+                device_map=device
+            )
 
 # Tests for write_to_csv function
 def test_write_to_csv_process_of_elimination(tmp_path):

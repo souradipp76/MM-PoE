@@ -34,10 +34,10 @@ class SimpleMockModel(torch.nn.Module):
         super(SimpleMockModel, self).__init__()
 
     def forward(self, input_ids=None, labels=None, pixel_values=None, **kwargs):
-        batch_size = input_ids.size(0)
         seq_len = input_ids.size(1)
+        batch_size_num_options = labels.size(0)
         vocab_size = 32128
-        logits = torch.randn(batch_size, seq_len, vocab_size)
+        logits = torch.randn(batch_size_num_options, seq_len, vocab_size)
         loss = torch.tensor(0.0)
         return MagicMock(loss=loss, logits=logits)
 
@@ -69,6 +69,25 @@ def sample_batch():
         "input_ids": torch.randint(0, vocab_size, (batch_size, num_options, seq_len)),
         "labels": torch.randint(0, vocab_size, (batch_size, num_options, seq_len)),
         "mask": torch.ones(batch_size, num_options),
+        "images": torch.randn(batch_size, 3, 224, 224),
+    }
+
+@pytest.fixture
+def sample_synonym_batch():
+    batch_size = 2
+    num_synonyms = 2
+    num_options = 2
+    seq_len = 18
+    vocab_size = 32128
+    return {
+        "ending_input_ids": torch.randint(0, vocab_size, (batch_size, num_options*(num_synonyms+1), seq_len)),
+        "header_input_ids": torch.randint(0, vocab_size, (batch_size, seq_len)),
+        "label": torch.randint(0, num_options*(num_synonyms+1), (batch_size,)),
+        "header_attention_mask": torch.ones(batch_size, seq_len),
+        "ending_attention_mask": torch.ones(batch_size, num_options*(num_synonyms+1), seq_len),
+        "input_ids": torch.randint(0, vocab_size, (batch_size, num_options*(num_synonyms+1), seq_len)),
+        "labels": torch.randint(0, vocab_size, (batch_size, num_options*(num_synonyms+1), seq_len)),
+        "mask": torch.ones(batch_size, num_options*(num_synonyms+1)),
         "images": torch.randn(batch_size, 3, 224, 224),
     }
 
@@ -112,22 +131,22 @@ def test_inference_language_modeling(mock_model, sample_batch, device, pad_token
     assert lm_predictions.shape == (sample_batch["label"].size(0),)
 
 # Tests for inference_generate_synonyms function
-def test_inference_generate_synonyms(mock_model, sample_batch, device, pad_token_id):
-    num_of_options = sample_batch["ending_input_ids"].size(1)
+def test_inference_generate_synonyms(mock_model, sample_synonym_batch, device, pad_token_id):
+    num_of_options = 2
     num_of_synonyms = 2
     def mock_compute_func(batch, model, device, pad_token_id):
         batch_size = batch["header_input_ids"].size(0)
         total_options = batch["ending_input_ids"].size(1)
         return torch.rand(batch_size, total_options)
-    eval_dataloader = [sample_batch]
+    eval_dataloader = [sample_synonym_batch]
     avg_log_probs, lm_accuracy, avg_lm_accuracy, lm_predictions = inference_generate_synonyms(
         mock_model, eval_dataloader, device, mock_compute_func, pad_token_id, num_of_options, num_of_synonyms
     )
-    expected_shape = (sample_batch["label"].size(0), num_of_options)
+    expected_shape = (sample_synonym_batch["label"].size(0), num_of_options*(num_of_synonyms+1))
     assert avg_log_probs.shape == expected_shape
     assert isinstance(lm_accuracy, float)
     assert isinstance(avg_lm_accuracy, float)
-    assert lm_predictions.shape == (sample_batch["label"].size(0),)
+    assert lm_predictions.shape == (sample_synonym_batch["label"].size(0),)
 
 # Tests for inference_calibration function
 def test_inference_calibration(mock_model, sample_batch, device, pad_token_id):
@@ -244,17 +263,17 @@ def test_inference_contrastive_decoding():
         'preprocess_func': preprocess_func,
         'preprocess_func_channel': preprocess_func_channel,
     }
-    with patch('methods.inference_language_modeling', return_value=(None, 0.0, 0.0, None)) as mock_inference:
+    with patch('mm_poe.methods.utils.methods.inference_language_modeling', return_value=(None, 0.0, 0.0, None)) as mock_inference:
         avg_log_probs, lm_accuracy, avg_lm_accuracy, lm_predictions = inference_contrastive_decoding(method, model, **kwargs)
         mock_inference.assert_called_once()
 
     method = 'calibration'
-    with patch('methods.inference_calibration', return_value=(None, 0.0, 0.0, None)) as mock_inference_cal:
+    with patch('mm_poe.methods.utils.methods.inference_calibration', return_value=(None, 0.0, 0.0, None)) as mock_inference_cal:
         avg_log_probs, lm_accuracy, avg_lm_accuracy, lm_predictions = inference_contrastive_decoding(method, model, **kwargs)
         mock_inference_cal.assert_called_once()
 
     method = 'channel'
-    with patch('methods.inference_language_modeling', return_value=(None, 0.0, 0.0, None)) as mock_inference_channel:
+    with patch('mm_poe.methods.utils.methods.inference_language_modeling', return_value=(None, 0.0, 0.0, None)) as mock_inference_channel:
         avg_log_probs, lm_accuracy, avg_lm_accuracy, lm_predictions = inference_contrastive_decoding(method, model, **kwargs)
         mock_inference_channel.assert_called()
 
