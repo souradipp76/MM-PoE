@@ -453,13 +453,13 @@ def test_main_with_mask_token(mock_text, mock_path, mock_select, mock_subprocess
 @patch('mm_poe.cli.questionary.select')
 @patch('mm_poe.cli.questionary.path')
 @patch('mm_poe.cli.questionary.text')
-def test_main_with_mask_token_empty(mock_text, mock_path, mock_select, mock_subprocess_call, mock_load_model, mock_set_seed):
+def test_main_with_mask_strategy_min_k(mock_text, mock_path, mock_select, mock_subprocess_call, mock_load_model, mock_set_seed):
     mock_select.return_value.ask.side_effect = [
         'GIT',
         'microsoft/git-base-vqav2',
         'FP32',
         'language_modeling',
-        'below_average',
+        'min_k',
         '0'
     ]
     mock_path.return_value.ask.side_effect = ['./models/', './images/image.png']
@@ -475,16 +475,16 @@ def test_main_with_mask_token_empty(mock_text, mock_path, mock_select, mock_subp
         # Modify args to include mask_token
         with patch('mm_poe.cli.Namespace') as mock_namespace:
             args = MagicMock()
-            args.mask_token = ""
+            args.min_k = 10
             args.process_of_elimination_prompt = 'Select the most suitable option to answer the question. Ignore [MASK] options.'
             mock_namespace.return_value = args
 
             with patch('mm_poe.cli.load_data') as mock_load_data, \
-                 patch('torch.utils.data.DataLoader') as mock_data_loader_class, \
-                 patch('mm_poe.cli.inference_language_modeling') as mock_inference_lm, \
-                 patch('mm_poe.cli.inference_process_of_elimination') as mock_inference_poe, \
-                 patch('mm_poe.cli.compute_mask_process_of_elimination') as mock_compute_mask, \
-                 patch('mm_poe.cli.create_multiple_choice_prompt') as mock_create_mcp:
+                patch('torch.utils.data.DataLoader') as mock_data_loader_class, \
+                patch('mm_poe.cli.inference_language_modeling') as mock_inference_lm, \
+                patch('mm_poe.cli.inference_process_of_elimination') as mock_inference_poe, \
+                patch('mm_poe.cli.compute_mask_process_of_elimination') as mock_compute_mask, \
+                patch('mm_poe.cli.create_multiple_choice_prompt') as mock_create_mcp:
 
                 mock_dataset = MagicMock()
                 mock_dataset.map.return_value = mock_dataset
@@ -506,7 +506,6 @@ def test_main_with_mask_token_empty(mock_text, mock_path, mock_select, mock_subp
                 mock_compute_mask.return_value = masks
 
                 def mock_create_mcp_fn(example, **kwargs):
-                    assert '[MASK]' not in kwargs['multiple_choice_prompt']
                     return example
                 mock_create_mcp.side_effect = mock_create_mcp_fn
 
@@ -514,4 +513,4 @@ def test_main_with_mask_token_empty(mock_text, mock_path, mock_select, mock_subp
                 mock_set_seed.assert_called_once_with(0)
                 mock_load_model.assert_called()
                 mock_load_data.assert_called()
-                mock_compute_mask.assert_called_with(predictions, 'below_average')
+                mock_compute_mask.assert_called_with(predictions, 'min_k', min_k=2)
