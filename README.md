@@ -3,32 +3,16 @@
 [![codecov](https://codecov.io/gh/souradipp76/MM-PoE/branch/main/graph/badge.svg?token=MM-PoE_token_here)](https://codecov.io/gh/souradipp76/MM-PoE)
 [![CI](https://github.com/souradipp76/MM-PoE/actions/workflows/main.yml/badge.svg)](https://github.com/souradipp76/MM-PoE/actions/workflows/main.yml)
 
-## Installation
-### Install it from PyPI
 
-```bash
-pip install mm_poe
-```
 
-### Install it from source
 
-```bash
-$ git clone https://github.com/souradipp76/MM-PoE.git
-$ cd MM-PoE
-$ make install
-```
 
 ## Usage
 
-```bash
-$ python -m mm_poe
-#or
-$ mm_poe
-```
 
 ## Contributing
 
-Read the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+
 
 ## License
 
@@ -37,130 +21,64 @@ Read the [LICENSE](LICENSE) file.
 
 
 
-# Yellowbrick
-
-[![Build Status](https://github.com/DistrictDataLabs/yellowbrick/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/DistrictDataLabs/yellowbrick/actions/workflows/ci.yml)
-[![Coverage Status](https://codecov.io/gh/DistrictDataLabs/yellowbrick/branch/develop/graph/badge.svg?token=BnaSECZz2r)](https://codecov.io/gh/DistrictDataLabs/yellowbrick)
-[![Total Alerts](https://img.shields.io/lgtm/alerts/g/DistrictDataLabs/yellowbrick.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/DistrictDataLabs/yellowbrick/alerts/)
-[![Language Grade: Python](https://img.shields.io/lgtm/grade/python/g/DistrictDataLabs/yellowbrick.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/DistrictDataLabs/yellowbrick/context:python)
-[![PyPI version](https://badge.fury.io/py/yellowbrick.svg)](https://badge.fury.io/py/yellowbrick)
-[![Documentation Status](https://readthedocs.org/projects/yellowbrick/badge/?version=latest)](http://yellowbrick.readthedocs.io/en/latest/?badge=latest)
-[![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1206239.svg)](https://doi.org/10.5281/zenodo.1206239)
-[![JOSS](http://joss.theoj.org/papers/10.21105/joss.01075/status.svg)](https://doi.org/10.21105/joss.01075)
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/DistrictDataLabs/yellowbrick/develop?filepath=examples%2Fexamples.ipynb)
+# MM-POE
 
 **Visual analysis and diagnostic tools to facilitate machine learning model selection.**
 
-[![Banner](docs/images/readme/banner.png)](https://www.scikit-yb.org/en/latest/gallery.html)
 
-## What is Yellowbrick?
+## What is MM-POE? Statement of Need
 
-Yellowbrick is a suite of visual diagnostic tools called "Visualizers" that extend the scikit-learn API to allow human steering of the model selection process. In a nutshell, Yellowbrick combines scikit-learn with matplotlib in the best tradition of the scikit-learn documentation, but to produce visualizations for _your_ machine learning workflow!
+**Statement of Need**
 
-For complete documentation on the Yellowbrick API, a gallery of available visualizers, the contributor's guide, tutorials and teaching resources, frequently asked questions, and more, please visit our documentation at [www.scikit-yb.org](https://www.scikit-yb.org/).
+Language models (LMs) excel at in-context learning for multiple choice reasoning tasks but often treat all options equally, unlike humans who typically eliminate incorrect choices before selecting the correct answer. This discrepancy can limit the effectiveness of LMs in accurately solving such tasks. To address this, we introduce the Process of Elimination (POE), a two-step scoring method designed to enhance LM performance by mimicking human reasoning strategies. 
 
-## Installing Yellowbrick
+In the first step, POE evaluates and scores each option, systematically eliminating those that appear incorrect. The second step involves masking these eliminated options, allowing the LM to focus solely on the remaining viable choices to make a final prediction. Our zero-shot experiments across eight reasoning tasks demonstrate POE's effectiveness, particularly excelling in logical reasoning scenarios. Additionally, POE proves adaptable to few-shot settings and is compatible with large language models (LLMs) like ChatGPT.
 
-Yellowbrick is compatible with Python 3.4 or later and also depends on scikit-learn and matplotlib. The simplest way to install Yellowbrick and its dependencies is from PyPI with pip, Python's preferred package installer.
+By implementing POE, researchers and practitioners can significantly improve the accuracy and reliability of LMs in multiple choice reasoning tasks, making it a valuable tool for advancing machine learning model selection and evaluation.
+
+## Installing MM-POE
+
+### Install it from PyPI
 
 ```bash
-$ pip install yellowbrick
+pip install mm_poe
+```
+### Install it from source
+
+```bash
+$ git clone https://github.com/souradipp76/MM-PoE.git
+$ cd MM-PoE
+$ make install
 ```
 
-Note that Yellowbrick is an active project and routinely publishes new releases with more visualizers and updates. In order to upgrade Yellowbrick to the latest version, use pip as follows.
+In order to upgrade MM-POE to the latest version, use pip as follows.
 
 ```bash
-$ pip install -U yellowbrick
-```
-
-You can also use the `-U` flag to update scikit-learn, matplotlib, or any other third-party utilities that work well with Yellowbrick to their latest versions.
-
-If you're using Anaconda (recommended for Windows users), you can take advantage of the conda utility to install Yellowbrick:
-
-```bash
-conda install -c districtdatalabs yellowbrick
+$ pip install -U mm_poe
 ```
 
 ## Using Yellowbrick
 
-The Yellowbrick API is specifically designed to play nicely with scikit-learn. Here is an example of a typical workflow sequence with scikit-learn and Yellowbrick:
+Here is a typical example usage of MM-POE:
 
-### Feature Visualization
+### Running the CLI
 
-In this example, we see how `Rank2D` performs pairwise comparisons of each feature in the dataset with a specific metric or algorithm and then returns them ranked as a lower-left triangle diagram.
-
-```python
-from yellowbrick.features import Rank2D
-
-visualizer = Rank2D(features=features, algorithm='covariance')
-visualizer.fit(X, y)      # Fit the data to the visualizer
-visualizer.transform(X)   # Transform the data
-visualizer.show()         # Finalize and render the figure
+```bash
+$ python -m mm_poe
+#or
+$ mm_poe
 ```
 
-### Model Visualization
+## Contributing to MM-POE
 
-In this example, we instantiate a scikit-learn classifier and then use Yellowbrick's `ROCAUC` class to visualize the tradeoff between the classifier's sensitivity and specificity.
+MM-POE is an open-source project that is supported by a community who will gratefully and humbly accept any contributions you might make to the project.
 
-```python
-from sklearn.svm import LinearSVC
-from yellowbrick.classifier import ROCAUC
+If you are interested in contributing, read the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
-model = LinearSVC()
-visualizer = ROCAUC(model)
-visualizer.fit(X, y)
-visualizer.score(X, y)
-visualizer.show()
-```
-
-For additional information on getting started with Yellowbrick, view the [Quick Start Guide](https://www.scikit-yb.org/en/latest/quickstart.html) in the [documentation](https://www.scikit-yb.org/en/latest/) and check out our [examples notebook](https://github.com/DistrictDataLabs/yellowbrick/blob/develop/examples/examples.ipynb).
-
-## Contributing to Yellowbrick
-
-Yellowbrick is an open-source project that is supported by a community who will gratefully and humbly accept any contributions you might make to the project. Large or small, any contribution makes a big difference; and if you've never contributed to an open-source project before, we hope you will start with Yellowbrick!
-
-If you are interested in contributing, check out our [contributor's guide](https://www.scikit-yb.org/en/latest/contributing/index.html). Beyond creating visualizers, there are many ways to contribute:
-
-- Submit a bug report or feature request on [GitHub Issues](https://github.com/DistrictDataLabs/yellowbrick/issues).
-- Contribute a Jupyter notebook to our examples [gallery](https://github.com/DistrictDataLabs/yellowbrick/tree/develop/examples).
-- Assist us with [user testing](https://www.scikit-yb.org/en/latest/evaluation.html).
-- Add to the documentation or help with our website, [scikit-yb.org](https://www.scikit-yb.org).
-- Write [unit or integration tests](https://www.scikit-yb.org/en/latest/contributing/developing_visualizers.html#integration-tests) for our project.
+- Submit a bug report or feature request on [GitHub Issues](https://github.com/souradipp76/MM-PoE/issues).
+- Add to the documentation or help with our website.
+- Write [unit or integration tests]() for our project.
 - Answer questions on our issues, mailing list, Stack Overflow, and elsewhere.
-- Translate our documentation into another language.
 - Write a blog post, tweet, or share our project with others.
-- [Teach](https://www.scikit-yb.org/en/latest/teaching.html) someone how to use Yellowbrick.
 
-As you can see, there are lots of ways to get involved, and we would be very happy for you to join us! The only thing we ask is that you abide by the principles of openness, respect, and consideration of others as described in the [Python Software Foundation Code of Conduct](https://www.python.org/psf/codeofconduct/).
-
-For more information, check out the `CONTRIBUTING.md` file in the root of the repository or the detailed documentation at [Contributing to Yellowbrick](https://www.scikit-yb.org/en/latest/contributing/index.html).
-
-## Yellowbrick Datasets
-
-Yellowbrick gives easy access to several datasets that are used for the examples in the documentation and testing. These datasets are hosted in our CDN and must be downloaded for use. Typically, when a user calls one of the data loader functions, e.g., `load_bikeshare()`, the data is automatically downloaded if it's not already on the user's computer. However, for development and testing, or if you know you will be working without internet access, it might be easier to simply download all the data at once.
-
-The data downloader script can be run as follows:
-
-```bash
-$ python -m yellowbrick.download
-```
-
-This will download the data to the fixtures directory inside of the Yellowbrick site packages. You can specify the location of the download either as an argument to the downloader script (use `--help` for more details) or by setting the `$YELLOWBRICK_DATA` environment variable. This is the preferred mechanism because this will also influence how data is loaded in Yellowbrick.
-
-_Note: Developers who have downloaded data from Yellowbrick versions earlier than v1.0 may experience some problems with the older data format. If this occurs, you can clear out your data cache as follows:_
-
-```bash
-$ python -m yellowbrick.download --cleanup
-```
-
-_This will remove old datasets and download the new ones. You can also use the `--no-download` flag to simply clear the cache without re-downloading data. Users who are having difficulty with datasets can also use this or they can uninstall and reinstall Yellowbrick using `pip`._
-
-## Citing Yellowbrick
-
-We would be glad if you used Yellowbrick in your scientific publications! If you do, please cite us using the [citation guidelines](https://www.scikit-yb.org/en/latest/about.html#citing-yellowbrick).
-
-## Affiliations
-
-[![District Data Labs](docs/images/readme/affiliates_ddl.png)](https://districtdatalabs.com/)
-[![NumFOCUS Affiliated Project](docs/images/readme/affiliates_numfocus.png)](https://numfocus.org)
+As you can see, there are lots of ways to get involved, and we would be very happy for you to join us!
