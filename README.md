@@ -5,23 +5,9 @@
 
 
 
-
-
-## Usage
-
-
-## Contributing
-
-
-
 ## License
 
 Read the [LICENSE](LICENSE) file.
-
-
-
-
-# MM-POE
 
 **Visual analysis and diagnostic tools to facilitate machine learning model selection.**
 
