@@ -1,3 +1,5 @@
+# test_data.py
+
 import os
 import sys
 import torch
@@ -245,10 +247,10 @@ def test_copa_loader_assert(sample_args):
         <a2>I wore sunglasses.</a2>
     </item>
     </root>'''
-    with patch('xml.etree.ElementTree.parse') as mock_parse:
-        mock_tree = ET.ElementTree(ET.fromstring(xml_content))
-        mock_parse.return_value = mock_tree
-        with pytest.raises(AssertionError):
+    with pytest.raises(AssertionError):
+        with patch('xml.etree.ElementTree.parse') as mock_parse:
+            mock_tree = ET.ElementTree(ET.fromstring(xml_content))
+            mock_parse.return_value = mock_tree
             examples = copa_loader('dummy_path.xml', args)
 
 def test_cqa_loader(sample_args):
@@ -333,8 +335,6 @@ def test_anli_loader(sample_args):
         assert len(examples) == 1
         assert examples[0]['label'] == 0
         assert 'A man is playing a piano. The man is playing a musical instrument.' in examples[0]['premise']
-
-# Similarly, you can write tests for other loader functions and preprocess functions.
 
 def test_generate_n_shot_poe_demonstrations(sample_args):
     n_shot_dataset = [
@@ -453,3 +453,216 @@ def test_ai2d_loader(sample_args):
                     assert len(examples) == 1
                     assert examples[0]['label'] == 1
                     assert examples[0]['image_path'] == 'path/to/dummy_path/ai2d/images/image1.jpg'
+
+# New test functions to increase coverage
+
+def test_preprocess_function_causal_vqa(sample_args):
+    examples = {
+        'question': ['What is shown in the image?'],
+        'choice0': ['Cat'],
+        'choice1': ['Dog'],
+        'image_path': ['path/to/image1.jpg']
+    }
+    processor = MagicMock()
+    tokenizer = MagicMock()
+    tokenizer.pad_token_id = 0
+    tokenizer.padding_side = 'right'
+    # Adjust the tokenizer to return lists of lists
+    tokenizer.return_value = {
+        'input_ids': [[1,2], [3,4]],
+        'attention_mask': [[1,1], [1,1]]
+    }
+    processor.tokenizer = tokenizer
+    data_obj = MagicMock()
+    data_obj.data = {
+        'pixel_values': torch.tensor([[[1,2],[3,4]]] * 2)  # Repeat to match the number of choices
+    }
+    processor.image_processor.return_value = data_obj
+    kwargs = {
+        'ending_names': ['choice0', 'choice1'],
+        'header_name': 'question',
+        'image_header_name': 'image_path',
+        'processor': processor
+    }
+    with patch('PIL.Image.open', return_value=MagicMock(spec=Image.Image)):
+        output = preprocess_function_causal_vqa(examples, **kwargs)
+        assert 'input_ids' in output
+        assert 'labels' in output
+        assert 'header_attention_mask' in output
+        assert 'ending_attention_mask' in output
+        assert 'images' in output
+
+def test_preprocess_function_seq2seq_vqa_channel(sample_args):
+    examples = {
+        'question': ['What is shown in the image?'],
+        'choice0': ['Cat'],
+        'choice1': ['Dog'],
+        'image_path': ['path/to/image1.jpg']
+    }
+    processor = MagicMock()
+    tokenizer = MagicMock()
+    tokenizer.return_value = {
+        'input_ids': [[1,2], [3,4]], 
+        'attention_mask': [[1,1], [1,1]]
+    }
+    processor.tokenizer = tokenizer
+    data_obj = MagicMock()
+    data_obj.data = {
+        'pixel_values': torch.tensor([[[1,2],[3,4]]] * 2)  # Repeat to match the number of choices
+    }
+    processor.image_processor.return_value = data_obj
+    kwargs = {
+        'ending_names': ['choice0', 'choice1'],
+        'header_name': 'question',
+        'image_header_name': 'image_path',
+        'processor': processor
+    }
+    with patch('PIL.Image.open', return_value=MagicMock(spec=Image.Image)):
+        output = preprocess_function_seq2seq_vqa_channel(examples, **kwargs)
+        assert 'header_input_ids' in output
+        assert 'ending_input_ids' in output
+        assert 'images' in output
+        assert len(output['images']) == len(examples['question'])
+        for img_list in output['images']:
+            assert len(img_list) == len(kwargs['ending_names'])
+
+def test_preprocess_function_causal_vqa_channel(sample_args):
+    examples = {
+        'question': ['What is shown in the image?'],
+        'hypothesis0': ['Cat'],
+        'hypothesis1': ['Dog'],
+        'image_path': ['path/to/image1.jpg']
+    }
+    processor = MagicMock()
+    tokenizer = MagicMock()
+    tokenizer.pad_token_id = 0
+    tokenizer.padding_side = 'right'
+    tokenizer.return_value = {
+        'input_ids': [[1,2], [3,4]],
+        'attention_mask': [[1,1], [1,1]]
+    }
+    processor.tokenizer = tokenizer
+    data_obj = MagicMock()
+    data_obj.data = {
+        'pixel_values': torch.tensor([[[1,2],[3,4]]] * 2)
+    }
+    processor.image_processor.return_value = data_obj
+    kwargs = {
+        'ending_names': ['hypothesis0', 'hypothesis1'],
+        'header_name': 'question',
+        'image_header_name': 'image_path',
+        'processor': processor
+    }
+    with patch('PIL.Image.open', return_value=MagicMock(spec=Image.Image)):
+        output = preprocess_function_causal_vqa_channel(examples, **kwargs)
+        assert 'input_ids' in output
+        assert 'labels' in output
+        assert 'header_attention_mask' in output
+        assert 'ending_attention_mask' in output
+        assert 'images' in output
+
+def test_piqa_loader(sample_args):
+    args = sample_args
+    args.multiple_choice_prompt = 'Answer the following question:'
+    qa_content = json.dumps({
+        'goal': 'To open a jar, you should',
+        'sol1': 'Twist the lid counter-clockwise',
+        'sol2': 'Push the lid upwards'
+    })
+    label_content = '0\n'  # First solution is correct
+    with patch('builtins.open', mock.mock_open(read_data=qa_content)) as mock_qa_file:
+        mock_qa_file.return_value.__iter__.return_value = [qa_content]
+        with patch('builtins.open', mock.mock_open(read_data=label_content)) as mock_label_file:
+            mock_label_file.return_value.__iter__.return_value = [label_content]
+            examples = piqa_loader(['dummy_qa_path.jsonl', 'dummy_label_path.txt'], args)
+            assert len(examples) == 1
+            assert examples[0]['label'] == 0
+            assert 'Answer the following question: Question: To open a jar, you should' in examples[0]['premise']
+
+def test_qasc_loader(sample_args):
+    args = sample_args
+    args.multiple_choice_prompt = 'Answer the following question:'
+    json_line = json.dumps({
+        'answerKey': 'B',
+        'question': {
+            'stem': 'What do plants need to perform photosynthesis?',
+            'choices': [
+                {'label': 'A', 'text': 'Oxygen'},
+                {'label': 'B', 'text': 'Sunlight'},
+                {'label': 'C', 'text': 'Nitrogen'},
+                {'label': 'D', 'text': 'Carbon dioxide'},
+                {'label': 'E', 'text': 'Water'},
+                {'label': 'F', 'text': 'Soil'},
+                {'label': 'G', 'text': 'Minerals'},
+                {'label': 'H', 'text': 'Glucose'}
+            ]
+        }
+    })
+    with patch('builtins.open', mock.mock_open(read_data=json_line)):
+        examples = qasc_loader('dummy_path.jsonl', args)
+        assert len(examples) == 1
+        assert examples[0]['label'] == 1  # 'B' corresponds to index 1
+        assert 'Answer the following question: Question: What do plants need to perform photosynthesis?' in examples[0]['premise']
+
+def test_siqa_loader(sample_args):
+    args = sample_args
+    args.multiple_choice_prompt = 'Answer the following question:'
+    qa_content = json.dumps({
+        'context': 'Alex went to the store.',
+        'question': 'Why did Alex go to the store?',
+        'answerA': 'To buy groceries',
+        'answerB': 'To sell groceries',
+        'answerC': 'To sleep'
+    })
+    label_content = '1\n'  # Answer index is 1 (but labels are 1-based in siqa_loader, and subtract 1)
+    with patch('builtins.open', mock.mock_open(read_data=qa_content)) as mock_qa_file:
+        mock_qa_file.return_value.__iter__.return_value = [qa_content]
+        with patch('builtins.open', mock.mock_open(read_data=label_content)) as mock_label_file:
+            mock_label_file.return_value.__iter__.return_value = [label_content]
+            examples = siqa_loader(['dummy_qa_path.jsonl', 'dummy_label_path.txt'], args)
+            assert len(examples) == 1
+            assert examples[0]['label'] == 0  # '1' in label file corresponds to index 0
+            assert 'Answer the following question: Question: Alex went to the store. Why did Alex go to the store?' in examples[0]['premise']
+
+def test_winogrande_loader(sample_args):
+    args = sample_args
+    args.multiple_choice_prompt = 'Answer the following question:'
+    qa_content = json.dumps({
+        'sentence': 'The trophy doesn\'t fit in the brown suitcase because it\'s too big.',
+        'option1': 'trophy',
+        'option2': 'suitcase'
+    })
+    label_content = '1\n'  # Correct answer is option1 (labels are 1-based)
+    with patch('builtins.open', mock.mock_open(read_data=qa_content)) as mock_qa_file:
+        mock_qa_file.return_value.__iter__.return_value = [qa_content]
+        with patch('builtins.open', mock.mock_open(read_data=label_content)) as mock_label_file:
+            mock_label_file.return_value.__iter__.return_value = [label_content]
+            examples = winogrande_loader(['dummy_qa_path.jsonl', 'dummy_label_path.txt'], args)
+            assert len(examples) == 1
+            assert examples[0]['label'] == 0  # '1' in label file corresponds to index 0
+            assert 'Answer the following question: Question: The trophy doesn\'t fit in the brown suitcase because it\'s too big.' in examples[0]['premise']
+
+def test_date_understanding_loader(sample_args):
+    args = sample_args
+    args.multiple_choice_prompt = 'Answer the following question:'
+    args.num_options = 2
+    data_content = {
+        "task_prefix": "",
+        "examples": [
+            {
+                "input": "What is 2+2?",
+                "target_scores": {
+                    "4": 1,
+                    "5": 0
+                }
+            }
+        ]
+    }
+    with patch('json.load', return_value=data_content):
+        with patch('builtins.open', mock.mock_open(read_data=json.dumps(data_content))):
+            examples = date_understanding_loader(['dummy_path.json'], args)
+            assert len(examples) == 1
+            assert examples[0]['label'] == 0  # '4' is at index 0
+            assert 'Answer the following question: Question: What is 2+2?' in examples[0]['premise']
+
+# Now this test_data.py covers only 60% of all tests when I run pytest coverage. You need to add more tests to this file. DO NOT CHANGE ANYTHING WRITTEN IN THIS FILE, NO CHANGE TO ANY OF THE CURRENT TESTS, ALL OF THEM ARE WORKING. ADD NEW TESTS TO THIS FILE TO GET 100% COVERAGE
