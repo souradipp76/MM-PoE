@@ -41,7 +41,7 @@ A common strategy for answering multiple-choice questions, especially under exam
 
 This paper argues that language models can benefit from an explicit two-step reasoning process akin to human problem-solving techniques. The proposed method, dubbed the Process of Elimination (POE), enhances the decision-making process by first scoring and then eliminating options that are seemingly incorrect before focusing on selecting the correct answer from the remaining choices. This method is designed to align with natural human reasoning by replicating how individuals often approach multiple-choice questions, particularly under the constraint of time and accuracy, as frequently experienced in academic testing environments.
 
-Our hypothesis posits that language models, when equipped with a mechanism to discard implausible answers systematically, can achieve better performance on multiple-choice reasoning tasks. This is particularly relevant in the context of logical reasoning, where the elimination of clearly incorrect options can simplify the decision process and potentially lead to more accurate outcomes. This idea is supported by previous work demonstrating the effectiveness of LMs in various reasoning tasks when adapted to more human-like reasoning methods [Brown et al., 2020; Holtzman et al., 2021].
+Our hypothesis posits that language models, when equipped with a mechanism to discard implausible answers systematically, can achieve better performance on multiple-choice reasoning tasks. This is particularly relevant in the context of logical reasoning, where the elimination of clearly incorrect options can simplify the decision process and potentially lead to more accurate outcomes. This idea is supported by previous work demonstrating the effectiveness of LMs in various reasoning tasks when adapted to more human-like reasoning methods[Holtzman et al., 2021].
 
 In the development of POE, we draw inspiration from the established capabilities of LMs to handle complex reasoning tasks [Brown et al., 2020] and the known strategies that humans employ in test-taking scenarios. The approach builds on the foundational work in language modeling likelihood [Brown et al., 2020], which demonstrates the LMs' ability to perform in-context learning. By incorporating a structured process to eliminate unlikely choices, POE aims to refine this capability, making it more targeted and efficient in dealing with the nuanced challenges presented by multiple-choice questions.
 
@@ -56,22 +56,22 @@ The Process of Elimination (POE) introduced in this paper operates on a two-step
 
 Given a multiple-choice reasoning task, we define the problem setting as follows:
 
-- Let \(x\) be the question or context provided.
-- Let \(Y = \{y_1, y_2, \ldots, y_n\}\) be the set of multiple-choice options available.
-- Let \(y\) be the correct answer from \(Y\).
+- Let $x$ be the question or context provided.
+- Let $Y = \{y_1, y_2, \ldots, y_n\}$ be the set of multiple-choice options available.
+- Let $y$ be the correct answer from $Y$.
 
-The goal is to develop an in-context learning method that accurately selects \(y\) from \(Y\) given \(x\).
+The goal is to develop an in-context learning method that accurately selects $y$ from $Y$ given $x$.
 
 ### Two-Step Scoring Method
 
 #### Step 1: Elimination
 
-In the first step of the POE method, each option \(y_i\) is scored based on a specified metric. The score function, \(\text{score}(x, y_i)\), evaluates each option's plausibility given the question \(x\). The scores are used to eliminate options that are deemed less likely to be correct. Specifically, options whose scores are below the average score are eliminated. This is calculated as follows:
+In the first step of the POE method, each option $y_i$ is scored based on a specified metric. The score function, $\text{score}(x, y_i)$, evaluates each option's plausibility given the question $x$. The scores are used to eliminate options that are deemed less likely to be correct. Specifically, options whose scores are below the average score are eliminated. This is calculated as follows:
 
-```markdown
+$$
 s_i = \text{score}(x, y_i)
 Y_{\text{wrong}} = \{y_i | s_i < \text{avg}(s_1, \ldots, s_n)\}
-```
+$$
 
 This elimination strategy intuitively aligns with how humans often discard options that seem clearly incorrect before carefully considering the remaining choices.
 
@@ -79,24 +79,24 @@ This elimination strategy intuitively aligns with how humans often discard optio
 
 The second step involves making the final choice from the non-eliminated options. This step utilizes a binary mask to exclude the eliminated options during the prediction phase. The mask for each option \(y_i\) is defined as follows:
 
-```markdown
+$$
 m_i = \begin{cases} 
 0 & \text{if } y_i \in Y_{\text{wrong}} \\
 1 & \text{otherwise}
 \end{cases}
-```
+$$
 
 The masked context \(x_{\text{mask}}\) is then constructed by modifying the original context \(x\) to include only the options for which \(m_i = 1\). Each option is scored again, but this time within the context that explicitly excludes the eliminated options, possibly by using a template \(T\) that masks out \(Y_{\text{wrong}}\) in the presentation of the options:
 
-```markdown
+$$
 x_{\text{mask}} = T(x, Y, \text{mask})
-```
+$$
 
 The final predicted answer \(\hat{y}\) is then the option with the highest score among the remaining options:
 
-```markdown
+$$
 \hat{y} = \arg\max_{i | m_i = 1} \text{score}(x_{\text{mask}}, y_i)
-```
+$$
 
 ### Implementation Considerations
 
@@ -156,7 +156,7 @@ POE consistently outperformed or matched the best-performing baselines across al
 | RS   | 55.1 | 49.0 | -6.1      |
 | IOM  | 56.2 | 50.0 | -6.2      |
 
-**Table 2**: Comparison of MCP and PoE accuracy scores on 8 new tasks. The top 4 tasks are logical reasoning tasks. PoE largely outperforms MCP on 4 logical reasoning tasks, and underperforms MCP on other 4 tasks.
+**Table 1**: Comparison of MCP and PoE accuracy scores on 8 new tasks. The top 4 tasks are logical reasoning tasks. PoE largely outperforms MCP on 4 logical reasoning tasks, and underperforms MCP on other 4 tasks.
 
 ## 6. Conclusion
 
