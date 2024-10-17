@@ -56,39 +56,47 @@ The Process of Elimination (POE) introduced in this paper operates on a two-step
 
 Given a multiple-choice reasoning task, we define the problem setting as follows:
 
-- Let \( x \) be the question or context provided.
-- Let \( Y = \{y_1, y_2, \ldots, y_n\} \) be the set of multiple-choice options available.
-- Let \( y \) be the correct answer from \( Y \).
+- Let \(x\) be the question or context provided.
+- Let \(Y = \{y_1, y_2, \ldots, y_n\}\) be the set of multiple-choice options available.
+- Let \(y\) be the correct answer from \(Y\).
 
-The goal is to develop an in-context learning method that accurately selects \( y \) from \( Y \) given \( x \).
+The goal is to develop an in-context learning method that accurately selects \(y\) from \(Y\) given \(x\).
 
 ### Two-Step Scoring Method
 
 #### Step 1: Elimination
 
-In the first step of the POE method, each option \( y_i \) is scored based on a specified metric. The score function, \( \text{score}(x, y_i) \), evaluates each option's plausibility given the question \( x \). The scores are used to eliminate options that are deemed less likely to be correct. Specifically, options whose scores are below the average score are eliminated. This is calculated as follows:
+In the first step of the POE method, each option \(y_i\) is scored based on a specified metric. The score function, \(\text{score}(x, y_i)\), evaluates each option's plausibility given the question \(x\). The scores are used to eliminate options that are deemed less likely to be correct. Specifically, options whose scores are below the average score are eliminated. This is calculated as follows:
 
-\[ s_i = \text{score}(x, y_i) \]
-\[ Y_{\text{wrong}} = \{y_i \mid s_i < \text{avg}(s_1, \ldots, s_n)\} \]
+```markdown
+s_i = \text{score}(x, y_i)
+Y_{\text{wrong}} = \{y_i | s_i < \text{avg}(s_1, \ldots, s_n)\}
+```
 
 This elimination strategy intuitively aligns with how humans often discard options that seem clearly incorrect before carefully considering the remaining choices.
 
 #### Step 2: Prediction
 
-The second step involves making the final choice from the non-eliminated options. This step utilizes a binary mask to exclude the eliminated options during the prediction phase. The mask for each option \( y_i \) is defined as follows:
+The second step involves making the final choice from the non-eliminated options. This step utilizes a binary mask to exclude the eliminated options during the prediction phase. The mask for each option \(y_i\) is defined as follows:
 
-\[ m_i = \begin{cases} 
+```markdown
+m_i = \begin{cases} 
 0 & \text{if } y_i \in Y_{\text{wrong}} \\
 1 & \text{otherwise}
-\end{cases} \]
+\end{cases}
+```
 
-The masked context \( x_{\text{mask}} \) is then constructed by modifying the original context \( x \) to include only the options for which \( m_i = 1 \). Each option is scored again, but this time within the context that explicitly excludes the eliminated options, possibly by using a template \( T \) that masks out \( Y_{\text{wrong}} \) in the presentation of the options:
+The masked context \(x_{\text{mask}}\) is then constructed by modifying the original context \(x\) to include only the options for which \(m_i = 1\). Each option is scored again, but this time within the context that explicitly excludes the eliminated options, possibly by using a template \(T\) that masks out \(Y_{\text{wrong}}\) in the presentation of the options:
 
-\[ x_{\text{mask}} = T(x, Y, \text{mask}) \]
+```markdown
+x_{\text{mask}} = T(x, Y, \text{mask})
+```
 
-The final predicted answer \( \hat{y} \) is then the option with the highest score among the remaining options:
+The final predicted answer \(\hat{y}\) is then the option with the highest score among the remaining options:
 
-\[ \hat{y} = \arg\max_{i \mid m_i = 1} \text{score}(x_{\text{mask}}, y_i) \]
+```markdown
+\hat{y} = \arg\max_{i | m_i = 1} \text{score}(x_{\text{mask}}, y_i)
+```
 
 ### Implementation Considerations
 
