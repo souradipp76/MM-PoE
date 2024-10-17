@@ -4,7 +4,7 @@
 [![CI](https://github.com/souradipp76/MM-PoE/actions/workflows/main.yml/badge.svg)](https://github.com/souradipp76/MM-PoE/actions/workflows/main.yml)
 
 
-**Multiple Choice Reasoning tool via. Process of Elimination using Multi-Modal models**
+**Multiple Choice Reasoning via. Process of Elimination using Multi-Modal models**
 
 
 ## What is MM-PoE?
