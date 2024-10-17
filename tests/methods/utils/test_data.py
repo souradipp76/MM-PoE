@@ -570,14 +570,13 @@ def test_piqa_loader(sample_args):
         'sol2': 'Push the lid upwards'
     })
     label_content = '0\n'  # First solution is correct
-    with patch('builtins.open', mock.mock_open(read_data=qa_content)) as mock_qa_file:
-        mock_qa_file.return_value.__iter__.return_value = [qa_content]
-        with patch('builtins.open', mock.mock_open(read_data=label_content)) as mock_label_file:
-            mock_label_file.return_value.__iter__.return_value = [label_content]
-            examples = piqa_loader(['dummy_qa_path.jsonl', 'dummy_label_path.txt'], args)
-            assert len(examples) == 1
-            assert examples[0]['label'] == 0
-            assert 'Answer the following question: Question: To open a jar, you should' in examples[0]['premise']
+    with patch('builtins.open', mock.mock_open()) as mock_file:
+        mock_file.side_effect = [mock.mock_open(read_data=qa_content).return_value,
+                                    mock.mock_open(read_data=label_content).return_value]
+        examples = piqa_loader(['dummy_qa_path.jsonl', 'dummy_label_path.txt'], args)
+        assert len(examples) == 1
+        assert examples[0]['label'] == 0
+        assert 'Answer the following question: Question: To open a jar, you should' in examples[0]['premise']
 
 def test_qasc_loader(sample_args):
     args = sample_args
@@ -615,14 +614,13 @@ def test_siqa_loader(sample_args):
         'answerC': 'To sleep'
     })
     label_content = '1\n'  # Answer index is 1 (but labels are 1-based in siqa_loader, and subtract 1)
-    with patch('builtins.open', mock.mock_open(read_data=qa_content)) as mock_qa_file:
-        mock_qa_file.return_value.__iter__.return_value = [qa_content]
-        with patch('builtins.open', mock.mock_open(read_data=label_content)) as mock_label_file:
-            mock_label_file.return_value.__iter__.return_value = [label_content]
-            examples = siqa_loader(['dummy_qa_path.jsonl', 'dummy_label_path.txt'], args)
-            assert len(examples) == 1
-            assert examples[0]['label'] == 0  # '1' in label file corresponds to index 0
-            assert 'Answer the following question: Question: Alex went to the store. Why did Alex go to the store?' in examples[0]['premise']
+    with patch('builtins.open', mock.mock_open()) as mock_file:
+        mock_file.side_effect = [mock.mock_open(read_data=qa_content).return_value,
+                                    mock.mock_open(read_data=label_content).return_value]
+        examples = siqa_loader(['dummy_qa_path.jsonl', 'dummy_label_path.txt'], args)
+        assert len(examples) == 1
+        assert examples[0]['label'] == 0  # '1' in label file corresponds to index 0
+        assert 'Answer the following question: Question: Alex went to the store. Why did Alex go to the store?' in examples[0]['premise']
 
 def test_winogrande_loader(sample_args):
     args = sample_args
@@ -633,14 +631,13 @@ def test_winogrande_loader(sample_args):
         'option2': 'suitcase'
     })
     label_content = '1\n'  # Correct answer is option1 (labels are 1-based)
-    with patch('builtins.open', mock.mock_open(read_data=qa_content)) as mock_qa_file:
-        mock_qa_file.return_value.__iter__.return_value = [qa_content]
-        with patch('builtins.open', mock.mock_open(read_data=label_content)) as mock_label_file:
-            mock_label_file.return_value.__iter__.return_value = [label_content]
-            examples = winogrande_loader(['dummy_qa_path.jsonl', 'dummy_label_path.txt'], args)
-            assert len(examples) == 1
-            assert examples[0]['label'] == 0  # '1' in label file corresponds to index 0
-            assert 'Answer the following question: Question: The trophy doesn\'t fit in the brown suitcase because it\'s too big.' in examples[0]['premise']
+    with patch('builtins.open', mock.mock_open()) as mock_file:
+        mock_file.side_effect = [mock.mock_open(read_data=qa_content).return_value,
+                                    mock.mock_open(read_data=label_content).return_value]
+        examples = winogrande_loader(['dummy_qa_path.jsonl', 'dummy_label_path.txt'], args)
+        assert len(examples) == 1
+        assert examples[0]['label'] == 0  # '1' in label file corresponds to index 0
+        assert 'Answer the following question: Question: The trophy doesn\'t fit in the brown suitcase because it\'s too big.' in examples[0]['premise']
 
 def test_date_understanding_loader(sample_args):
     args = sample_args
