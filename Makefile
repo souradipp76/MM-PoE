@@ -32,7 +32,7 @@ fmt:              ## Format code using black & isort.
 
 .PHONY: lint
 lint:             ## Run pep8, black, mypy linters.
-	$(ENV_PREFIX)flake8 mm_poe/
+	$(ENV_PREFIX)flake8 --ignore=E203,W503 mm_poe/
 	$(ENV_PREFIX)black -l 79 --check mm_poe/
 	$(ENV_PREFIX)black -l 79 --check tests/
 	$(ENV_PREFIX)mypy --ignore-missing-imports mm_poe/
@@ -49,19 +49,21 @@ watch:            ## Run tests on every change.
 
 .PHONY: clean
 clean:            ## Clean unused files.
-	@find ./ -name '*.pyc' -exec rm -f {} \;
-	@find ./ -name '__pycache__' -exec rm -rf {} \;
-	@find ./ -name 'Thumbs.db' -exec rm -f {} \;
-	@find ./ -name '*~' -exec rm -f {} \;
 	@rm -rf .cache
 	@rm -rf .pytest_cache
 	@rm -rf .mypy_cache
 	@rm -rf build
 	@rm -rf dist
 	@rm -rf *.egg-info
+	@rm -rf .coverage*
+	@rm -rf coverage.xml
 	@rm -rf htmlcov
 	@rm -rf .tox/
 	@rm -rf docs/_build
+	@find . -name '*.pyc' -exec rm -f {} \;
+	@find . -name '__pycache__' -exec rm -rf {} \;
+	@find . -name 'Thumbs.db' -exec rm -f {} \;
+	@find . -name '*~' -exec rm -f {} \;
 
 .PHONY: virtualenv
 virtualenv:       ## Create a virtual environment.
