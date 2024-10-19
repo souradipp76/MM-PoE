@@ -163,8 +163,8 @@ def main():
 
         # step 5: (evaluation) inference on data, and compute accuracy.
         logger.info(
-            f"Start inference (method: {args.method}) on {args.dataset} using \
-                {args.model_family} model: {args.checkpoint}."
+            f"Start inference (method: {args.method}) on {args.dataset} using "
+            + f"{args.model_family} model: {args.checkpoint}."
         )
         if args.method in [
             "vision_language_modeling",
@@ -179,8 +179,8 @@ def main():
             )
         elif args.method == "contrastive_decoding":
             logger.info(
-                f"Load {args.model_family} amateur model: \
-                    {args.amateur_checkpoint}."
+                f"Load {args.model_family} amateur model: "
+                + f"{args.amateur_checkpoint}."
             )
             # get model path: ../models/args.model_family/args.checkpoint
             amateur_model_path = os.path.join(

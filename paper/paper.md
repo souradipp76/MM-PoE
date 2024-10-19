@@ -60,7 +60,7 @@ Given a multiple-choice visual reasoning task, we define the problem setting as 
 - Let $Y = \{y_1, y_2, \ldots, y_n\}$ be the set of multiple-choice options available.
 - Let $y$ be the correct answer from $Y$.
 
-The goal is to develop an in-context learning method that accurately selects $y$ from $Y$ given $x$ and $m$.
+The goal is to develop an in-context learning method that accurately selects $y$ from $Y$ given $x$ and $h$.
 
 ## Two-Step Scoring Method
 

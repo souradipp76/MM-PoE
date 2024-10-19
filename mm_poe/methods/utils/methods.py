@@ -63,8 +63,8 @@ def inference_language_modeling_old(model, eval_dataloader, device):
         ).sum().item() / len(batch_labels)
         total_accuracy = (predictions == labels).sum().item() / len(labels)
         pbar.set_description(
-            f"Total Accuracy: {total_accuracy:.4f}, \
-                Batch Accuracy: {batch_accuracy:.4f}"
+            f"Total Accuracy: {total_accuracy:.4f}, "
+            + f"Batch Accuracy: {batch_accuracy:.4f}"
         )
     return total_accuracy
 
@@ -131,8 +131,8 @@ def inference_contrastive_decoding_old(
         ).sum().item() / len(batch_labels)
         total_accuracy = (predictions == labels).sum().item() / len(labels)
         pbar.set_description(
-            f"Total Accuracy: {total_accuracy:.4f}, \
-                Batch Accuracy: {batch_accuracy:.4f}"
+            f"Total Accuracy: {total_accuracy:.4f}, "
+            + f"Batch Accuracy: {batch_accuracy:.4f}"
         )
     return total_accuracy
 
@@ -234,8 +234,8 @@ def inference_generate_synonyms(
             labels
         )
         pbar.set_description(
-            f"Language modeling accuracy: {lm_accuracy:.4f}, \
-                Average language modeling accuracy: {avg_lm_accuracy:.4f}"
+            f"Language modeling accuracy: {lm_accuracy:.4f}, "
+            + f"Average language modeling accuracy: {avg_lm_accuracy:.4f}"
         )
     avg_log_probs = torch.cat(avg_log_probs, dim=0)
     return avg_log_probs, lm_accuracy, avg_lm_accuracy, lm_predictions
@@ -286,8 +286,8 @@ def inference_calibration(
             labels
         )
         pbar.set_description(
-            f"Calibration accuracy: {lm_accuracy:.4f}, \
-                Average calibration accuracy: {avg_lm_accuracy:.4f}"
+            f"Calibration accuracy: {lm_accuracy:.4f}, "
+            + f"Average calibration accuracy: {avg_lm_accuracy:.4f}"
         )
     avg_log_probs = torch.cat(avg_log_probs, dim=0)
     return avg_log_probs, lm_accuracy, avg_lm_accuracy, lm_predictions
@@ -486,8 +486,8 @@ def inference_process_of_elimination(
             labels
         )
         pbar.set_description(
-            f"Process of elimination accuracy: {lm_accuracy:.4f}, \
-                Average process of elimination accuracy: {avg_lm_accuracy:.4f}"
+            f"Process of elimination accuracy: {lm_accuracy:.4f}, "
+            + f"Average process of elimination accuracy: {avg_lm_accuracy:.4f}"
         )
     avg_log_probs = torch.cat(avg_log_probs, dim=0)
     return avg_log_probs, lm_accuracy, avg_lm_accuracy, lm_predictions

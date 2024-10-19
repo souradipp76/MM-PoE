@@ -701,8 +701,10 @@ def copa_loader(path, args):
             # B. People brought boats to the pond.
             # Answer:
             hypotheses = ["A", "B"]
-            premise = f"{args.multiple_choice_prompt} \
-                Question: {premise}\nA. {a1}\nB. {a2}\nAnswer:"
+            premise = (
+                f"{args.multiple_choice_prompt} "
+                + f"Question: {premise}\nA. {a1}\nB. {a2}\nAnswer:"
+            )
         else:
             hypotheses = [" " + a1, " " + a2]
         examples_copa += [
@@ -1294,8 +1296,10 @@ def vqa_loader(path, args):
             options = "\n".join(
                 [f"{alphabets[i]}. {ans}" for i, ans in enumerate(mc_ans)]
             )
-            premise = f"{args.multiple_choice_prompt} \
-                Question: {question}\n{options}\nAnswer:"
+            premise = (
+                f"{args.multiple_choice_prompt} "
+                + f"Question: {question}\n{options}\nAnswer:"
+            )
         else:
             hypotheses = mc_ans
             premise = question + uncond_premise
@@ -1356,8 +1360,10 @@ def scienceqa_loader(path, args):
             options = "\n".join(
                 [f"{alphabets[i]}. {ans}" for i, ans in enumerate(mc_ans)]
             )
-            premise = f"{args.multiple_choice_prompt} \
-                Question: {question}\n{options}\nAnswer:"
+            premise = (
+                f"{args.multiple_choice_prompt} "
+                + f"Question: {question}\n{options}\nAnswer:"
+            )
         else:
             hypotheses = mc_ans
             premise = question + uncond_premise
@@ -1421,8 +1427,10 @@ def ai2d_loader(path, args):
                 options = "\n".join(
                     [f"{alphabets[i]}. {ans}" for i, ans in enumerate(mc_ans)]
                 )
-                premise = f"{args.multiple_choice_prompt} \
-                    Question: {question}\n{options}\nAnswer:"
+                premise = (
+                    f"{args.multiple_choice_prompt} "
+                    + f"Question: {question}\n{options}\nAnswer:"
+                )
             else:
                 hypotheses = mc_ans
                 premise = question + uncond_premise
@@ -1470,8 +1478,10 @@ def single_inference_loader(path, args):
         options = "\n".join(
             [f"{alphabets[i]}. {ans}" for i, ans in enumerate(mc_ans)]
         )
-        premise = f"{args.multiple_choice_prompt} \
-            Question: {question}\n{options}\nAnswer:"
+        premise = (
+            f"{args.multiple_choice_prompt} "
+            + f"Question: {question}\n{options}\nAnswer:"
+        )
     else:
         hypotheses = mc_ans
         premise = question + uncond_premise

@@ -70,23 +70,23 @@ def parse_args():
         ],
         default=None,
         required=True,
-        help="The moddel family, as checkpoints under the same \
-            model family use same codes to download.",
+        help="The moddel family, as checkpoints under the same "
+        + "model family use same codes to download.",
     )
     parser.add_argument(
         "--checkpoint",
         type=str,
         default=None,
         required=True,
-        help="The checkpoint name under a model family, \
-            e.g. gpt2, gpt2-medium, gpt2-large, gpt2-xl.",
+        help="The checkpoint name under a model family, "
+        + "e.g. gpt2, gpt2-medium, gpt2-large, gpt2-xl.",
     )
     parser.add_argument(
         "--amateur_checkpoint",
         type=str,
         default=None,
-        help="The amateur checkpoint name under a model family. \
-            For constrative decoding.",
+        help="The amateur checkpoint name under a model family. "
+        + "For constrative decoding.",
     )
     parser.add_argument(
         "--expert_method",
@@ -116,22 +116,22 @@ def parse_args():
         "--weighting_parameter",
         type=float,
         default=-1.0,
-        help="The weighting parameter for constrative decoding. \
-            It is applied to the amateur model.",
+        help="The weighting parameter for constrative decoding. "
+        + "It is applied to the amateur model.",
     )
     parser.add_argument(
         "--weighting_parameters",
         type=str,
         default=None,
-        help="The weighting parameters for constrative decoding. \
-            One weight for one dataset.",
+        help="The weighting parameters for constrative decoding. "
+        + "One weight for one dataset.",
     )
     parser.add_argument(
         "--num_random_search",
         type=int,
         default=0,
-        help="The number of random search for the \
-            weighting parameter for constrative decoding.",
+        help="The number of random search for the "
+        + "weighting parameter for constrative decoding.",
     )
     parser.add_argument(
         "--loading_precision",
@@ -146,15 +146,15 @@ def parse_args():
         # choices=["copa", "cqa", "winogrande"],
         default=None,
         required=True,
-        help="The datasets to inference on. \
-            Pass multiple datasets separate by space",
+        help="The datasets to inference on. "
+        + "Pass multiple datasets separate by space",
     )
     parser.add_argument(
         "--sample",
         type=int,
         default=None,
-        help="The number of samples to inference on. \
-            If None, inference on the whole dataset.",
+        help="The number of samples to inference on. "
+        + "If None, inference on the whole dataset.",
     )
     parser.add_argument(
         "--batch_size",
@@ -189,8 +189,8 @@ def parse_args():
         "--process_of_elimination_prompt",
         type=str,
         default=None,
-        help="The process of elimination prompt. \
-            It asks the model to ignore masked options.",
+        help="The process of elimination prompt. "
+        + "It asks the model to ignore masked options.",
     )
     parser.add_argument(
         "--scoring_method_for_process_of_elimination",
@@ -233,14 +233,14 @@ def parse_args():
         "--generate_synonyms_prompt",
         type=str,
         default=None,
-        help="The prompt template for generating synonyms. \
-            'option is replaced with actual options'",
+        help="The prompt template for generating synonyms. "
+        + "'option is replaced with actual options'",
     )
     parser.add_argument(
         "--push_data_to_hub",
         action="store_true",
-        help="Whether to push the data to Hugging Face Hub. \
-            This is convienient for LLM experiments.",
+        help="Whether to push the data to Hugging Face Hub. "
+        + "This is convienient for LLM experiments.",
     )
     parser.add_argument(
         "--min_k",
@@ -251,8 +251,8 @@ def parse_args():
         "--mask_token",
         type=str,
         default=None,
-        help="The mask token. If None, \
-            use the default mask token of the model.",
+        help="The mask token. If None, "
+        + "use the default mask token of the model.",
     )
 
     args = parser.parse_args()
@@ -508,24 +508,24 @@ def load_data(args):
         loader = anli_loader
     elif args.dataset == "vqa":
         args.num_options = 18
-        file_path = os.path.join("/content/data", args.dataset)
-        train_file_path = os.path.join("/content/data", args.dataset)
+        file_path = os.path.join("../data", args.dataset)
+        train_file_path = os.path.join("../data", args.dataset)
         ending_names = [f"hypothesis{i}" for i in range(args.num_options)]
         header_name = "premise"
         image_header_name = "image_path"
         loader = vqa_loader
     elif args.dataset == "scienceqa":
         args.num_options = 4
-        file_path = os.path.join("/content/data", args.dataset)
-        train_file_path = os.path.join("/content/data", args.dataset)
+        file_path = os.path.join("../data", args.dataset)
+        train_file_path = os.path.join("../data", args.dataset)
         ending_names = [f"hypothesis{i}" for i in range(args.num_options)]
         header_name = "premise"
         image_header_name = "image_path"
         loader = scienceqa_loader
     elif args.dataset == "ai2d":
         args.num_options = 4
-        file_path = os.path.join("/content/data", args.dataset)
-        train_file_path = os.path.join("/content/data", args.dataset)
+        file_path = os.path.join("../data", args.dataset)
+        train_file_path = os.path.join("../data", args.dataset)
         ending_names = [f"hypothesis{i}" for i in range(args.num_options)]
         header_name = "premise"
         image_header_name = "image_path"
