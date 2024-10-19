@@ -4,4 +4,6 @@ torch
 huggingface_hub
 bitsandbytes
 accelerate
+questionary
+pillow
 gdown
