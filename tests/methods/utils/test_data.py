@@ -477,6 +477,7 @@ def test_preprocess_function_causal_channel(sample_args):
 def test_vqa_loader(sample_args):
     args = sample_args
     args.num_options = 2
+    args.split = "val"
     ann_content = {
         "annotations": [{"multiple_choice_answer": "cat", "image_id": 123}]
     }
@@ -509,6 +510,7 @@ def test_vqa_loader(sample_args):
 def test_scienceqa_loader(sample_args):
     args = sample_args
     args.num_options = 4
+    args.split = "val"
     ann_content = {
         "1": {
             "question": "What is H2O?",

@@ -188,8 +188,8 @@ def main():
 
         # step 5: (evaluation) inference on data, and compute accuracy.
         logger.info(
-            f"Start inference (method: {args.method}) on {args.dataset} \
-                using {args.model_family} model: {args.checkpoint}."
+            f"Start inference (method: {args.method}) on {args.dataset} "
+            + f"using {args.model_family} model: {args.checkpoint}."
         )
         scoring_method = args.scoring_method_for_process_of_elimination
         logger.info(
@@ -324,8 +324,8 @@ def main():
 
         prompting_method = args.prompting_method_for_process_of_elimination
         logger.info(
-            f"Step 2: Creating multiple choice prompt. \
-                Prompting method: {prompting_method}."
+            "Step 2: Creating multiple choice prompt. "
+            + f"Prompting method: {prompting_method}."
         )
         # if args.prompting_method_for_process_of_elimination
         # mcp_kwargs = {"multiple_choice_prompt": multiple_choice_prompt,}

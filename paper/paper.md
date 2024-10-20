@@ -24,60 +24,60 @@ bibliography: paper.bib
 
 # Summary
 
-This paper introduces the Process of Elimination (POE), a method to enhance language models' performance on multiple-choice reasoning by employing a two-step scoring system that first eliminates incorrect options and then predicts from the remaining ones. Our experiments across eight reasoning tasks show the method's effectiveness, particularly in logical reasoning tasks.
+This paper introduces Multiple Choice Reasoning via. Process of Elimination using Multi-Modal models, also know as Multi-Modal Process of Elimination (MM-PoE), a method to enhance vision language models' performance on multiple-choice visual reasoning by employing a two-step scoring system that first eliminates incorrect options and then predicts from the remaining ones. Our experiments across three question answering datasets show the method's effectiveness, particularly in visual reasoning tasks. This method addresses one of the main limitations of the paper [@ma2023poe] by extending to tasks involving multi-modalities and also includes experimentation techniques for few-shot settings.
 
 # Statement of Need
 
-Language models (LMs) excel at in-context learning for multiple choice reasoning tasks but often treat all options equally, unlike humans who typically eliminate incorrect choices before selecting the correct answer. Same is true in case of visual question answering tasks with multiple choices. This discrepancy can limit the effectiveness of vision language models in accurately solving such tasks. To address this, we introduce Multi-Modal Process of Elimination (MM-PoE), a two-step scoring method designed to enhance VLM performance by mimicking human reasoning strategies in multi-modal settings. 
+Large Language models (LLMs) excel at in-context learning for multiple choice reasoning tasks but often treat all options equally, unlike humans who typically eliminate incorrect choices before selecting the correct answer. Same is true for vision language models (VLMs) in case of visual question answering tasks with multiple choices. This discrepancy can limit the effectiveness of vision language models in accurately solving such tasks. To address this, we introduce Multi-Modal Process of Elimination (MM-PoE), a two-step scoring method designed to enhance VLM performance by mimicking human reasoning strategies in multi-modal settings.
 
-In the first step, the method evaluates and scores each option, systematically eliminating those that appear incorrect. The second step involves masking these eliminated options, allowing the VLM to focus solely on the remaining viable choices to make a final prediction. Our zero-shot experiments across three datasets demonstrate MM-PoE's effectiveness, particularly excelling in logical reasoning scenarios . Additionally, MM-PoE proves adaptable to few-shot settings and is compatible with large language models (LLMs) like ChatGPT.
+In the first step, the method evaluates and scores each option, systematically eliminating those that appear incorrect. The second step involves masking these eliminated options, allowing the VLM to focus solely on the remaining viable choices to make a final prediction. Our zero-shot experiments across three datasets demonstrate MM-PoE's effectiveness, particularly excelling in logical reasoning scenarios . Additionally, MM-PoE proves adaptable to few-shot settings and is compatible with the current state-of-the-art vision language models (VLMs).
 
 By implementing MM-PoE, researchers and practitioners can experiment and significantly improve the accuracy and reliability of VLMs in multiple choice reasoning tasks, making it a valuable tool for advancing machine learning models for visual reasoning.
 
-
 # State of the Field
 
-A common strategy for answering multiple-choice questions, especially under examination conditions, involves a process of elimination where incorrect answers are systematically discarded to narrow down the choices to the most likely correct one. This approach, grounded in everyday test-taking strategies, contrasts with how current language models (LMs) handle multiple-choice reasoning tasks. Typically, LMs evaluate each option independently or collectively without actively discarding less likely answers, potentially reducing their effectiveness in distinguishing the best choice from plausible distractors.
+A common strategy for answering multiple-choice questions, especially under examination conditions, involves a process of elimination where incorrect answers are systematically discarded to narrow down the choices to the most likely correct one. This approach, grounded in everyday test-taking strategies, contrasts with how current language models (LMs) and vision language models (VLMs) handle multiple-choice reasoning tasks. Typically, VLMs evaluate each option independently or collectively without actively discarding less likely answers, potentially reducing their effectiveness in distinguishing the best choice from plausible distractors.
 
-This paper argues that language models can benefit from an explicit two-step reasoning process akin to human problem-solving techniques. The proposed method, dubbed the Process of Elimination (POE), enhances the decision-making process by first scoring and then eliminating options that are seemingly incorrect before focusing on selecting the correct answer from the remaining choices. This method is designed to align with natural human reasoning by replicating how individuals often approach multiple-choice questions, particularly under the constraint of time and accuracy, as frequently experienced in academic testing environments.
+This paper argues that vision language models can benefit from an explicit two-step reasoning process akin to human problem-solving techniques. The proposed method, known as Multi-Modal Process of Elimination (MM-PoE), enhances the decision-making process by first scoring and then eliminating options that are seemingly incorrect before focusing on selecting the correct answer from the remaining choices. This method is designed to align with natural human reasoning by replicating how individuals often approach multiple-choice questions, particularly under the constraint of time and accuracy, as frequently experienced in academic testing environments.
 
-Our hypothesis posits that language models, when equipped with a mechanism to discard implausible answers systematically, can achieve better performance on multiple-choice reasoning tasks. This is particularly relevant in the context of logical reasoning, where the elimination of clearly incorrect options can simplify the decision process and potentially lead to more accurate outcomes. This idea is supported by previous work demonstrating the effectiveness of LMs in various reasoning tasks when adapted to more human-like reasoning methods[Holtzman et al., 2021].
+Our hypothesis posits that vision language models, when equipped with a mechanism to discard implausible answers systematically, can achieve better performance on multiple-choice visual reasoning tasks. This is particularly relevant in the context of logical reasoning, where the elimination of clearly incorrect options can simplify the decision process and potentially lead to more accurate outcomes. This idea is supported by previous work demonstrating the effectiveness of LMs in various reasoning tasks when adapted to more human-like reasoning methods[@holtzman2021surface].
 
-In the development of POE, we draw inspiration from the established capabilities of LMs to handle complex reasoning tasks [Brown et al., 2020] and the known strategies that humans employ in test-taking scenarios. The approach builds on the foundational work in language modeling likelihood [Brown et al., 2020], which demonstrates the LMs' ability to perform in-context learning. By incorporating a structured process to eliminate unlikely choices, POE aims to refine this capability, making it more targeted and efficient in dealing with the nuanced challenges presented by multiple-choice questions.
+In the development of MM-PoE, we draw inspiration from the established capabilities of LMs to handle complex reasoning tasks [@brown2020language] and the known strategies that humans employ in test-taking scenarios as depicted in [@ma2023poe]. The approach builds on the foundational work in language modeling likelihood [@brown2020language], which demonstrates the LMs' ability to perform in-context learning. By incorporating a structured process to eliminate unlikely choices in a multi-modal setting, MM-PoE aims to refine this capability, making it more targeted and efficient in dealing with the nuanced challenges presented by multiple-choice questions.
 
-The effectiveness of this approach is underscored through zero-shot experiments across a diverse set of reasoning tasks, illustrating that the integration of human-like elimination strategies can significantly enhance the performance of language models. This paper aims to show that by mimicking human reasoning processes, we can make LMs not only perform better on standardized reasoning tasks but also behave in ways that are more interpretable and aligned with human cognitive processes.
+The effectiveness of this approach is underscored through zero-shot and few-shot experiments across a diverse set of reasoning datasets, illustrating that the integration of human-like elimination strategies can significantly enhance the performance of vision language models. This paper aims to show that by mimicking human reasoning processes, we can make VLMs not only perform better on standardized visual reasoning tasks but also behave in ways that are more interpretable and aligned with human cognitive processes.
 
 
-## 2. Method
+# Methodology
 
-The Process of Elimination (POE) introduced in this paper operates on a two-step mechanism designed to enhance the decision-making capabilities of language models (LMs) in multiple-choice reasoning tasks. This method employs a novel approach to option elimination followed by a focused prediction phase. The strategy is rooted in the belief that separating the elimination of clearly incorrect options from the choice of the best remaining option will improve overall task performance.
+The Multi-Modal Process of Elimination (MM-PoE) introduced in this paper operates on a two-step mechanism designed to enhance the decision-making capabilities of vision language models (VLMs) in multiple-choice visual reasoning tasks. This method employs a novel approach to option elimination followed by a focused prediction phase. The strategy is rooted in the belief that separating the elimination of clearly incorrect options from the choice of the best remaining option will improve overall task performance.
 
-### Problem Setting
+## Problem Setting
 
-Given a multiple-choice reasoning task, we define the problem setting as follows:
+Given a multiple-choice visual reasoning task, we define the problem setting as follows:
 
 - Let $x$ be the question or context provided.
+- Let $h$ be the image provided.
 - Let $Y = \{y_1, y_2, \ldots, y_n\}$ be the set of multiple-choice options available.
 - Let $y$ be the correct answer from $Y$.
 
-The goal is to develop an in-context learning method that accurately selects $y$ from $Y$ given $x$.
+The goal is to develop an in-context learning method that accurately selects $y$ from $Y$ given $x$ and $h$.
 
-### Two-Step Scoring Method
+## Two-Step Scoring Method
 
-#### Step 1: Elimination
+### Step 1: Elimination
 
-In the first step of the POE method, each option $y_i$ is scored based on a specified metric. The score function, $\text{score}(x, y_i)$, evaluates each option's plausibility given the question $x$. The scores are used to eliminate options that are deemed less likely to be correct. Specifically, options whose scores are below the average score are eliminated. This is calculated as follows:
+In the first step of the MM-PoE method, each option $y_i$ is scored based on a specified metric. The score function, $\text{score}(x, h, y_i)$, evaluates each option's plausibility given the question $x$ and image $h$. The scores are used to eliminate options that are deemed less likely to be correct. Specifically, options whose scores are below the average score are eliminated. This is calculated as follows:
 
 $$
-s_i = \text{score}(x, y_i)
+s_i = \text{score}(x, h, y_i)\\
 Y_{\text{wrong}} = \{y_i | s_i < \text{avg}(s_1, \ldots, s_n)\}
 $$
 
 This elimination strategy intuitively aligns with how humans often discard options that seem clearly incorrect before carefully considering the remaining choices.
 
-#### Step 2: Prediction
+### Step 2: Prediction
 
-The second step involves making the final choice from the non-eliminated options. This step utilizes a binary mask to exclude the eliminated options during the prediction phase. The mask for each option \(y_i\) is defined as follows:
+The second step involves making the final choice from the non-eliminated options. This step utilizes a binary mask to exclude the eliminated options during the prediction phase. The mask for each option $y_i$ is defined as follows:
 
 $$
 m_i = \begin{cases} 
@@ -86,86 +86,90 @@ m_i = \begin{cases}
 \end{cases}
 $$
 
-The masked context \(x_{\text{mask}}\) is then constructed by modifying the original context \(x\) to include only the options for which \(m_i = 1\). Each option is scored again, but this time within the context that explicitly excludes the eliminated options, possibly by using a template \(T\) that masks out \(Y_{\text{wrong}}\) in the presentation of the options:
+The masked context $x_{\text{mask}}$ is then constructed by modifying the original context $x$ to include only the options for which $m_i = 1$. Each option is scored again, but this time within the context that explicitly excludes the eliminated options, possibly by using a template $T$ that masks out $Y_{\text{wrong}}$ in the presentation of the options:
 
 $$
 x_{\text{mask}} = T(x, Y, \text{mask})
 $$
 
-The final predicted answer \(\hat{y}\) is then the option with the highest score among the remaining options:
+The final predicted answer $\hat{y}$ is then the option with the highest score among the remaining options:
 
 $$
-\hat{y} = \arg\max_{i | m_i = 1} \text{score}(x_{\text{mask}}, y_i)
+\hat{y} = \arg\max_{i | m_i = 1} \text{score}(x_{\text{mask}}, h, y_i)
 $$
 
-### Implementation Considerations
+# Experimental Setup
 
-The effectiveness of POE hinges on the robustness of the scoring function and the accuracy of the elimination step. The scoring function can be any LM-based likelihood estimator, such as language modeling likelihood or any of its alternatives like average log probability or calibrated log probability. Our implementation tests multiple such scoring functions to identify the most effective ones in both eliminating implausible options and accurately selecting the final answer.
+To evaluate the effectiveness of the Multi-Modal Process of Elimination (MM-PoE), we designed an experimental framework that tests the method across a diverse set of visual reasoning datasets. This setup aims to compare MM-PoE with existing scoring methods to highlight its potential improvements in accuracy and reasoning capability. Our experiments primarily focused on a zero-shot setting to evaluate the generalization capabilities of MM-PoE without any task-specific tuning. Accuracy was used as the main metric for performance evaluation, with results averaged over multiple seeds to ensure robustness.
 
-The POE method is designed to be model-agnostic, meaning it can be implemented using any existing LM capable of scoring text options, and it is flexible enough to be adapted to different types of multiple-choice questions across various domains.
+To further explore the versatility of MM-PoE, we also examined its performance in few-shot settings by incorporating examples into the model's input, aiming to observe any changes in effectiveness when provided with context-specific demonstrations.
 
-## 3. Experiment Setup
+## Data
 
-To evaluate the effectiveness of the Process of Elimination (POE), we designed an experimental framework that tests the method across a diverse set of reasoning tasks. This setup aims to compare POE with existing scoring methods to highlight its potential improvements in accuracy and reasoning capability.
+Our experiments were conducted on three different multiple-choice visual reasoning datasets, selected to cover a broad spectrum of reasoning types and complexities. These tasks include both traditional reasoning tasks and more specialized ones designed to test specific reasoning skills. To ensure a comprehensive evaluation, we used train sets from established benchmarks when available; otherwise, we utilized development sets.
 
-### Data
+| Dataset | #Options | Train  | Dev  | Test |
+|----|------|------|------|-----------|
+|VQA v1.0| 18 | 248,349 | 121,512 | 244,302  |
+|ScienceQA  | 4 | 2221 |  |  |
+| AI2D | 4 |  |  |     |
 
-Our experiments were conducted on eight different multiple-choice reasoning tasks, selected to cover a broad spectrum of reasoning types and complexities. These tasks include both traditional reasoning tasks and more specialized ones designed to test specific reasoning skills. To ensure a comprehensive evaluation, we used test sets from established benchmarks when available; otherwise, we utilized development sets.
+## Model
 
-### Model
+For the core experiments, we utilized the GIT and BLIP models, chosen for its balance between computational efficiency and performance in instruction-tuned vision language tasks. These models have demonstrated strong capabilities in handling various multi-modal tasks and serves as a robust platform for evaluating our MM-PoE method.
 
-For the core experiments, we utilized the FLAN-T5-XL model, chosen for its balance between computational efficiency and performance in instruction-tuned language tasks. This model has demonstrated strong capabilities in handling various NLP tasks and serves as a robust platform for evaluating our POE method.
+## Baselines
 
-### Baseline Methods
+We compared MM-PoE against five baseline scoring methods to assess its relative performance:
 
-We compared POE against five baseline scoring methods to assess its relative performance:
-
-1. **Language Modeling (LM):** This baseline uses the raw language modeling likelihood as the scoring function.
+1. **Language Modeling (LM):** This baseline uses the raw vision language modeling likelihood as the scoring function.
 2. **Average Language Modeling (AVG):** This method averages the log probabilities across all tokens in the option.
-3. **Calibration:** This involves adjusting the LM scores based on calibration techniques that aim to correct for the model's confidence.
+3. **Calibration:** This involves adjusting the VLM scores based on calibration techniques that aim to correct for the model's confidence.
 4. **Channel:** Channel methods score each option based on how likely the question is given the option, which reverses the typical conditional probability used in LMs.
 5. **Multiple Choice Prompting (MCP):** This approach formats the input by presenting the question followed by all options, prompting the model to select the most likely option.
 
-Each method provides a different approach to scoring options, allowing for a comprehensive comparison of how each interacts with the structure and strategy of POE.
+Each method provides a different approach to scoring options, allowing for a comprehensive comparison of how each interacts with the structure and strategy of MM-PoE.
 
-### Settings
+## Implementation
 
-Our experiments primarily focused on a zero-shot setting to evaluate the generalization capabilities of POE without any task-specific tuning. Accuracy was used as the main metric for performance evaluation, with results averaged over multiple seeds to ensure robustness.
+The effectiveness of MM-PoE hinges on the robustness of the scoring function and the accuracy of the elimination step. The scoring function can be any VLM-based likelihood estimator, such as vision language modeling likelihood or any of its alternatives like average log probability or calibrated log probability. Our implementation tests multiple such scoring functions to identify the most effective ones in both eliminating implausible options and accurately selecting the final answer. 
 
-To further explore the versatility of POE, we also examined its performance in few-shot settings by incorporating examples into the model's input, aiming to observe any changes in effectiveness when provided with context-specific demonstrations.
+The MM-PoE method is designed to be model-agnostic, meaning it can be implemented using any existing VLM capable of scoring text options, and it is flexible enough to be adapted to different types of multiple-choice visual answering questions across various domains. The scoring functions were carefully chosen based on their theoretical alignment with the two-step elimination and prediction philosophy of MM-PoE. We conducted extensive parameter tuning and optimization to maximize the performance of both the elimination step and the final prediction accuracy.
 
-### Implementation Details
-
-For each task, we implemented the scoring and prediction steps of POE as described in the Methods section. The scoring functions were carefully chosen based on their theoretical alignment with the two-step elimination and prediction philosophy of POE. We conducted extensive parameter tuning and optimization to maximize the performance of both the elimination step and the final prediction accuracy.
-
-This experiment setup was designed to rigorously test the effectiveness of POE across a range of reasoning tasks and compare its performance against standard baseline methods. The results of these experiments are intended to demonstrate the potential benefits of integrating a process of elimination approach into language model reasoning strategies for multiple-choice questions.
+This experiment setup was designed to rigorously test the effectiveness of MM-PoE across a range of visual reasoning tasks and compare its performance against standard baseline methods. The results of these experiments are intended to demonstrate the potential benefits of integrating a process of elimination approach into vision language model reasoning strategies for multiple-choice questions.
 
 
-## 4. Results
+## Results
 
-POE consistently outperformed or matched the best-performing baselines across all tasks, showing particular strength in logical reasoning. The method's effectiveness in separating elimination and prediction tasks was crucial to its success.
+MM-PoE consistently outperformed or matched the best-performing baselines across all datasets, showing particular strength in logical reasoning. The method's effectiveness in separating elimination and prediction tasks was crucial to its success.
 
-| Task | MCP  | PoE  | PoE - MCP |
-|------|------|------|-----------|
-| LA   | 50.0 | 68.8 | +18.8     |
-| IMT  | 34.0 | 47.2 | +13.2     |
-| CLD  | 67.2 | 75.9 | +8.7      |
-| RACO | 53.8 | 60.6 | +6.8      |
-| CAI  | 84.1 | 81.8 | -2.3      |
-| EIE  | 25.0 | 19.1 | -5.9      |
-| RS   | 55.1 | 49.0 | -6.1      |
-| IOM  | 56.2 | 50.0 | -6.2      |
+| Model | Dataset | LM | AVG | Calibration | Channel | MCP  | PoE  |
+|----|------|------|------|-----------|---|---|---|
+|microsoft/git-base-vqav2| VQA   | | | | | | |     |
+|microsoft/git-base-vqav2| ScienceQA  | 27.4 | | 23.2| 24.6 | 25.8 | 27.2 |
+|microsoft/git-base-vqav2| AI2D  | 25.4| | 26.4| 25.4 | 25.3 | 26.5 |
+|microsoft/git-base-textvqa| VQA   | | | | | | |
+|microsoft/git-base-textvqa| ScienceQA | 21.8| | 25.8 | 23.4 | 23.6 | 28.2 |
+|microsoft/git-base-textvqa| AI2D | 26.5 |  | 20.8| 26.2 | 24.2| 26.8 |
 
-**Table 1**: Comparison of MCP and PoE accuracy scores on 8 new tasks. The top 4 tasks are logical reasoning tasks. PoE largely outperforms MCP on 4 logical reasoning tasks, and underperforms MCP on other 4 tasks.
+**Table 1**: Comparison of Multiple-Choice Prompting (MCP) and Process of Elimination (PoE) accuracy scores on 3 visual question answering datasets for the `microsoft/git-base-vqav2` and `microsoft/git-base-textvqa` models in the zero-shot settings. Each dataset has different number of answer choices. PoE largely outperforms MCP on all the visual reasoning tasks for the two multi-modal models mentioned.
 
-## 6. Conclusion
+## Example
 
-POE demonstrates a significant improvement in handling multiple choice reasoning tasks by mimicking a human-like process of elimination approach. Future work will focus on enhancing its generalizability and efficiency, possibly extending to few-shot settings and other modalities.
+<img src="figures/image.png" alt="Example" width="300">
 
-## Ethics Statement
+**Question**: Which of these states is farthest north?<br>
+**Choices**: West Virginia, Louisiana, Arizona, Oklahoma<br>
+**Predicted**: 0
 
-While this model uses publicly available tasks and models, users should be aware of potential biases in the data and model outputs.
+# Conclusion
+
+MM-PoE demonstrates a significant improvement in handling multiple choice visual reasoning tasks by mimicking a human-like process of elimination approach. Future work will focus on enhancing its generalizability and efficiency, possibly extending to handle better masking strategies.
+
+# Ethics Statement
+
+While this method uses publicly available data and models, users should be aware of potential biases in the data and model outputs.
 
 # Acknowledgements
 
-We have used the server provided by Northwestern University for building this software.
+We would like to extend our sincere gratitude to Northwestern University for providing access to their servers and GPU resources, which were instrumental in conducting this research. The computational power and infrastructure made available by the university enabled the efficient processing and analysis of large datasets, significantly contributing to the success of the project. Without this support, the research would not have been possible at the scale or speed required. We deeply appreciate the university’s commitment to fostering a collaborative research environment and supporting technological innovation.

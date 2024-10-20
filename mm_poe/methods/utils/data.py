@@ -701,8 +701,10 @@ def copa_loader(path, args):
             # B. People brought boats to the pond.
             # Answer:
             hypotheses = ["A", "B"]
-            premise = f"{args.multiple_choice_prompt} \
-                Question: {premise}\nA. {a1}\nB. {a2}\nAnswer:"
+            premise = (
+                f"{args.multiple_choice_prompt} "
+                + f"Question: {premise}\nA. {a1}\nB. {a2}\nAnswer:"
+            )
         else:
             hypotheses = [" " + a1, " " + a2]
         examples_copa += [
@@ -1241,7 +1243,7 @@ def vqa_loader(path, args):
     version_type = ""
     task_type = "MultipleChoice"
     data_type = "mscoco"
-    data_subtype = "train2014"
+    data_subtype = "%s2014" % args.split
     ann_file = "%s/Annotations/%s%s_%s_annotations.json" % (
         path,
         version_type,
@@ -1280,7 +1282,6 @@ def vqa_loader(path, args):
         question = train_ques["questions"][i]["question"]
         mc_ans = train_ques["questions"][i]["multiple_choices"]
         label = mc_ans.index(ans)
-        # num_options = args.num_options
 
         if getattr(args, "multiple_choice_prompt", None) is not None:
             hypotheses = mc_ans
@@ -1294,8 +1295,10 @@ def vqa_loader(path, args):
             options = "\n".join(
                 [f"{alphabets[i]}. {ans}" for i, ans in enumerate(mc_ans)]
             )
-            premise = f"{args.multiple_choice_prompt} \
-                Question: {question}\n{options}\nAnswer:"
+            premise = (
+                f"{args.multiple_choice_prompt} "
+                + f"Question: {question}\n{options}\nAnswer:"
+            )
         else:
             hypotheses = mc_ans
             premise = question + uncond_premise
@@ -1318,23 +1321,22 @@ def vqa_loader(path, args):
 
 def scienceqa_loader(path, args):
     ann_file = "%s/ScienceQA_DATA/problems.json" % (path)
-    img_dir = "%s/ScienceQA_DATA/train" % (path)
+    img_dir = "%s/ScienceQA_DATA/%s" % (path, args.split)
     alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     examples = []
 
     print("Loading annotations and images...")
     anno = json.load(open(ann_file, "r"))
-    # train_test_split = json.load(open(traintestFile, 'r'))
-    train_ids = os.listdir(img_dir)
-    train_anno = {id: anno[id] for id in train_ids}
+    ids = os.listdir(img_dir)
+    anno = {id: anno[id] for id in ids}
 
     if args.calibration_prompt is not None:
         uncond_premise = args.calibration_prompt
     else:
         uncond_premise = " the answer is:"
 
-    for i, (id, value) in enumerate(train_anno.items()):
+    for i, (id, value) in enumerate(anno.items()):
         img_id = id
         question = value["question"]
         mc_ans = value["choices"]
@@ -1356,8 +1358,10 @@ def scienceqa_loader(path, args):
             options = "\n".join(
                 [f"{alphabets[i]}. {ans}" for i, ans in enumerate(mc_ans)]
             )
-            premise = f"{args.multiple_choice_prompt} \
-                Question: {question}\n{options}\nAnswer:"
+            premise = (
+                f"{args.multiple_choice_prompt} "
+                + f"Question: {question}\n{options}\nAnswer:"
+            )
         else:
             hypotheses = mc_ans
             premise = question + uncond_premise
@@ -1421,8 +1425,10 @@ def ai2d_loader(path, args):
                 options = "\n".join(
                     [f"{alphabets[i]}. {ans}" for i, ans in enumerate(mc_ans)]
                 )
-                premise = f"{args.multiple_choice_prompt} \
-                    Question: {question}\n{options}\nAnswer:"
+                premise = (
+                    f"{args.multiple_choice_prompt} "
+                    + f"Question: {question}\n{options}\nAnswer:"
+                )
             else:
                 hypotheses = mc_ans
                 premise = question + uncond_premise
@@ -1470,8 +1476,10 @@ def single_inference_loader(path, args):
         options = "\n".join(
             [f"{alphabets[i]}. {ans}" for i, ans in enumerate(mc_ans)]
         )
-        premise = f"{args.multiple_choice_prompt} \
-            Question: {question}\n{options}\nAnswer:"
+        premise = (
+            f"{args.multiple_choice_prompt} "
+            + f"Question: {question}\n{options}\nAnswer:"
+        )
     else:
         hypotheses = mc_ans
         premise = question + uncond_premise

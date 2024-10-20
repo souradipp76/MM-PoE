@@ -83,8 +83,10 @@ def main():
 
     args.multiple_choice_prompt = ""
     args.calibration_prompt = " the answer is:"
-    args.process_of_elimination_prompt = "Select the most suitable option \
-        to answer the question. Ignore [MASK] options."
+    args.process_of_elimination_prompt = (
+        "Select the most suitable option "
+        + "to answer the question. Ignore [MASK] options."
+    )
 
     args.scoring_method_for_process_of_elimination = questionary.select(
         message="Select scoring method?",
@@ -106,9 +108,9 @@ def main():
     args.prompting_method_for_process_of_elimination = "multiple_choice_prompt"
     args.mask_token = None
 
-    args.question = questionary.text("Question:").ask()
+    args.question = questionary.text("Question:").ask().strip()
     args.choices = questionary.text("Choices [comma seprated]:").ask()
-    args.choices = args.choices.split(",")
+    args.choices = [choice.strip() for choice in args.choices.split(",")]
     args.num_options = len(args.choices)
     args.image_path = questionary.path(
         "Image Path?", default="./images/image.png"
@@ -138,10 +140,10 @@ def main():
         "models/model_downloaders/model_downloaders.py",
     )
     subprocess.call(
-        f"python {model_downloader_path} \
-            --model_family {args.model_family} \
-            --checkpoint {args.checkpoint} \
-            --output_dir {args.output_dir}",
+        f"python {model_downloader_path} "
+        + f"--model_family {args.model_family} "
+        + f"--checkpoint {args.checkpoint} "
+        + f"--output_dir {args.output_dir}",
         shell=True,
     )
 
@@ -187,7 +189,6 @@ def main():
 
     # evaluate on dataset
     multiple_choice_prompt = args.multiple_choice_prompt
-    # multiple_choice_prompt = args.multiple_choice_prompt
     args.multiple_choice_prompt = None
     (
         ending_names,
@@ -222,8 +223,8 @@ def main():
 
     # step 5: (evaluation) inference on data, and compute accuracy.
     logger.info(
-        f"Start inference (method: {args.method}) on {args.dataset} \
-            using {args.model_family} model: {args.checkpoint}."
+        f"Start inference (method: {args.method}) on {args.dataset} "
+        + f"using {args.model_family} model: {args.checkpoint}."
     )
     scoring_method = args.scoring_method_for_process_of_elimination
     logger.info(f"Step 1: Computing masks. Scoring method: {scoring_method}.")
@@ -346,8 +347,8 @@ def main():
 
     prompting_method = args.prompting_method_for_process_of_elimination
     logger.info(
-        f"Step 2: Creating multiple choice prompt. \
-            Prompting method: {prompting_method}."
+        "Step 2: Creating multiple choice prompt. "
+        + f"Prompting method: {prompting_method}."
     )
     # if args.prompting_method_for_process_of_elimination
     # mcp_kwargs = {"multiple_choice_prompt": multiple_choice_prompt,}

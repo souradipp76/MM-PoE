@@ -83,16 +83,16 @@ def parse_args():
             "Idefics2",
         ],
         default=None,
-        help="The model family, as checkpoints under \
-            the same model family use same codes to download.",
+        help="The model family, as checkpoints under "
+        + "the same model family use same codes to download.",
     )
 
     parser.add_argument(
         "--checkpoint",
         type=str,
         default=None,
-        help="The checkpoint name under a model family, \
-            e.g. gpt2, gpt2-medium, gpt2-large, gpt2-xl.",
+        help="The checkpoint name under a model family, "
+        + "e.g. gpt2, gpt2-medium, gpt2-large, gpt2-xl.",
     )
 
     parser.add_argument(
@@ -115,7 +115,6 @@ def main():
     """Main"""
     # import pdb; pdb.set_trace()
     args = parse_args()
-    print(args)
 
     if args.model_family in ["GPT2", "Pythia", "OPT-IML", "Dolly"]:
         tokenizer_func = AutoTokenizer
@@ -142,9 +141,9 @@ def main():
         checkpoints = all_checkpoints[args.model_family]
     elif args.checkpoint not in all_checkpoints[args.model_family]:
         print(
-            f"Invalid checkpoint from {args.model_family}. Choose from: \
-                {all_checkpoints[args.model_family]} or \
-                    set --download_all_checkpoints"
+            f"Invalid checkpoint from {args.model_family}. Choose from: "
+            + f"{all_checkpoints[args.model_family]} or "
+            + "set --download_all_checkpoints"
         )
         return
     else:
@@ -153,8 +152,8 @@ def main():
     print(f"Models to download: {checkpoints}")
     for checkpoint in checkpoints:
         print(
-            f"Downloading {checkpoint}\t under model family \
-                {args.model_family}..."
+            f"Downloading {checkpoint}\t under model family "
+            + f"{args.model_family}..."
         )
 
         # download the model
