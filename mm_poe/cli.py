@@ -202,8 +202,6 @@ def main():
     mcp_args.multiple_choice_prompt = multiple_choice_prompt
     _, _, _, raw_mcp_dataset, n_shot_mcp_dataset = load_data(mcp_args)
 
-    print(raw_mcp_dataset[0]["premise"])
-
     logger.info(f"Preprocess data: {args.dataset}.")
     fn_kwargs = {
         "ending_names": ending_names,
@@ -375,8 +373,6 @@ def main():
     mcp_dataset = masked_dataset.map(
         create_multiple_choice_prompt, fn_kwargs=mcp_kwargs
     )
-
-    print(mcp_dataset[0]["premise"])
 
     logger.info("Step 3: Final Inference")
     mcp_dataset = mcp_dataset.map(

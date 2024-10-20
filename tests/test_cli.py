@@ -449,7 +449,10 @@ def test_main_with_mask_strategy_min_k(
         with patch("mm_poe.cli.Namespace") as mock_namespace:
             args = MagicMock()
             args.min_k = 1
-            args.process_of_elimination_prompt = "Select the most suitable option to answer the question. Ignore [MASK] options."
+            args.process_of_elimination_prompt = (
+                "Select the most suitable option "
+                + "to answer the question. Ignore [MASK] options."
+            )
             mock_namespace.return_value = args
 
             with patch("mm_poe.cli.load_data") as mock_load_data, patch(
@@ -549,7 +552,10 @@ def test_main_with_mask_token(
         with patch("mm_poe.cli.Namespace") as mock_namespace:
             args = MagicMock()
             args.mask_token = "XXX"
-            args.process_of_elimination_prompt = "Select the most suitable option to answer the question. Ignore [MASK] options."
+            args.process_of_elimination_prompt = (
+                "Select the most suitable option "
+                + "to answer the question. Ignore [MASK] options."
+            )
             mock_namespace.return_value = args
 
             with patch("mm_poe.cli.load_data") as mock_load_data, patch(
@@ -650,7 +656,10 @@ def test_main_with_mask_strategy_min_k(
         with patch("mm_poe.cli.Namespace") as mock_namespace:
             args = MagicMock()
             args.min_k = 10
-            args.process_of_elimination_prompt = "Select the most suitable option to answer the question. Ignore [MASK] options."
+            args.process_of_elimination_prompt = (
+                "Select the most suitable "
+                + "option to answer the question. Ignore [MASK] options."
+            )
             mock_namespace.return_value = args
 
             with patch("mm_poe.cli.load_data") as mock_load_data, patch(

@@ -24,7 +24,7 @@ bibliography: paper.bib
 
 # Summary
 
-This paper introduces Multiple Choice Reasoning via. Process of Elimination using Multi-Modal models, also know as Multi-Modal Process of Elimination (MM-PoE), a method to enhance vision language models' performance on multiple-choice visual reasoning by employing a two-step scoring system that first eliminates incorrect options and then predicts from the remaining ones. Our experiments across three question answering datasets show the method's effectiveness, particularly in visual reasoning tasks.
+This paper introduces Multiple Choice Reasoning via. Process of Elimination using Multi-Modal models, also know as Multi-Modal Process of Elimination (MM-PoE), a method to enhance vision language models' performance on multiple-choice visual reasoning by employing a two-step scoring system that first eliminates incorrect options and then predicts from the remaining ones. Our experiments across three question answering datasets show the method's effectiveness, particularly in visual reasoning tasks. This method addresses one of the main limitations of the paper [@ma2023poe] by extending to tasks involving multi-modalities and also includes experimentation techniques for few-shot settings.
 
 # Statement of Need
 
@@ -108,6 +108,12 @@ To further explore the versatility of MM-PoE, we also examined its performance i
 
 Our experiments were conducted on three different multiple-choice visual reasoning datasets, selected to cover a broad spectrum of reasoning types and complexities. These tasks include both traditional reasoning tasks and more specialized ones designed to test specific reasoning skills. To ensure a comprehensive evaluation, we used train sets from established benchmarks when available; otherwise, we utilized development sets.
 
+| Dataset | #Options | Train  | Dev  | Test |
+|----|------|------|------|-----------|
+|VQA v1| 18 |  | |     |
+|ScienceQA  | 4 | 2221 |  |  |
+| AI2D | 4 |  |  |     |
+
 ## Model
 
 For the core experiments, we utilized the GIT and BLIP models, chosen for its balance between computational efficiency and performance in instruction-tuned vision language tasks. These models have demonstrated strong capabilities in handling various multi-modal tasks and serves as a robust platform for evaluating our MM-PoE method.
@@ -137,14 +143,14 @@ This experiment setup was designed to rigorously test the effectiveness of MM-Po
 
 MM-PoE consistently outperformed or matched the best-performing baselines across all datasets, showing particular strength in logical reasoning. The method's effectiveness in separating elimination and prediction tasks was crucial to its success.
 
-| Model | Dataset | MCP  | PoE  | PoE - MCP |
-|----|------|------|------|-----------|
-|microsoft/git-base-vqav2| VQA   |  | |     |
-|microsoft/git-base-vqav2| ScienceQA  | 25.8 | 27.2 | +1.4    |
-|microsoft/git-base-vqav2| AI2D  | 25.3 | 26.5 | +1.2     |
-|microsoft/git-base-textvqa| VQA   |  |  |      |
-|microsoft/git-base-textvqa| ScienceQA  | 21.5 | 28.2 | +6.7     |
-|microsoft/git-base-textvqa| AI2D  | 24.2| 26.8 | +2.6      |
+| Model | Dataset | LM | AVG | Calibration | Channel | MCP  | PoE  |
+|----|------|------|------|-----------|---|---|---|
+|microsoft/git-base-vqav2| VQA   | | | | | | |     |
+|microsoft/git-base-vqav2| ScienceQA  | | | | | 25.8 | 27.2 |
+|microsoft/git-base-vqav2| AI2D  | | | | | 25.3 | 26.5 |
+|microsoft/git-base-textvqa| VQA   | | | | | | |
+|microsoft/git-base-textvqa| ScienceQA | | | | | 21.5 | 28.2 |
+|microsoft/git-base-textvqa| AI2D | | | | | 24.2| 26.8 |
 
 **Table 1**: Comparison of Multiple-Choice Prompting (MCP) and Process of Elimination (PoE) accuracy scores on 3 visual question answering datasets for the `microsoft/git-base-vqav2` and `microsoft/git-base-textvqa` models in the zero-shot settings. Each dataset has different number of answer choices. PoE largely outperforms MCP on all the visual reasoning tasks for the two multi-modal models mentioned.
 
