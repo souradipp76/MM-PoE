@@ -56,7 +56,7 @@ def main():
     elif args.do_synonym is True:
         args.method = "generate_synonyms"
     else:
-        args.method = "vision_language_modeling"
+        args.method = "language_modeling"
 
     # print(args)
     logging.basicConfig(
@@ -167,7 +167,7 @@ def main():
             + f"{args.model_family} model: {args.checkpoint}."
         )
         if args.method in [
-            "vision_language_modeling",
+            "language_modeling",
             "multiple_choice_prompt",
         ]:
             _, lm_accuracy, avg_lm_accuracy, _ = inference_language_modeling(

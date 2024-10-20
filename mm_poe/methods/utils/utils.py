@@ -508,6 +508,7 @@ def load_data(args):
         loader = anli_loader
     elif args.dataset == "vqa":
         args.num_options = 18
+        args.split = 'val'
         file_path = os.path.join("../data", args.dataset)
         train_file_path = os.path.join("../data", args.dataset)
         ending_names = [f"hypothesis{i}" for i in range(args.num_options)]
@@ -516,6 +517,7 @@ def load_data(args):
         loader = vqa_loader
     elif args.dataset == "scienceqa":
         args.num_options = 4
+        args.split = 'val'
         file_path = os.path.join("../data", args.dataset)
         train_file_path = os.path.join("../data", args.dataset)
         ending_names = [f"hypothesis{i}" for i in range(args.num_options)]
@@ -525,7 +527,6 @@ def load_data(args):
     elif args.dataset == "ai2d":
         args.num_options = 4
         file_path = os.path.join("../data", args.dataset)
-        train_file_path = os.path.join("../data", args.dataset)
         ending_names = [f"hypothesis{i}" for i in range(args.num_options)]
         header_name = "premise"
         image_header_name = "image_path"
@@ -543,6 +544,7 @@ def load_data(args):
     dev_data = loader(file_path, args)
     dev_dataset = Dataset.from_list(dev_data).with_format("torch")
     if train_file_path is not None:
+        args.split = 'train'
         train_data = loader(train_file_path, args)
         train_dataset = Dataset.from_list(train_data).with_format("torch")
     else:  # BB tasks have no train set.

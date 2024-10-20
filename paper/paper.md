@@ -110,7 +110,7 @@ Our experiments were conducted on three different multiple-choice visual reasoni
 
 | Dataset | #Options | Train  | Dev  | Test |
 |----|------|------|------|-----------|
-|VQA v1| 18 |  | |     |
+|VQA v1.0| 18 | 248,349 | 121,512 | 244,302  |
 |ScienceQA  | 4 | 2221 |  |  |
 | AI2D | 4 |  |  |     |
 
@@ -122,7 +122,7 @@ For the core experiments, we utilized the GIT and BLIP models, chosen for its ba
 
 We compared MM-PoE against five baseline scoring methods to assess its relative performance:
 
-1. **Vision Language Modeling (VLM):** This baseline uses the raw vision language modeling likelihood as the scoring function.
+1. **Language Modeling (LM):** This baseline uses the raw vision language modeling likelihood as the scoring function.
 2. **Average Language Modeling (AVG):** This method averages the log probabilities across all tokens in the option.
 3. **Calibration:** This involves adjusting the VLM scores based on calibration techniques that aim to correct for the model's confidence.
 4. **Channel:** Channel methods score each option based on how likely the question is given the option, which reverses the typical conditional probability used in LMs.
@@ -146,11 +146,11 @@ MM-PoE consistently outperformed or matched the best-performing baselines across
 | Model | Dataset | LM | AVG | Calibration | Channel | MCP  | PoE  |
 |----|------|------|------|-----------|---|---|---|
 |microsoft/git-base-vqav2| VQA   | | | | | | |     |
-|microsoft/git-base-vqav2| ScienceQA  | | | | | 25.8 | 27.2 |
-|microsoft/git-base-vqav2| AI2D  | | | | | 25.3 | 26.5 |
+|microsoft/git-base-vqav2| ScienceQA  | 27.4 | | 23.2| 24.6 | 25.8 | 27.2 |
+|microsoft/git-base-vqav2| AI2D  | 25.4| | 26.4| 25.4 | 25.3 | 26.5 |
 |microsoft/git-base-textvqa| VQA   | | | | | | |
-|microsoft/git-base-textvqa| ScienceQA | | | | | 21.5 | 28.2 |
-|microsoft/git-base-textvqa| AI2D | | | | | 24.2| 26.8 |
+|microsoft/git-base-textvqa| ScienceQA | 21.8| | 25.8 | 23.4 | 23.6 | 28.2 |
+|microsoft/git-base-textvqa| AI2D | 26.5 |  | 20.8| 26.2 | 24.2| 26.8 |
 
 **Table 1**: Comparison of Multiple-Choice Prompting (MCP) and Process of Elimination (PoE) accuracy scores on 3 visual question answering datasets for the `microsoft/git-base-vqav2` and `microsoft/git-base-textvqa` models in the zero-shot settings. Each dataset has different number of answer choices. PoE largely outperforms MCP on all the visual reasoning tasks for the two multi-modal models mentioned.
 
