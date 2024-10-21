@@ -65,7 +65,7 @@ def main():
     ).ask()
 
     args.loading_precision = questionary.select(
-        message="Select model checkpoint?",
+        message="Select model precision?",
         choices=["FP32", "FP16", "BF16", "INT8", "INT4"],
         default="FP32",
     ).ask()
@@ -116,7 +116,8 @@ def main():
         "Image Path?", default="./images/image.png"
     ).ask()
     args.label = questionary.select(
-        message="Answer:", choices=[str(x) for x in range(args.num_options)]
+        message="Ground Truth Option:",
+        choices=[str(x) for x in range(args.num_options)],
     ).ask()
     args.label = int(args.label)
     args.method = "process_of_elimination"
@@ -394,4 +395,4 @@ def main():
         )
     )
     option = int(lm_predictions.numpy()[0])
-    logger.info(f"Answer: {option}")
+    logger.info(f"Predicted Option: {option}. Answer: {args.choices[option]}")

@@ -4,7 +4,7 @@
 [![CI](https://github.com/souradipp76/MM-PoE/actions/workflows/main.yml/badge.svg)](https://github.com/souradipp76/MM-PoE/actions/workflows/main.yml)
 
 
-**Multiple Choice Reasoning via. Process of Elimination using Multi-Modal models**
+**Multiple Choice Reasoning via. Process of Elimination using Multi-Modal Models**
 
 
 ## What is MM-PoE?
@@ -15,7 +15,7 @@ Multi-Modal Process of Elimination (MM-PoE) is a method to enhance vision langua
 
 Large Language models (LLMs) excel at in-context learning for multiple choice reasoning tasks but often treat all options equally, unlike humans who typically eliminate incorrect choices before selecting the correct answer. Same is true for vision language models (VLMs) in case of visual question answering tasks with multiple choices. This discrepancy can limit the effectiveness of vision language models in accurately solving such tasks. To address this, we introduce Multi-Modal Process of Elimination (MM-PoE), a two-step scoring method designed to enhance VLM performance by mimicking human reasoning strategies in multi-modal settings.
 
-In the first step, the method evaluates and scores each option, systematically eliminating those that appear incorrect. The second step involves masking these eliminated options, allowing the VLM to focus solely on the remaining viable choices to make a final prediction. Our zero-shot experiments across three datasets demonstrate MM-PoE's effectiveness, particularly excelling in logical reasoning scenarios . Additionally, MM-PoE proves adaptable to few-shot settings and is compatible with the current state-of-the-art vision language models (VLMs).
+In the first step, the method evaluates and scores each option, systematically eliminating those that appear incorrect. The second step involves masking these eliminated options, allowing the VLM to focus solely on the remaining viable choices to make a final prediction. Our zero-shot experiments across three datasets demonstrate MM-PoE's effectiveness, particularly excelling in logical reasoning scenarios. Additionally, MM-PoE proves adaptable to few-shot settings and is compatible with the current state-of-the-art vision language models (VLMs).
 
 By implementing MM-PoE, researchers and practitioners can experiment and significantly improve the accuracy and reliability of VLMs in multiple choice reasoning tasks, making it a valuable tool for advancing machine learning models for visual reasoning.
 
@@ -65,7 +65,10 @@ $ python -m mm_poe
 $ mm_poe
 ```
 
-The application will prompt the user to provide relevant inputs for a multiple choice question e.g a question, multiple answer choices for the question and the path to the image relevant the question context. Once the inputs are provided, the predicted answer will be displayed based on the selections. Note that this application runs inference for only a single sample at a time.
+The application will prompt the user to provide relevant inputs for a multiple choice question e.g. a question, multiple answer choices for the question and the path to the image relevant the question context. Once the inputs are provided, the predicted answer will be displayed based prompt outputs. Note that this application runs inference for only a single sample at a time.
+
+
+<img src="paper/figures/cli.png" alt="Example" width="500">
 
 ### Running Experiments
 
