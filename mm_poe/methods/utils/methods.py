@@ -169,8 +169,8 @@ def inference_language_modeling(
             labels
         )
         pbar.set_description(
-            f"Language modeling accuracy: {lm_accuracy:.4f},\
-                Average language modeling accuracy: {avg_lm_accuracy:.4f}"
+            f"Language modeling accuracy: {lm_accuracy:.4f}, "
+            + f"Average language modeling accuracy: {avg_lm_accuracy:.4f}"
         )
     avg_log_probs = torch.cat(avg_log_probs, dim=0)
     return avg_log_probs, lm_accuracy, avg_lm_accuracy, lm_predictions
