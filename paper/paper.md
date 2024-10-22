@@ -1,5 +1,5 @@
 ---
-title: 'MM-PoE: Multiple Choice Reasoning via. Process of Elimination using Multi-Modal models'
+title: 'MM-PoE: Multiple Choice Reasoning via. Process of Elimination using Multi-Modal Models'
 tags:
   - machine learning
   - large language models
@@ -18,7 +18,7 @@ affiliations:
    index: 1
  - name: Purdue University
    index: 2
-date: 16 October 2024
+date: 22 October 2024
 bibliography: paper.bib
 ---
 
