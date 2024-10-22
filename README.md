@@ -63,7 +63,7 @@ $ python -m mm_poe
 $ mm_poe
 ```
 
-The application will prompt the user to provide relevant inputs for a multiple choice question e.g. a question, multiple answer choices for the question and the path to the image relevant the question context. Once the inputs are provided, the predicted answer will be displayed based prompt outputs. Note that this application runs inference for only a single sample at a time.
+The application will prompt the user to provide relevant inputs for a multiple choice question e.g. a question, multiple answer choices for the question and the path to the image relevant to the question context. Once the inputs are provided, the predicted answer will be displayed based prompt outputs. Note that this application runs inference for only a single sample at a time.
 
 
 <img src="paper/figures/cli.png" alt="Example" width="500">

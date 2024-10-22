@@ -69,7 +69,10 @@ The goal is to develop an in-context learning method that accurately selects $y$
 In the first step of the MM-PoE method, each option $y_i$ is scored based on a specified metric. The score function, $\text{score}(x, h, y_i)$, evaluates each option's plausibility given the question $x$ and image $h$. The scores are used to eliminate options that are deemed less likely to be correct. Specifically, options whose scores are below the average score are eliminated. This is calculated as follows:
 
 $$
-s_i = \text{score}(x, h, y_i)\\
+s_i = \text{score}(x, h, y_i)
+$$
+
+$$
 Y_{\text{wrong}} = \{y_i | s_i < \text{avg}(s_1, \ldots, s_n)\}
 $$
 
@@ -145,14 +148,12 @@ MM-PoE consistently outperformed or matched the best-performing baselines across
 
 | Model | Dataset | LM | AVG | Calibration | Channel | MCP  | PoE  |
 |----|------|------|------|-----------|---|---|---|
-|microsoft/git-base-vqav2| VQA | 45 | 43 | 38 | | | | |
 |microsoft/git-base-vqav2| ScienceQA | 27.4 | 17.8 | 23.2| 24.6 | 25.8 | 27.2 |
 |microsoft/git-base-vqav2| AI2D | 25.4| 26.2 | 26.4| 25.4 | 25.3 | 26.5 |
-|microsoft/git-base-textvqa| VQA | 18.5 | 17 | | | | |
 |microsoft/git-base-textvqa| ScienceQA | 21.8 | 20.4 | 25.8 | 23.4 | 23.6 | 28.2 |
 |microsoft/git-base-textvqa| AI2D | 26.5 | 27.6 | 20.8| 26.2 | 24.2| 26.8 |
 
-**Table 1**: Comparison of Multiple-Choice Prompting (MCP) and Process of Elimination (PoE) accuracy scores on 3 visual question answering datasets for the `microsoft/git-base-vqav2` and `microsoft/git-base-textvqa` models in the zero-shot settings. Each dataset has different number of answer choices. PoE largely outperforms MCP on all the visual reasoning tasks for the two multi-modal models mentioned.
+**Table 1**: Comparison of Multiple-Choice Prompting (MCP) and Process of Elimination (PoE) accuracy scores on 2 visual question answering datasets for the `microsoft/git-base-vqav2` and `microsoft/git-base-textvqa` models in the zero-shot settings. Each dataset has different number of answer choices. PoE mostly outperforms MCP on all the visual reasoning tasks for the two multi-modal models mentioned.
 
 ## Examples
 
