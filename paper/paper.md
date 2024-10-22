@@ -32,7 +32,7 @@ Large Language models (LLMs) excel at in-context learning for multiple choice re
 
 In the first step, the method evaluates and scores each option, systematically eliminating those that appear incorrect. The second step involves masking these eliminated options, allowing the VLM to focus solely on the remaining viable choices to make a final prediction. Our zero-shot experiments across three datasets demonstrate MM-PoE's effectiveness, particularly excelling in logical reasoning scenarios. Additionally, MM-PoE proves adaptable to few-shot settings and is compatible with the current state-of-the-art vision language models (VLMs).
 
-By implementing MM-PoE, researchers and practitioners can experiment and significantly improve the accuracy and reliability of VLMs in multiple choice reasoning tasks, making it a valuable tool for advancing machine learning models for visual reasoning.
+Using this tool, researchers and practitioners can experiment and significantly improve the accuracy and reliability of VLMs in multiple choice reasoning tasks, making it a valuable tool for advancing machine learning models for visual reasoning.
 
 # State of the Field
 
@@ -145,23 +145,37 @@ MM-PoE consistently outperformed or matched the best-performing baselines across
 
 | Model | Dataset | LM | AVG | Calibration | Channel | MCP  | PoE  |
 |----|------|------|------|-----------|---|---|---|
-|microsoft/git-base-vqav2| VQA   | 45 | 43 | 38| 14 | 2| |     |
-|microsoft/git-base-vqav2| ScienceQA  | 27.4 | | 23.2| 24.6 | 25.8 | 27.2 |
-|microsoft/git-base-vqav2| AI2D  | 25.4| | 26.4| 25.4 | 25.3 | 26.5 |
-|microsoft/git-base-textvqa| VQA   | | | | | | |
-|microsoft/git-base-textvqa| ScienceQA | 21.8| | 25.8 | 23.4 | 23.6 | 28.2 |
-|microsoft/git-base-textvqa| AI2D | 26.5 |  | 20.8| 26.2 | 24.2| 26.8 |
+|microsoft/git-base-vqav2| VQA | 45 | 43 | 38 | | | | |
+|microsoft/git-base-vqav2| ScienceQA | 27.4 | 17.8 | 23.2| 24.6 | 25.8 | 27.2 |
+|microsoft/git-base-vqav2| AI2D | 25.4| 26.2 | 26.4| 25.4 | 25.3 | 26.5 |
+|microsoft/git-base-textvqa| VQA | 18.5 | 17 | | | | |
+|microsoft/git-base-textvqa| ScienceQA | 21.8 | 20.4 | 25.8 | 23.4 | 23.6 | 28.2 |
+|microsoft/git-base-textvqa| AI2D | 26.5 | 27.6 | 20.8| 26.2 | 24.2| 26.8 |
 
 **Table 1**: Comparison of Multiple-Choice Prompting (MCP) and Process of Elimination (PoE) accuracy scores on 3 visual question answering datasets for the `microsoft/git-base-vqav2` and `microsoft/git-base-textvqa` models in the zero-shot settings. Each dataset has different number of answer choices. PoE largely outperforms MCP on all the visual reasoning tasks for the two multi-modal models mentioned.
 
-## Example
+## Examples
 
+### ScienceQA Example
 <img src="figures/image.png" alt="Example" width="500">
 
 **Question**: Which of these states is farthest north?<br>
-**Choices**: West Virginia, Louisiana, Arizona, Oklahoma<br>
-**Masked Choices**: West Virginia, Louisiana, [MASK], [MASK]<br>
-**Predicted**: West Virginia
+**Options**: West Virginia, Louisiana, Arizona, Oklahoma<br>
+**Ground Truth Option**: West Virginia
+
+**Predicted Masks**: West Virginia, Louisiana, [MASK], [MASK]<br>
+**Predicted Option**: West Virginia
+
+### AI2D Example
+
+<img src="figures/17.png" alt="Example" width="500">
+
+**Question**: Are phytoplankton predators or prey in this food chain?<br>
+**Options**: producer, predator, prey, NA<br>
+**Ground Truth Option**: prey
+
+**Predicted Masks**: [MASK], predator, prey, NA<br>
+**Predicted Option**: prey
 
 # Conclusion
 
