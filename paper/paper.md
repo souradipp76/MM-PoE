@@ -9,6 +9,7 @@ tags:
   - visual question answering
 authors:
   - name: Sayak Chakrabarty
+    orcid: 0009-0004-6179-389X
     affiliation: 1
   - name: Souradip Pal
     orcid: 0000-0002-5781-3032
