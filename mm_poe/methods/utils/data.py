@@ -505,7 +505,6 @@ def preprocess_function_causal_vqa_channel(examples, **kwargs):
     tokenizer = processor.tokenizer
     image_processor = processor.image_processor
 
-    ending_names = [k for k in examples.keys() if k.startswith("hypothesis")]
     num_choice = len(ending_names)
     question_headers = examples[header_name]
     first_sentences = [
@@ -1263,24 +1262,24 @@ def vqa_loader(path, args):
     examples = []
 
     print("Loading annotations and questions...")
-    train_anno = json.load(open(ann_file, "r"))
-    train_ques = json.load(open(question_file, "r"))
+    anno = json.load(open(ann_file, "r"))
+    ques = json.load(open(question_file, "r"))
 
     if args.calibration_prompt is not None:
         uncond_premise = args.calibration_prompt
     else:
         uncond_premise = " the answer is:"
 
-    for i in range(len(train_anno["annotations"])):
-        ans = train_anno["annotations"][i]["multiple_choice_answer"]
-        img_id = train_anno["annotations"][i]["image_id"]
+    for i in range(len(anno["annotations"])):
+        ans = anno["annotations"][i]["multiple_choice_answer"]
+        img_id = anno["annotations"][i]["image_id"]
         # question_id = train_anno['annotations'][i]['question_id']
         image_path = os.path.join(
-            img_dir, "COCO_train2014_" + "%012d.jpg" % img_id
+            img_dir, "COCO_%s2014_" % args.split + "%012d.jpg" % img_id
         )
 
-        question = train_ques["questions"][i]["question"]
-        mc_ans = train_ques["questions"][i]["multiple_choices"]
+        question = ques["questions"][i]["question"]
+        mc_ans = ques["questions"][i]["multiple_choices"]
         label = mc_ans.index(ans)
 
         if getattr(args, "multiple_choice_prompt", None) is not None:

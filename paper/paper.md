@@ -24,15 +24,15 @@ bibliography: paper.bib
 
 # Summary
 
-This paper introduces Multiple Choice Reasoning via. Process of Elimination using Multi-Modal models, also know as Multi-Modal Process of Elimination (MM-PoE), a method to enhance vision language models' performance on multiple-choice visual reasoning by employing a two-step scoring system that first eliminates incorrect options and then predicts from the remaining ones. Our experiments across three question answering datasets show the method's effectiveness, particularly in visual reasoning tasks. This method addresses one of the main limitations of the paper [@ma2023poe] by extending to tasks involving multi-modalities and also includes experimentation techniques for few-shot settings.
+This paper introduces Multiple Choice Reasoning via. Process of Elimination using Multi-Modal models, also know as Multi-Modal Process of Elimination (MM-PoE), a method to enhance vision language models' performance on multiple-choice visual reasoning tasks by employing a two-step scoring system that first eliminates incorrect options and then predicts from the remaining ones. Our experiments across three question answering datasets show the method's effectiveness, particularly in visual reasoning tasks. This method addresses one of the key limitations of the paper [@ma2023poe] by extending to tasks involving multi-modalities and also includes experimentation techniques for few-shot settings.
 
 # Statement of Need
 
 Large Language models (LLMs) excel at in-context learning for multiple choice reasoning tasks but often treat all options equally, unlike humans who typically eliminate incorrect choices before selecting the correct answer. Same is true for vision language models (VLMs) in case of visual question answering tasks with multiple choices. This discrepancy can limit the effectiveness of vision language models in accurately solving such tasks. To address this, we introduce Multi-Modal Process of Elimination (MM-PoE), a two-step scoring method designed to enhance VLM performance by mimicking human reasoning strategies in multi-modal settings.
 
-In the first step, the method evaluates and scores each option, systematically eliminating those that appear incorrect. The second step involves masking these eliminated options, allowing the VLM to focus solely on the remaining viable choices to make a final prediction. Our zero-shot experiments across three datasets demonstrate MM-PoE's effectiveness, particularly excelling in logical reasoning scenarios . Additionally, MM-PoE proves adaptable to few-shot settings and is compatible with the current state-of-the-art vision language models (VLMs).
+In the first step, the method evaluates and scores each option, systematically eliminating those that appear incorrect. The second step involves masking these eliminated options, allowing the VLM to focus solely on the remaining viable choices to make a final prediction. Our zero-shot experiments across three datasets demonstrate MM-PoE's effectiveness, particularly excelling in logical reasoning scenarios. Additionally, MM-PoE proves adaptable to few-shot settings and is compatible with the current state-of-the-art vision language models (VLMs).
 
-By implementing MM-PoE, researchers and practitioners can experiment and significantly improve the accuracy and reliability of VLMs in multiple choice reasoning tasks, making it a valuable tool for advancing machine learning models for visual reasoning.
+Using this tool, researchers and practitioners can experiment and significantly improve the accuracy and reliability of VLMs in multiple choice reasoning tasks, making it a valuable tool for advancing machine learning models for visual reasoning.
 
 # State of the Field
 
@@ -106,13 +106,13 @@ To further explore the versatility of MM-PoE, we also examined its performance i
 
 ## Data
 
-Our experiments were conducted on three different multiple-choice visual reasoning datasets, selected to cover a broad spectrum of reasoning types and complexities. These tasks include both traditional reasoning tasks and more specialized ones designed to test specific reasoning skills. To ensure a comprehensive evaluation, we used train sets from established benchmarks when available; otherwise, we utilized development sets.
+Our experiments were conducted on three different multiple-choice visual reasoning datasets - Visual Question Answering(VQA) [@VQA], ScienceQA [@lu2022learn] and Diagram Understanding(AI2D) [@Kembhavi2016ADI], selected to cover a broad spectrum of reasoning types and complexities. These tasks include both traditional visual reasoning tasks and more specialized ones designed to test specific reasoning skills. To ensure a comprehensive evaluation, we used train sets from established benchmarks when available; otherwise, we utilized development sets. In case of varying number of options in the multiple-choice answers for SceinceQA and AI2D datasets, we filtered questions containing image context and exactly four options.
 
 | Dataset | #Options | Train  | Dev  | Test |
 |----|------|------|------|-----------|
-|VQA v1.0| 18 | 248,349 | 121,512 | 244,302  |
-|ScienceQA  | 4 | 2221 |  |  |
-| AI2D | 4 |  |  |     |
+| VQA | 18 | 248,349 | 121,512 | 244,302 |
+| ScienceQA | 4 | 12726 | 4241 | 4241 |
+| AI2D | 4 | 3921 | 982 | - |
 
 ## Model
 
@@ -145,22 +145,37 @@ MM-PoE consistently outperformed or matched the best-performing baselines across
 
 | Model | Dataset | LM | AVG | Calibration | Channel | MCP  | PoE  |
 |----|------|------|------|-----------|---|---|---|
-|microsoft/git-base-vqav2| VQA   | | | | | | |     |
-|microsoft/git-base-vqav2| ScienceQA  | 27.4 | | 23.2| 24.6 | 25.8 | 27.2 |
-|microsoft/git-base-vqav2| AI2D  | 25.4| | 26.4| 25.4 | 25.3 | 26.5 |
-|microsoft/git-base-textvqa| VQA   | | | | | | |
-|microsoft/git-base-textvqa| ScienceQA | 21.8| | 25.8 | 23.4 | 23.6 | 28.2 |
-|microsoft/git-base-textvqa| AI2D | 26.5 |  | 20.8| 26.2 | 24.2| 26.8 |
+|microsoft/git-base-vqav2| VQA | 45 | 43 | 38 | | | | |
+|microsoft/git-base-vqav2| ScienceQA | 27.4 | 17.8 | 23.2| 24.6 | 25.8 | 27.2 |
+|microsoft/git-base-vqav2| AI2D | 25.4| 26.2 | 26.4| 25.4 | 25.3 | 26.5 |
+|microsoft/git-base-textvqa| VQA | 18.5 | 17 | | | | |
+|microsoft/git-base-textvqa| ScienceQA | 21.8 | 20.4 | 25.8 | 23.4 | 23.6 | 28.2 |
+|microsoft/git-base-textvqa| AI2D | 26.5 | 27.6 | 20.8| 26.2 | 24.2| 26.8 |
 
 **Table 1**: Comparison of Multiple-Choice Prompting (MCP) and Process of Elimination (PoE) accuracy scores on 3 visual question answering datasets for the `microsoft/git-base-vqav2` and `microsoft/git-base-textvqa` models in the zero-shot settings. Each dataset has different number of answer choices. PoE largely outperforms MCP on all the visual reasoning tasks for the two multi-modal models mentioned.
 
-## Example
+## Examples
 
-<img src="figures/image.png" alt="Example" width="300">
+### ScienceQA Example
+<img src="figures/image.png" alt="Example" width="500">
 
 **Question**: Which of these states is farthest north?<br>
-**Choices**: West Virginia, Louisiana, Arizona, Oklahoma<br>
-**Predicted**: 0
+**Options**: West Virginia, Louisiana, Arizona, Oklahoma<br>
+**Ground Truth Option**: West Virginia
+
+**Predicted Masks**: West Virginia, Louisiana, [MASK], [MASK]<br>
+**Predicted Option**: West Virginia
+
+### AI2D Example
+
+<img src="figures/17.png" alt="Example" width="500">
+
+**Question**: Are phytoplankton predators or prey in this food chain?<br>
+**Options**: producer, predator, prey, NA<br>
+**Ground Truth Option**: prey
+
+**Predicted Masks**: [MASK], predator, prey, NA<br>
+**Predicted Option**: prey
 
 # Conclusion
 

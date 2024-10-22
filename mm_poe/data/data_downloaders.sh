@@ -80,6 +80,9 @@ cd Annotations
 wget https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/Annotations_Train_mscoco.zip
 unzip Annotations_Train_mscoco.zip
 rm Annotations_Train_mscoco.zip
+wget https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/Annotations_Val_mscoco.zip
+unzip Annotations_Val_mscoco.zip
+rm Annotations_Val_mscoco.zip
 mkdir ../Questions
 cd ../Questions
 wget https://s3.amazonaws.com/cvmlp/vqa/mscoco/vqa/Questions_Train_mscoco.zip
