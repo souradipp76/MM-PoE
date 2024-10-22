@@ -32,7 +32,7 @@ def read_requirements(path):
 setup(
     name="mm_poe",
     version=read("mm_poe", "VERSION"),
-    description="Awesome MM-PoE created by souradipp76",
+    description="Multiple Choice Reasoning via. Process of Elimination using Multi-Modal Models",
     url="https://github.com/souradipp76/MM-PoE/",
     long_description=read("README.md"),
     long_description_content_type="text/markdown",

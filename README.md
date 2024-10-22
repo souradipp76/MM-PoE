@@ -1,6 +1,6 @@
 # MM-PoE
 
-[![codecov](https://codecov.io/gh/souradipp76/MM-PoE/branch/main/graph/badge.svg?token=MM-PoE_token_here)](https://codecov.io/gh/souradipp76/MM-PoE)
+[![codecov](https://codecov.io/gh/souradipp76/MM-PoE/branch/main/graph/badge.svg?token=77bb4fa8-804f-4498-a040-4d93886f32be)](https://codecov.io/gh/souradipp76/MM-PoE)
 [![CI](https://github.com/souradipp76/MM-PoE/actions/workflows/main.yml/badge.svg)](https://github.com/souradipp76/MM-PoE/actions/workflows/main.yml)
 
 
