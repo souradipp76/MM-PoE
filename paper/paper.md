@@ -147,12 +147,12 @@ This experiment setup was designed to rigorously test the effectiveness of MM-Po
 
 MM-PoE consistently outperformed or matched the best-performing baselines across all datasets, showing particular strength in logical reasoning. The method's effectiveness in separating elimination and prediction tasks was crucial to its success.
 
-| Model | Dataset | LM | AVG | Calibration | Channel | MCP  | PoE  |
-|----|------|------|------|-----------|---|---|---|
-|microsoft/git-base-vqav2| ScienceQA | 27.4 | 17.8 | 23.2| 24.6 | 25.8 | 27.2 |
-|microsoft/git-base-vqav2| AI2D | 25.4| 26.2 | 26.4| 25.4 | 25.3 | 26.5 |
-|microsoft/git-base-textvqa| ScienceQA | 21.8 | 20.4 | 25.8 | 23.4 | 23.6 | 28.2 |
-|microsoft/git-base-textvqa| AI2D | 26.5 | 27.6 | 20.8| 26.2 | 24.2| 26.8 |
+| Model                    | Dataset   | LM   | AVG  | Calibration | Channel | MCP  | PoE  |
+|:------------------------:|:---------:|:----:|:----:|:-----------:|:-------:|:----:|:----:|
+|microsoft/git-base-vqav2  | ScienceQA | 27.4 | 17.8 | 23.2        | 24.6    | 25.8 | 27.2 |
+|microsoft/git-base-vqav2  | AI2D      | 25.4 | 26.2 | 26.4        | 25.4    | 25.3 | 26.5 |
+|microsoft/git-base-textvqa| ScienceQA | 21.8 | 20.4 | 25.8        | 23.4    | 23.6 | 28.2 |
+|microsoft/git-base-textvqa| AI2D      | 26.5 | 27.6 | 20.8        | 26.2    | 24.2 | 26.8 |
 
 **Table 1**: Comparison of Multiple-Choice Prompting (MCP) and Process of Elimination (PoE) accuracy scores on 2 visual question answering datasets for the `microsoft/git-base-vqav2` and `microsoft/git-base-textvqa` models in the zero-shot settings. Each dataset has different number of answer choices. PoE mostly outperforms MCP on all the visual reasoning tasks for the two multi-modal models mentioned.
 
@@ -190,3 +190,5 @@ While this method uses publicly available data and models, users should be aware
 # Acknowledgements
 
 We would like to extend our sincere gratitude to Northwestern University for providing access to their servers and GPU resources, which were instrumental in conducting this research. The computational power and infrastructure made available by the university enabled the efficient processing and analysis of large datasets, significantly contributing to the success of the project. Without this support, the research would not have been possible at the scale or speed required. We deeply appreciate the university’s commitment to fostering a collaborative research environment and supporting technological innovation.
+
+# References
