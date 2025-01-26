@@ -91,7 +91,7 @@ Run scripts in `methods/` to get the results:
 
 ```bash
 $ cd methods
-$ bash 7_main_exp.sh
+$ bash 7_main_exp_vqa.sh
 #or
 $ bash 9_mask_vqa.sh
 #or

@@ -101,7 +101,7 @@ rm train2014.zip
 wget http://images.cocodataset.org/zips/val2014.zip
 unzip val2014.zip
 rm val2014.zip
-cd ../data
+cd ../../..
 
 # scienceqa
 mkdir scienceqa
@@ -113,7 +113,9 @@ unzip train.zip
 rm train.zip
 unzip val.zip
 rm val.zip
-cd ../data
+unzip test.zip
+rm test.zip
+cd ../..
 
 # ai2d
 mkdir ai2d
@@ -122,5 +124,5 @@ echo "Downloading ai2d dataset..."
 wget http://ai2-website.s3.amazonaws.com/data/ai2d-all.zip
 unzip ai2d-all.zip
 rm ai2d-all.zip
-cd ../data
+cd ../..
 echo "Done."

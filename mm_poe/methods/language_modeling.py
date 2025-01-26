@@ -70,7 +70,7 @@ def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     # get model path: ../models/args.model_family/args.checkpoint
     model_path = os.path.join(
-        "/content/models", args.model_family, args.checkpoint
+        "../models", args.model_family, args.checkpoint
     )
     model, tokenizer = load_model(device, model_path, args)
     if args.model_family in ["GPT2", "Pythia", "OPT-IML", "Dolly"]:
@@ -135,7 +135,7 @@ def main():
             )
             # get model path: ../models/args.model_family/args.checkpoint
             amateur_model_path = os.path.join(
-                "/content/models", args.model_family, args.amateur_checkpoint
+                "../models", args.model_family, args.amateur_checkpoint
             )
             amateur_model, _ = load_model(device, amateur_model_path, args)
             # we want to integrate contrastive decoding with other methods,

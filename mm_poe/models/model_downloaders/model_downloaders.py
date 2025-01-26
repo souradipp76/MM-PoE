@@ -198,7 +198,7 @@ def main():
         for folder in folders_to_delete:
             print(f"Removing cached files at {folder}...")
             shutil.rmtree(folder)
-
+    print("Done")    
 
 if __name__ == "__main__":
     main()

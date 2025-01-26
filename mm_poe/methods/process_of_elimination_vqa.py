@@ -67,7 +67,7 @@ def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     # get model path: ../models/args.model_family/args.checkpoint
     model_path = os.path.join(
-        "/content/models", args.model_family, args.checkpoint
+        "../models", args.model_family, args.checkpoint
     )
     model, tokenizer = load_model(device, model_path, args)
     if args.model_family in ["GPT2", "Pythia", "OPT-IML", "Dolly"]:
