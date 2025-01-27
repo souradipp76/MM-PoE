@@ -75,9 +75,7 @@ def main():
     logger.info(f"Load {args.model_family} model: {args.checkpoint}.")
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     # get model path: ../models/args.model_family/args.checkpoint
-    model_path = os.path.join(
-        "../models", args.model_family, args.checkpoint
-    )
+    model_path = os.path.join("../models", args.model_family, args.checkpoint)
     model, tokenizer = load_model(device, model_path, args)
     if args.model_family in ["GPT2", "Pythia", "OPT-IML", "Dolly"]:
         compute_func = compute_conditional_score_causal
