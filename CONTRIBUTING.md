@@ -2,6 +2,12 @@
 
 mm_poe welcomes contributions from the community.
 
+# Asking Questions and Reporting Issues
+
+Have a question? Have you identified a reproducible problem in MM-PoE? Have a feature request? We want to hear about it!
+
+Ask a question, submit a bug report or feature request on [GitHub Issues](https://github.com/souradipp76/MM-PoE/issues).
+
 **You need PYTHON3!**
 
 This instructions are for linux base systems. (Linux, MacOS, BSD, etc.)

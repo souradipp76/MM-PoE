@@ -1497,3 +1497,76 @@ def single_inference_loader(path, args):
     examples += example
     print("Dataset Length: ", len(examples))
     return examples
+
+
+# Custom Dataloader
+def custom_loader(path, args):
+    # Annotation/Question file format:
+    # {
+    #     "COCO_train2014_000000000025": {
+    #         "question": "What is the capital of France?",
+    #         "choices": ["Paris", "London", "Berlin", "Madrid"],
+    #         "answer": 0,
+    #         "image": "COCO_train2014_000000000025.jpg",
+    #     }
+    # }
+    ann_file = "%s/question.json" % (path)
+
+    # Image directory/file format:
+    # images/COCO_train2014_000000000025.jpg
+    img_dir = "%s/images" % (path)
+
+    alphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    examples = []
+
+    print("Loading annotations and images...")
+    anno = json.load(open(ann_file, "r"))
+
+    if args.calibration_prompt is not None:
+        uncond_premise = args.calibration_prompt
+    else:
+        uncond_premise = " the answer is:"
+
+    for i, (question_id, value) in enumerate(anno.items()):
+        question = value["question"]
+        mc_ans = value["choices"]
+        label = int(value["answer"])
+        image_file = value["image"]
+
+        if (not len(mc_ans) == args.num_options) or (image_file is None):
+            continue
+
+        image_path = os.path.join(img_dir, image_file)
+        if getattr(args, "multiple_choice_prompt", None) is not None:
+            hypotheses = mc_ans
+            # Question: What is the capital of France?
+            # A. Paris
+            # B. London
+            # C. Berlin
+            # D. Madrid
+            # Answer:
+            options = "\n".join(
+                [f"{alphabets[i]}. {ans}" for i, ans in enumerate(mc_ans)]
+            )
+            premise = (
+                f"{args.multiple_choice_prompt} "
+                + f"Question: {question}\n{options}\nAnswer:"
+            )
+        else:
+            hypotheses = mc_ans
+            premise = question + uncond_premise
+
+        example = [
+            {
+                "premise": premise,
+                "image_path": image_path,
+                "uncond_premise": uncond_premise,
+                "label": label,
+            }
+        ]
+
+        for idx, ans in enumerate(hypotheses):
+            example[0][f"hypothesis{idx}"] = ans
+        examples += example
+    print("Dataset Length: ", len(examples))
+    return examples

@@ -126,7 +126,7 @@ def main():
         args.dataset = dataset
         # multiple_choice_prompt = args.multiple_choice_prompt
         args.multiple_choice_prompt = None
-        if args.dataset in ["vqa", "scienceqa", "ai2d"]:
+        if args.dataset in ["vqa", "scienceqa", "ai2d", "custom_dataset"]:
             (
                 ending_names,
                 header_name,
@@ -144,7 +144,7 @@ def main():
 
         mcp_args = copy.deepcopy(args)
         mcp_args.multiple_choice_prompt = multiple_choice_prompt
-        if args.dataset in ["vqa", "scienceqa", "ai2d"]:
+        if args.dataset in ["vqa", "scienceqa", "ai2d", "custom_dataset"]:
             _, _, _, raw_mcp_dataset, n_shot_mcp_dataset = load_data(mcp_args)
         else:
             _, _, raw_mcp_dataset, n_shot_mcp_dataset = load_data(mcp_args)

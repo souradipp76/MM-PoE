@@ -17,7 +17,11 @@ In the first step, the method evaluates and scores each option, systematically e
 
 Using this tool, researchers and practitioners can experiment and significantly improve the accuracy and reliability of VLMs in multiple choice reasoning tasks, making it a valuable tool for advancing machine learning models for visual reasoning.
 
-## Installing MM-PoE
+
+
+## Installation
+
+MM-PoE is available only on Linux/Windows. CUDA-compatible hardware is required to run the tool.
 
 ### Install it from PyPI
 
@@ -98,7 +102,81 @@ $ bash 9_mask_vqa.sh
 $ bash 11_few_shot_vqa.sh
 ```
 
-The numbers 7, 9 and 11 in the script names correspnds to the experiments related to MM-PoE using VLMs for multiple-choice visual question answering tasks and rest corresponds to experiments related to PoE using LLMs on logical resoning tasks. The results will be saved in `results/`.
+The numbers 7, 9 and 11 in the script names correspnds to the experiments related to MM-PoE using VLMs for multiple-choice visual question answering tasks and rest corresponds to experiments related to PoE using LLMs on logical resoning tasks. The results will be saved in `results/`. 
+
+Alternatively, run the notebook `scripts/experiments.ipynb` on Google Colab: <a src="https://colab.research.google.com/assets/colab-badge.svg" href="https://colab.research.google.com/github/souradipp76/MM-PoE/blob/main/scripts/experiments.ipynb" target="_blank" rel="noopener noreferrer"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"></a>
+
+MM-PoE is compared against the following five baseline scoring methods to assess its relative performance:
+
+- **Language Modeling (LM)**: This baseline uses the raw vision language modeling likelihood as the scoring function.
+- **Average Language Modeling (AVG)**: This method averages the log probabilities across all tokens in the option.
+- **Calibration**: This involves adjusting the VLM scores based on calibration techniques that aim to correct for the model's confidence.
+- **Channel**: Channel methods score each option based on how likely the question is given the option, which reverses the typical conditional probability used in VLMs.
+- **Multiple Choice Prompting (MCP)**: This approach formats the input by presenting the question followed by all options, prompting the model to select the most likely option.
+
+| **Method**                | **Score**                                      | **Input**                                           | **Output** |
+|---------------------------|-----------------------------------------------|-----------------------------------------------------|------------|
+| LM                        | $\log P (y_i\|x,h)$                           | $x, \langle h \rangle$ the answer is:              | $y_1$      |
+| AVG                       | $1/len(y_i)*\log P(y_i\|x,h)$                  | $x, \langle h \rangle$ the answer is:              | $y_1$      |
+| Calibration               | $\log P(y_i\|x,h)$                            | $x, \langle h \rangle$ the answer is:              | $y_1$      |
+| Channel                   | $\log P(x\|y_i,h)$                            | $y_1, \langle h \rangle$                           | $x$ the answer is: |
+| MCP                       | $\log P (y_i\|x,h, Y )$                       | Question: $x$, Image: $\langle h \rangle$ <br>A. $y_1$ <br>B. $y_2$ <br>C. $y_3$ <br>Answer:      | A          |
+| MM-POE: Elimination       | $\log P (y_i\|x,h, Y )$                       | Question: $x$, Image: $\langle h \rangle$ <br>A. $y_1$ <br>B. $y_2$ <br>C. $y_3$ <br>Answer:      | A          |
+| MM-POE: Prediction        | $\log P (y_i\|x_{mask},h, Y \setminus Y_{wrong})$ | Select the most suitable option to answer the question. <br>Ignore [MASK] options. <br> Question: $x$, Image: $\langle h \rangle$ <br> A. [MASK] <br>B. $y_2$ <br>C. $y_3$ <br>Answer:            | B          |
+|                           |                                               |                           |            |
+
+
+Below are the details about the scripts running the experiments. By default, the experiments use `Salesforce/blip2-opt-2.7b` model and runs on all the supported datasets(`VQA`, `ScienceQA` and `AI2D`) for 5 random seeds. 
+- `7_main_exp_vqa.sh` - Evaluates the accuracy for the scoring methods `LM`, `AVG`, `Calibration`, `Channel`, `MCP` and `MM-POE` in zero-shot settings. `MM-POE` uses `MCP` for `MM-POE Elimination` phase. 
+- `9_mask_vqa.sh` - Evaluates the accuracy for the scoring method `MM-POE` with all `LM`, `AVG`, `Calibration`, `Channel` and `MCP` for `MM-POE Elimination` phase in zero-shot settings. It also uses two masking strategies `lowest` and `below_average` to mask the options.
+- `11_few_shot_vqa.sh` - Evaluates the accuracy for the scoring method `MCP` and `MM-POE` with `MCP` in the `MM-POE Elimination` phase using `lowest` masking strategy for the $n$-shot case with $n = 0,1,3$.
+
+### Supported Datasets
+- `VQA` - https://visualqa.org
+- `ScienceQA` - https://scienceqa.github.io
+- `AI2D` - https://prior.allenai.org/projects/diagram-understanding
+
+| **Dataset**  | **#Options** | **Train** | **Dev** | **Test** |
+|-------------|-------------|----------|--------|--------|
+| VQA         | 18          | 248,349  | 121,512| 244,302|
+| ScienceQA   | 4           | 12,726   | 4,241  | 4,241  |
+| AI2D        | 4           | 3,921    | 982    | -      |
+
+**Using Custom Dataset**
+
+To use your own custom dataset, save your data under `mm_poe/data/custom_dataset`. Tne dataset should contain a `mm_poe/data/custom_dataset/questions.json` file in the following format given below. All the images should be under `mm_poe/data/custom_dataset/images` directory. While running the experiements, set the argument as `datasets="custom_dataset"` in the scripts.
+
+*Questions file format:*
+```json
+{
+   "COCO_train2014_000000000025": {
+       "question": "What is the capital of France?",
+        "choices": ["Paris", "London", "Berlin", "Madrid"],
+        "answer": 0,
+        "image": "COCO_train2014_000000000025.jpg",
+    },
+    "COCO_train2014_000000000026": {
+        ...
+        ...
+    }
+}
+```
+
+### Supported Models
+- `BLIP2`
+  - `Salesforce/blip2-opt-2.7b` - https://huggingface.co/Salesforce/blip2-opt-2.7b
+  - `Salesforce/blip2-flan-t5-xl` - https://huggingface.co/Salesforce/blip2-flan-t5-xl
+- `InstructBLIP`
+  - `Salesforce/instructblip-vicuna-7b` - https://huggingface.co/Salesforce/instructblip-vicuna-7b
+- `GIT`
+  - `microsoft/git-base-vqav2` - https://huggingface.co/microsoft/git-base-vqav2
+  - `microsoft/git-base-textvqa` - https://huggingface.co/microsoft/git-base-textvqa
+- `PaliGemma`
+  - `google/paligemma-3b-ft-science-qa-448` - https://huggingface.co/google/paligemma-3b-ft-science-qa-448
+  - `google/paligemma-3b-ft-vqav2-448` - https://huggingface.co/google/paligemma-3b-ft-vqav2-448
+  - `google/paligemma-3b-ft-ai2d-448` - https://huggingface.co/google/paligemma-3b-ft-ai2d-448
+- `Idefics2`
+  - `HuggingFaceM4/idefics2-8b` - https://huggingface.co/HuggingFaceM4/idefics2-8b
 
 ## Contributing
 

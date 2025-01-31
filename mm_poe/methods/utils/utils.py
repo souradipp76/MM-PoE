@@ -32,6 +32,7 @@ from .data import (
     scienceqa_loader,
     ai2d_loader,
     single_inference_loader,
+    custom_loader,
 )
 
 
@@ -537,6 +538,15 @@ def load_data(args):
         header_name = "premise"
         image_header_name = "image_path"
         loader = single_inference_loader
+    elif args.dataset == "custom_dataset":
+        args.num_options = 4
+        args.split = "val"
+        file_path = os.path.join("../data", args.dataset)
+        train_file_path = os.path.join("../data", args.dataset)
+        ending_names = [f"hypothesis{i}" for i in range(args.num_options)]
+        header_name = "premise"
+        image_header_name = "image_path"
+        loader = custom_loader
     else:
         print(f"{args.dataset}: downloader not implemented.")
         return
@@ -549,7 +559,13 @@ def load_data(args):
         train_dataset = Dataset.from_list(train_data).with_format("torch")
     else:  # BB tasks have no train set.
         train_dataset = dev_dataset
-    if args.dataset in ["vqa", "scienceqa", "ai2d", "single_inference"]:
+    if args.dataset in [
+        "vqa",
+        "scienceqa",
+        "ai2d",
+        "single_inference",
+        "custom_dataset",
+    ]:
         return (
             ending_names,
             header_name,

@@ -112,7 +112,7 @@ def main():
     # evaluate on each dataset
     for dataset in args.datasets:
         args.dataset = dataset
-        if args.dataset in ["vqa", "scienceqa", "ai2d"]:
+        if args.dataset in ["vqa", "scienceqa", "ai2d", "custom_dataset"]:
             (
                 ending_names,
                 header_name,
