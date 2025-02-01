@@ -132,7 +132,7 @@ Below are the details about the scripts running the experiments. By default, the
 - `11_few_shot_vqa.sh` - Evaluates the accuracy for the scoring method `MCP` and `MM-POE` with `MCP` in the `MM-POE Elimination` phase using `lowest` masking strategy for the $n$-shot case with $n = 0,1,3$.
 
 ### Supported Datasets
-- `VQA` - https://visualqa.org
+- `VQA(v1)` - https://visualqa.org
 - `ScienceQA` - https://scienceqa.github.io
 - `AI2D` - https://prior.allenai.org/projects/diagram-understanding
 
@@ -150,10 +150,10 @@ To use your own custom dataset, save your data under `mm_poe/data/custom_dataset
 ```json
 {
    "COCO_train2014_000000000025": {
-       "question": "What is the capital of France?",
+        "question": "What is the capital of France?",
         "choices": ["Paris", "London", "Berlin", "Madrid"],
         "answer": 0,
-        "image": "COCO_train2014_000000000025.jpg",
+        "image": "COCO_train2014_000000000025.jpg"
     },
     "COCO_train2014_000000000026": {
         ...
