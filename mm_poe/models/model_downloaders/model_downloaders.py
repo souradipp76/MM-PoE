@@ -1,4 +1,4 @@
-""" Model Downloaders """
+"""Model Downloaders"""
 
 import argparse
 import glob
