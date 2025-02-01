@@ -1,4 +1,4 @@
-transformers==4.41.1
+transformers
 datasets
 torch
 huggingface_hub

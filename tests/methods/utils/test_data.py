@@ -184,6 +184,7 @@ def test_preprocess_function_seq2seq_vqa(sample_args):
         "header_name": "question",
         "image_header_name": "image_path",
         "processor": processor,
+        "image_token": "",
     }
     with patch("PIL.Image.open", return_value=MagicMock(spec=Image.Image)):
         output = preprocess_function_seq2seq_vqa(examples, **kwargs)
@@ -596,6 +597,7 @@ def test_preprocess_function_causal_vqa(sample_args):
         "header_name": "question",
         "image_header_name": "image_path",
         "processor": processor,
+        "image_token": "",
     }
     with patch("PIL.Image.open", return_value=MagicMock(spec=Image.Image)):
         output = preprocess_function_causal_vqa(examples, **kwargs)
@@ -632,6 +634,7 @@ def test_preprocess_function_seq2seq_vqa_channel(sample_args):
         "header_name": "question",
         "image_header_name": "image_path",
         "processor": processor,
+        "image_token": "",
     }
     with patch("PIL.Image.open", return_value=MagicMock(spec=Image.Image)):
         output = preprocess_function_seq2seq_vqa_channel(examples, **kwargs)
@@ -667,6 +670,7 @@ def test_preprocess_function_causal_vqa_channel(sample_args):
         "header_name": "question",
         "image_header_name": "image_path",
         "processor": processor,
+        "image_token": "",
     }
     with patch("PIL.Image.open", return_value=MagicMock(spec=Image.Image)):
         output = preprocess_function_causal_vqa_channel(examples, **kwargs)

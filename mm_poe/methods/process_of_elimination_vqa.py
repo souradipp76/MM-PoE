@@ -166,7 +166,10 @@ def main():
                 "tokenizer": tokenizer,
                 "processor": processor,
                 "image_header_name": image_header_name,
+                "image_token": "<image>",
             }
+            if args.model_family in ["GIT"]:
+                fn_kwargs["image_token"] = ""
         else:
             fn_kwargs = {
                 "ending_names": ending_names,
@@ -226,7 +229,10 @@ def main():
                     "tokenizer": tokenizer,
                     "processor": processor,
                     "image_header_name": image_header_name,
+                    "image_token": "<image>",
                 }
+                if args.model_family in ["GIT"]:
+                    fn_kwargs["image_token"] = ""
             else:
                 fn_kwargs = {
                     "ending_names": ending_names,

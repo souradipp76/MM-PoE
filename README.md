@@ -144,7 +144,7 @@ Below are the details about the scripts running the experiments. By default, the
 
 **Using Custom Dataset**
 
-To use your own custom dataset, save your data under `mm_poe/data/custom_dataset`. Tne dataset should contain a `mm_poe/data/custom_dataset/questions.json` file in the following format given below. All the images should be under `mm_poe/data/custom_dataset/images` directory. While running the experiements, set the argument as `datasets="custom_dataset"` in the scripts.
+To use your own custom dataset, save your data under `mm_poe/data/custom_dataset`. The dataset should contain a `mm_poe/data/custom_dataset/questions.json` file in the following format given below. All the images should be under `mm_poe/data/custom_dataset/images` directory. While running the experiements, set the argument as `datasets="custom_dataset"` in the scripts. Check out the example custom dataset under the `mm_poe/data/custom_datasets` directory.
 
 *Questions file format:*
 ```json
@@ -177,6 +177,8 @@ To use your own custom dataset, save your data under `mm_poe/data/custom_dataset
   - `google/paligemma-3b-ft-ai2d-448` - https://huggingface.co/google/paligemma-3b-ft-ai2d-448
 - `Idefics2`
   - `HuggingFaceM4/idefics2-8b` - https://huggingface.co/HuggingFaceM4/idefics2-8b
+
+Any of the above models can be selected by changing the `model_family` and `checkpoints` argument in the `models/model_downloaders/model_downloaders.sh` script for downloading the model and in the three scripts for the experiments. Note that appropriate `loading_precision` needs to set based on the model and hardware used.
 
 ## Contributing
 

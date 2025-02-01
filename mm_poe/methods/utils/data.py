@@ -147,11 +147,12 @@ def preprocess_function_causal(examples, **kwargs):
 
 
 def preprocess_function_seq2seq_vqa(examples, **kwargs):
-    ending_names, header_name, image_header_name, processor = (
+    ending_names, header_name, image_header_name, processor, image_token = (
         kwargs["ending_names"],
         kwargs["header_name"],
         kwargs["image_header_name"],
         kwargs["processor"],
+        kwargs["image_token"],
     )
     tokenizer = processor.tokenizer
     image_processor = processor.image_processor
@@ -160,7 +161,8 @@ def preprocess_function_seq2seq_vqa(examples, **kwargs):
     question_headers = examples[header_name]
     # the tokenizer handles multiple spaces.
     first_sentences = [
-        [context] * len(ending_names) for context in examples[header_name]
+        [image_token + context] * len(ending_names)
+        for context in examples[header_name]
     ]
     second_sentences = [
         [f"{examples[end][i]}" for end in ending_names]
@@ -208,11 +210,12 @@ def preprocess_function_seq2seq_vqa(examples, **kwargs):
 
 
 def preprocess_function_causal_vqa(examples, **kwargs):
-    ending_names, header_name, image_header_name, processor = (
+    ending_names, header_name, image_header_name, processor, image_token = (
         kwargs["ending_names"],
         kwargs["header_name"],
         kwargs["image_header_name"],
         kwargs["processor"],
+        kwargs["image_token"],
     )
     tokenizer = processor.tokenizer
     image_processor = processor.image_processor
@@ -220,7 +223,8 @@ def preprocess_function_causal_vqa(examples, **kwargs):
     num_choice = len(ending_names)
     question_headers = examples[header_name]
     first_sentences = [
-        [context] * len(ending_names) for context in examples[header_name]
+        [image_token + context] * len(ending_names)
+        for context in examples[header_name]
     ]
     second_sentences = [
         [f"{examples[end][i]}" for end in ending_names]
@@ -432,11 +436,12 @@ def preprocess_function_causal_channel(examples, **kwargs):
 
 
 def preprocess_function_seq2seq_vqa_channel(examples, **kwargs):
-    ending_names, header_name, image_header_name, processor = (
+    ending_names, header_name, image_header_name, processor, image_token = (
         kwargs["ending_names"],
         kwargs["header_name"],
         kwargs["image_header_name"],
         kwargs["processor"],
+        kwargs["image_token"],
     )
     tokenizer = processor.tokenizer
     image_processor = processor.image_processor
@@ -448,7 +453,7 @@ def preprocess_function_seq2seq_vqa_channel(examples, **kwargs):
         [context] * len(ending_names) for context in examples[header_name]
     ]
     second_sentences = [
-        [f"{examples[end][i]}" for end in ending_names]
+        [image_token + f"{examples[end][i]}" for end in ending_names]
         for i, header in enumerate(question_headers)
     ]
 
@@ -496,11 +501,12 @@ def preprocess_function_seq2seq_vqa_channel(examples, **kwargs):
 
 
 def preprocess_function_causal_vqa_channel(examples, **kwargs):
-    ending_names, header_name, image_header_name, processor = (
+    ending_names, header_name, image_header_name, processor, image_token = (
         kwargs["ending_names"],
         kwargs["header_name"],
         kwargs["image_header_name"],
         kwargs["processor"],
+        kwargs["image_token"],
     )
     tokenizer = processor.tokenizer
     image_processor = processor.image_processor
@@ -508,7 +514,8 @@ def preprocess_function_causal_vqa_channel(examples, **kwargs):
     num_choice = len(ending_names)
     question_headers = examples[header_name]
     first_sentences = [
-        [context] * len(ending_names) for context in examples[header_name]
+        [image_token + context] * len(ending_names)
+        for context in examples[header_name]
     ]
     second_sentences = [
         [f"{examples[end][i]}" for end in ending_names]
@@ -1510,7 +1517,7 @@ def custom_loader(path, args):
     #         "image": "COCO_train2014_000000000025.jpg",
     #     }
     # }
-    ann_file = "%s/question.json" % (path)
+    ann_file = "%s/questions.json" % (path)
 
     # Image directory/file format:
     # images/COCO_train2014_000000000025.jpg

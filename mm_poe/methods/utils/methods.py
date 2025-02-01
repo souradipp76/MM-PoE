@@ -631,6 +631,7 @@ def compute_conditional_score_seq2seq_vqa(batch, model, device, pad_token_id):
         )
 
     _, logits = outputs.loss, outputs.logits
+    logits = logits[:, : ending_input_ids.shape[-1], :]
     # e.g., (batch_size * #option, ending_seq_len, #vocab): (64, 18, 32128)
     logits = logits.contiguous().view(-1, logits.shape[-1])
     # ignore padding token: 0

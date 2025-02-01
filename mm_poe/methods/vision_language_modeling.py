@@ -147,7 +147,10 @@ def main():
                 "tokenizer": tokenizer,
                 "processor": processor,
                 "image_header_name": image_header_name,
+                "image_token": "<image>",
             }
+            if args.model_family in ["GIT"]:
+                fn_kwargs["image_token"] = ""
         num_of_options = len(ending_names)
         tokenized_dataset = raw_dataset.map(
             preprocess_func,
@@ -236,7 +239,10 @@ def main():
                     "tokenizer": tokenizer,
                     "processor": processor,
                     "image_header_name": image_header_name,
+                    "image_token": "<image>",
                 }
+                if args.model_family in ["GIT"]:
+                    fn_kwargs["image_token"] = ""
             tokenized_calibration_dataset = raw_dataset.map(
                 preprocess_func,
                 fn_kwargs=fn_kwargs,
@@ -320,7 +326,10 @@ def main():
                     "tokenizer": tokenizer,
                     "processor": processor,
                     "image_header_name": image_header_name,
+                    "image_token": "<image>",
                 }
+                if args.model_family in ["GIT"]:
+                    fn_kwargs["image_token"] = ""
             tokenized_synonyms_dataset = synonyms_dataset.map(
                 preprocess_func,
                 fn_kwargs=fn_kwargs,
