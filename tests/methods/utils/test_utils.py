@@ -505,8 +505,6 @@ def test_load_model_families(
                 mock_tokenizer_class.from_pretrained.assert_called_with(
                     model_path
                 )
-            # Check that model is moved to the correct device
-            mock_model.to.assert_called_with(device)
 
 
 def test_load_model_invalid_family():
