@@ -28,7 +28,8 @@ from mm_poe.methods.utils.methods import (
 from mm_poe.methods.utils.utils import load_data, load_model, set_seed
 
 all_checkpoints = {
-    "BLIP2": ["Salesforce/blip2-opt-2.7b", "Salesforce/blip2-flan-t5-xl"],
+    "BLIP2-OPT": ["Salesforce/blip2-opt-2.7b"],
+    "BLIP2-T5": ["Salesforce/blip2-flan-t5-xl"],
     "InstructBLIP": ["Salesforce/instructblip-vicuna-7b"],
     "GIT": ["microsoft/git-base-vqav2", "microsoft/git-base-textvqa"],
     "PaliGemma": [
@@ -53,7 +54,14 @@ def main():
 
     args.model_family = questionary.select(
         message="Select model family?",
-        choices=["BLIP2", "InstructBLIP", "GIT", "PaliGemma", "Idefics2"],
+        choices=[
+            "BLIP2-OPT",
+            "BLIP2-T5",
+            "InstructBLIP",
+            "GIT",
+            "PaliGemma",
+            "Idefics2",
+        ],
         default="GIT",
     ).ask()
 
@@ -157,7 +165,12 @@ def main():
         args.output_dir, args.model_family, args.checkpoint
     )
     model, tokenizer = load_model(device, model_path, args)
-    if args.model_family in ["BLIP2", "InstructBLIP", "PaliGemma", "Idefics2"]:
+    if args.model_family in [
+        "BLIP2-T5",
+        "InstructBLIP",
+        "PaliGemma",
+        "Idefics2",
+    ]:
         compute_func = compute_conditional_score_seq2seq_vqa
         preprocess_func = preprocess_function_seq2seq_vqa
         preprocess_func_channel = preprocess_function_seq2seq_vqa_channel
@@ -170,7 +183,7 @@ def main():
         ]
         processor = tokenizer
         tokenizer = processor.tokenizer
-    elif args.model_family in ["GIT"]:
+    elif args.model_family in ["BLIP2-OPT", "GIT"]:
         compute_func = compute_conditional_score_causal_vqa
         preprocess_func = preprocess_function_causal_vqa
         preprocess_func_channel = preprocess_function_causal_vqa_channel

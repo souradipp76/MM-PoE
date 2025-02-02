@@ -312,7 +312,8 @@ def inference_contrastive_decoding(method, model, **kwargs):
         "tokenizer": tokenizer,
     }
     if args.model_family in [
-        "BLIP2",
+        "BLIP2-OPT",
+        "BLIP2-T5",
         "InstructBLIP",
         "GIT",
         "PaliGemma",
@@ -352,7 +353,8 @@ def inference_contrastive_decoding(method, model, **kwargs):
             "tokenizer": tokenizer,
         }
         if args.model_family in [
-            "BLIP2",
+            "BLIP2-OPT",
+            "BLIP2-T5",
             "InstructBLIP",
             "GIT",
             "PaliGemma",

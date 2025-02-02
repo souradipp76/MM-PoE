@@ -126,7 +126,7 @@ MM-PoE is compared against the following five baseline scoring methods to assess
 |                           |                                               |                           |            |
 
 
-Below are the details about the scripts running the experiments. By default, the experiments use `Salesforce/blip2-opt-2.7b` model and runs on all the supported datasets(`VQA`, `ScienceQA` and `AI2D`) for 5 random seeds. 
+Below are the details about the scripts running the experiments. By default, the experiments use `microsoft/git-base-vqav2` model and runs on all the supported datasets(`VQA`, `ScienceQA` and `AI2D`) for 5 random seeds. 
 - `7_main_exp_vqa.sh` - Evaluates the accuracy for the scoring methods `LM`, `AVG`, `Calibration`, `Channel`, `MCP` and `MM-POE` in zero-shot settings. `MM-POE` uses `MCP` for `MM-POE Elimination` phase. 
 - `9_mask_vqa.sh` - Evaluates the accuracy for the scoring method `MM-POE` with all `LM`, `AVG`, `Calibration`, `Channel` and `MCP` for `MM-POE Elimination` phase in zero-shot settings. It also uses two masking strategies `lowest` and `below_average` to mask the options.
 - `11_few_shot_vqa.sh` - Evaluates the accuracy for the scoring method `MCP` and `MM-POE` with `MCP` in the `MM-POE Elimination` phase using `lowest` masking strategy for the $n$-shot case with $n = 0,1,3$.

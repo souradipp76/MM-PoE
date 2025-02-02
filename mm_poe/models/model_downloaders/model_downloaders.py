@@ -50,7 +50,8 @@ all_checkpoints = {
         "mosaicml/mpt-7b-storywriter",
     ],
     "Dolly": ["databricks/dolly-v2-7b"],
-    "BLIP2": ["Salesforce/blip2-opt-2.7b", "Salesforce/blip2-flan-t5-xl"],
+    "BLIP2-OPT": ["Salesforce/blip2-opt-2.7b"],
+    "BLIP2-T5": ["Salesforce/blip2-flan-t5-xl"],
     "InstructBLIP": ["Salesforce/instructblip-vicuna-7b"],
     "GIT": ["microsoft/git-base-vqav2", "microsoft/git-base-textvqa"],
     "PaliGemma": [
@@ -76,7 +77,8 @@ def parse_args():
             "Pythia",
             "OPT-IML",
             "Dolly",
-            "BLIP2",
+            "BLIP2-OPT",
+            "BLIP2-T5",
             "InstructBLIP",
             "GIT",
             "PaliGemma",
@@ -123,7 +125,8 @@ def main():
         tokenizer_func = AutoTokenizer
         model_func = AutoModelForSeq2SeqLM
     elif args.model_family in [
-        "BLIP2",
+        "BLIP2-OPT",
+        "BLIP2-T5",
         "InstructBLIP",
         "GIT",
         "PaliGemma",
@@ -171,7 +174,8 @@ def main():
                 # load_in_8bit=True,
             )
         elif args.model_family in [
-            "BLIP2",
+            "BLIP2-OPT",
+            "BLIP2-T5",
             "InstructBLIP",
             "PaliGemma",
             "Idefics2",

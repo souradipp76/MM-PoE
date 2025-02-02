@@ -84,7 +84,7 @@ def main():
             "ending_attention_mask",
         ]
     elif args.model_family in [
-        "BLIP2",
+        "BLIP2-T5",
         "InstructBLIP",
         "PaliGemma",
         "Idefics2",
@@ -101,7 +101,7 @@ def main():
         ]
         processor = tokenizer
         tokenizer = processor.tokenizer
-    elif args.model_family in ["GIT"]:
+    elif args.model_family in ["BLIP2-OPT", "GIT"]:
         compute_func = compute_conditional_score_causal_vqa
         preprocess_func = preprocess_function_causal_vqa
         preprocess_func_channel = preprocess_function_causal_vqa_channel
@@ -154,7 +154,8 @@ def main():
 
         logger.info(f"Preprocess data: {args.dataset}.")
         if args.model_family in [
-            "BLIP2",
+            "BLIP2-OPT",
+            "BLIP2-T5",
             "InstructBLIP",
             "GIT",
             "PaliGemma",
@@ -217,7 +218,8 @@ def main():
             )
         elif scoring_method == "calibration":
             if args.model_family in [
-                "BLIP2",
+                "BLIP2-OPT",
+                "BLIP2-T5",
                 "InstructBLIP",
                 "GIT",
                 "PaliGemma",

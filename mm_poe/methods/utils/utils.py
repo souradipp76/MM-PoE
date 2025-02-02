@@ -63,7 +63,8 @@ def parse_args():
             "Pythia",
             "OPT-IML",
             "Dolly",
-            "BLIP2",
+            "BLIP2-OPT",
+            "BLIP2-T5",
             "InstructBLIP",
             "GIT",
             "PaliGemma",
@@ -584,7 +585,8 @@ def load_model(device, model_path, args):
         tokenizer_func = AutoTokenizer
         model_func = AutoModelForSeq2SeqLM
     elif args.model_family in [
-        "BLIP2",
+        "BLIP2-OPT",
+        "BLIP2-T5",
         "InstructBLIP",
         "GIT",
         "PaliGemma",

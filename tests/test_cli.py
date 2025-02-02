@@ -134,7 +134,7 @@ def test_main_with_calibration_lowest(
     mock_set_seed,
 ):
     mock_select.return_value.ask.side_effect = [
-        "BLIP2",  # args.model_family
+        "BLIP2-OPT",  # args.model_family
         "Salesforce/blip2-opt-2.7b",  # args.checkpoint
         "FP16",  # args.loading_precision
         "calibration",  # args.scoring_method_for_process_of_elimination
@@ -230,7 +230,7 @@ def test_main_with_mcp_lowest(
     mock_set_seed,
 ):
     mock_select.return_value.ask.side_effect = [
-        "BLIP2",  # args.model_family
+        "BLIP2-OPT",  # args.model_family
         "Salesforce/blip2-opt-2.7b",  # args.checkpoint
         "FP16",  # args.loading_precision
         "multiple_choice_prompt",  # args.scoring_method_for_process_of_elimination
@@ -326,7 +326,7 @@ def test_main_with_channel_below_average(
     mock_set_seed,
 ):
     mock_select.return_value.ask.side_effect = [
-        "BLIP2",  # args.model_family
+        "BLIP2-OPT",  # args.model_family
         "Salesforce/blip2-opt-2.7b",  # args.checkpoint
         "FP16",  # args.loading_precision
         "channel",  # args.scoring_method_for_process_of_elimination

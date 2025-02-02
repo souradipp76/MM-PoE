@@ -1,8 +1,8 @@
 #!/bin/bash
 seeds=(0 1 2 3 4)
-model_family="BLIP2"
-checkpoints=("Salesforce/blip2-opt-2.7b")
-loading_precision="FP16"
+model_family="GIT"
+checkpoints=("microsoft/git-base-vqav2")
+loading_precision="FP32"
 datasets="vqa scienceqa ai2d" # vqa scienceqa ai2d
 batch_size=2
 sample=100
