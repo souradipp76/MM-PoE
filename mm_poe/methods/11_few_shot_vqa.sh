@@ -1,9 +1,9 @@
 #!/bin/bash
 seeds=(0 1 2 3 4)
-model_family="GIT"
+model_family="GIT" # "BLIP2-OPT" "BLIP2-T5" "InstructBLIP" "GIT" "PaliGemma" "Idefics2"
 checkpoints=("microsoft/git-base-vqav2")
-loading_precision="FP32"
-datasets="vqa scienceqa ai2d" # vqa scienceqa ai2d
+loading_precision="FP32" # FP32 FP16 BF16(for 7b models) INT8
+datasets="vqa scienceqa ai2d" # vqa scienceqa ai2d custom_dataset
 batch_size=2
 sample=100
 n_shots=(0 1 3)

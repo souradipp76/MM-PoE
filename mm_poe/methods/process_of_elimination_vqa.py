@@ -252,7 +252,7 @@ def main():
                 batch_size=args.batch_size,
                 shuffle=False,
             )
-            avg_log_probs, _, _ = inference_calibration(
+            avg_log_probs, _, _, _ = inference_calibration(
                 model,
                 eval_dataloader,
                 eval_calibration_dataloader,
