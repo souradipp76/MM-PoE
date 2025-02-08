@@ -163,8 +163,9 @@ To use your own custom dataset, save your data under `mm_poe/data/custom_dataset
 ```
 
 ### Supported Models
-- `BLIP2`
+- `BLIP2-OPT`
   - `Salesforce/blip2-opt-2.7b` - https://huggingface.co/Salesforce/blip2-opt-2.7b
+- `BLIP2-T5`
   - `Salesforce/blip2-flan-t5-xl` - https://huggingface.co/Salesforce/blip2-flan-t5-xl
 - `InstructBLIP`
   - `Salesforce/instructblip-vicuna-7b` - https://huggingface.co/Salesforce/instructblip-vicuna-7b
