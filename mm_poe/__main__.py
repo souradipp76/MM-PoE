@@ -1,6 +1,11 @@
 """Entry point for mm_poe."""
 
-from mm_poe.cli import main
+
+def entry_point():
+    from .cli import main
+
+    main()
+
 
 if __name__ == "__main__":
-    main()
+    entry_point()
