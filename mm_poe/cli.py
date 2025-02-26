@@ -10,14 +10,14 @@ import questionary
 import torch
 from torch.utils.data import DataLoader
 
-from methods.utils.data import (
+from mm_poe.methods.utils.data import (
     create_multiple_choice_prompt,
     preprocess_function_seq2seq_vqa,
     preprocess_function_seq2seq_vqa_channel,
     preprocess_function_causal_vqa,
     preprocess_function_causal_vqa_channel,
 )
-from methods.utils.methods import (
+from mm_poe.methods.utils.methods import (
     compute_conditional_score_seq2seq_vqa,
     compute_conditional_score_causal_vqa,
     compute_mask_process_of_elimination,
@@ -25,7 +25,7 @@ from methods.utils.methods import (
     inference_language_modeling,
     inference_calibration,
 )
-from methods.utils.utils import load_data, load_model, set_seed
+from mm_poe.methods.utils.utils import load_data, load_model, set_seed
 
 all_checkpoints = {
     "BLIP2-OPT": ["Salesforce/blip2-opt-2.7b"],
