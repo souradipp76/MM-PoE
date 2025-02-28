@@ -3,8 +3,8 @@ from argparse import Namespace
 import copy
 import logging
 import os
-import subprocess
 import pathlib
+import sys
 
 import questionary
 import torch
@@ -26,6 +26,10 @@ from mm_poe.methods.utils.methods import (
     inference_calibration,
 )
 from mm_poe.methods.utils.utils import load_data, load_model, set_seed
+
+from mm_poe.models.model_downloaders.model_downloaders import (
+    main as download_model,
+)
 
 all_checkpoints = {
     "BLIP2-OPT": ["Salesforce/blip2-opt-2.7b"],
@@ -148,13 +152,16 @@ def main():
         pathlib.Path(__file__).parent.resolve(),
         "models/model_downloaders/model_downloaders.py",
     )
-    subprocess.call(
-        f"python {model_downloader_path} "
-        + f"--model_family {args.model_family} "
-        + f"--checkpoint {args.checkpoint} "
-        + f"--output_dir {args.output_dir}",
-        shell=True,
-    )
+    sys.argv = [
+        model_downloader_path,
+        "--model_family",
+        args.model_family,
+        "--checkpoint",
+        args.checkpoint,
+        "--output_dir",
+        args.output_dir,
+    ]
+    download_model()
 
     # step 4: load model, tokenizer.
     # Then move to gpu, and set to evaluation mode.
@@ -223,7 +230,10 @@ def main():
         "tokenizer": tokenizer,
         "processor": processor,
         "image_header_name": image_header_name,
+        "image_token": "<image>",
     }
+    if args.model_family in ["GIT"]:
+        fn_kwargs["image_token"] = ""
     num_of_options = len(ending_names)
     tokenized_dataset = raw_dataset.map(
         preprocess_func,
@@ -268,7 +278,10 @@ def main():
             "tokenizer": tokenizer,
             "processor": processor,
             "image_header_name": image_header_name,
+            "image_token": "<image>",
         }
+        if args.model_family in ["GIT"]:
+            fn_kwargs["image_token"] = ""
         tokenized_calibration_dataset = raw_dataset.map(
             preprocess_func,
             fn_kwargs=fn_kwargs,

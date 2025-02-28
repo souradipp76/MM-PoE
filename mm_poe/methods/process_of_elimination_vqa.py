@@ -7,7 +7,7 @@ import torch
 from torch.utils.data import DataLoader
 
 
-from utils.data import (
+from mm_poe.methods.utils.data import (
     upload_to_huggingface_hub,
     preprocess_function_seq2seq,
     preprocess_function_causal,
@@ -21,7 +21,7 @@ from utils.data import (
     preprocess_function_causal_vqa,
     preprocess_function_causal_vqa_channel,
 )
-from utils.methods import (
+from mm_poe.methods.utils.methods import (
     compute_conditional_score_seq2seq,
     compute_conditional_score_causal,
     compute_conditional_score_seq2seq_vqa,
@@ -31,7 +31,7 @@ from utils.methods import (
     inference_language_modeling,
     inference_calibration,
 )
-from utils.utils import (
+from mm_poe.methods.utils.utils import (
     load_data,
     load_model,
     parse_args,

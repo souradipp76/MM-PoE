@@ -7,7 +7,7 @@ import torch
 from torch.utils.data import DataLoader
 
 
-from utils.data import (
+from mm_poe.methods.utils.data import (
     upload_to_huggingface_hub,
     preprocess_function_seq2seq,
     preprocess_function_causal,
@@ -17,7 +17,7 @@ from utils.data import (
     generate_n_shot_poe_demonstrations,
     create_n_shot_splits,
 )
-from utils.methods import (
+from mm_poe.methods.utils.methods import (
     compute_conditional_score_seq2seq,
     compute_conditional_score_causal,
     compute_mask_process_of_elimination,
@@ -25,7 +25,7 @@ from utils.methods import (
     inference_language_modeling,
     inference_calibration,
 )
-from utils.utils import (
+from mm_poe.methods.utils.utils import (
     load_data,
     load_model,
     parse_args,

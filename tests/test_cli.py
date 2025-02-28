@@ -10,7 +10,7 @@ from mm_poe.cli import main
 
 @patch("mm_poe.cli.set_seed")
 @patch("mm_poe.cli.load_model")
-@patch("mm_poe.cli.subprocess.call")
+@patch("mm_poe.cli.download_model")
 @patch("mm_poe.cli.questionary.select")
 @patch("mm_poe.cli.questionary.path")
 @patch("mm_poe.cli.questionary.text")
@@ -18,7 +18,7 @@ def test_main(
     mock_text,
     mock_path,
     mock_select,
-    mock_subprocess_call,
+    mock_download_model,
     mock_load_model,
     mock_set_seed,
 ):
@@ -42,8 +42,8 @@ def test_main(
         "cat,dog,horse",  # args.choices
     ]
 
-    # Mock the subprocess.call to prevent actual execution
-    mock_subprocess_call.return_value = 0
+    # Mock the download_model to prevent actual execution
+    mock_download_model.return_value = 0
 
     # Mock the load_model function to return mock model and tokenizer
     mock_model = MagicMock()
@@ -112,7 +112,7 @@ def test_main(
 
             # Assertions to check if functions were called as expected
             mock_set_seed.assert_called_once_with(0)
-            mock_subprocess_call.assert_called()
+            mock_download_model.assert_called()
             mock_load_model.assert_called()
             mock_load_data.assert_called()
             mock_inference_lm.assert_called()
@@ -121,7 +121,7 @@ def test_main(
 
 @patch("mm_poe.cli.set_seed")
 @patch("mm_poe.cli.load_model")
-@patch("mm_poe.cli.subprocess.call")
+@patch("mm_poe.cli.download_model")
 @patch("mm_poe.cli.questionary.select")
 @patch("mm_poe.cli.questionary.path")
 @patch("mm_poe.cli.questionary.text")
@@ -129,7 +129,7 @@ def test_main_with_calibration_lowest(
     mock_text,
     mock_path,
     mock_select,
-    mock_subprocess_call,
+    mock_download_model,
     mock_load_model,
     mock_set_seed,
 ):
@@ -152,7 +152,7 @@ def test_main_with_calibration_lowest(
         "apple,banana,orange",  # args.choices
     ]
 
-    mock_subprocess_call.return_value = 0
+    mock_download_model.return_value = 0
     mock_model = MagicMock()
     mock_tokenizer = MagicMock()
     mock_load_model.return_value = (mock_model, mock_tokenizer)
@@ -208,7 +208,7 @@ def test_main_with_calibration_lowest(
             main()
 
             mock_set_seed.assert_called_once_with(0)
-            mock_subprocess_call.assert_called()
+            mock_download_model.assert_called()
             mock_load_model.assert_called()
             mock_load_data.assert_called()
             mock_inference_calibration.assert_called()
@@ -217,7 +217,7 @@ def test_main_with_calibration_lowest(
 
 @patch("mm_poe.cli.set_seed")
 @patch("mm_poe.cli.load_model")
-@patch("mm_poe.cli.subprocess.call")
+@patch("mm_poe.cli.download_model")
 @patch("mm_poe.cli.questionary.select")
 @patch("mm_poe.cli.questionary.path")
 @patch("mm_poe.cli.questionary.text")
@@ -225,7 +225,7 @@ def test_main_with_mcp_lowest(
     mock_text,
     mock_path,
     mock_select,
-    mock_subprocess_call,
+    mock_download_model,
     mock_load_model,
     mock_set_seed,
 ):
@@ -248,7 +248,7 @@ def test_main_with_mcp_lowest(
         "apple,banana,orange",  # args.choices
     ]
 
-    mock_subprocess_call.return_value = 0
+    mock_download_model.return_value = 0
     mock_model = MagicMock()
     mock_tokenizer = MagicMock()
     mock_load_model.return_value = (mock_model, mock_tokenizer)
@@ -304,7 +304,7 @@ def test_main_with_mcp_lowest(
             main()
 
             mock_set_seed.assert_called_once_with(0)
-            mock_subprocess_call.assert_called()
+            mock_download_model.assert_called()
             mock_load_model.assert_called()
             mock_load_data.assert_called()
             mock_inference_language_modeling.assert_called()
@@ -313,7 +313,7 @@ def test_main_with_mcp_lowest(
 
 @patch("mm_poe.cli.set_seed")
 @patch("mm_poe.cli.load_model")
-@patch("mm_poe.cli.subprocess.call")
+@patch("mm_poe.cli.download_model")
 @patch("mm_poe.cli.questionary.select")
 @patch("mm_poe.cli.questionary.path")
 @patch("mm_poe.cli.questionary.text")
@@ -321,7 +321,7 @@ def test_main_with_channel_below_average(
     mock_text,
     mock_path,
     mock_select,
-    mock_subprocess_call,
+    mock_download_model,
     mock_load_model,
     mock_set_seed,
 ):
@@ -344,7 +344,7 @@ def test_main_with_channel_below_average(
         "apple,banana,orange",  # args.choices
     ]
 
-    mock_subprocess_call.return_value = 0
+    mock_download_model.return_value = 0
     mock_model = MagicMock()
     mock_tokenizer = MagicMock()
     mock_load_model.return_value = (mock_model, mock_tokenizer)
@@ -400,7 +400,7 @@ def test_main_with_channel_below_average(
             main()
 
             mock_set_seed.assert_called_once_with(0)
-            mock_subprocess_call.assert_called()
+            mock_download_model.assert_called()
             mock_load_model.assert_called()
             mock_load_data.assert_called()
             mock_inference_language_modeling.assert_called()
@@ -409,7 +409,7 @@ def test_main_with_channel_below_average(
 
 @patch("mm_poe.cli.set_seed")
 @patch("mm_poe.cli.load_model")
-@patch("mm_poe.cli.subprocess.call")
+@patch("mm_poe.cli.download_model")
 @patch("mm_poe.cli.questionary.select")
 @patch("mm_poe.cli.questionary.path")
 @patch("mm_poe.cli.questionary.text")
@@ -417,7 +417,7 @@ def test_main_with_mask_strategy_min_k(
     mock_text,
     mock_path,
     mock_select,
-    mock_subprocess_call,
+    mock_download_model,
     mock_load_model,
     mock_set_seed,
 ):
@@ -437,7 +437,7 @@ def test_main_with_mask_strategy_min_k(
         "What is in the image?",
         "cat,dog,horse",
     ]
-    mock_subprocess_call.return_value = 0
+    mock_download_model.return_value = 0
     mock_model = MagicMock()
     mock_tokenizer = MagicMock()
     mock_load_model.return_value = (mock_model, mock_tokenizer)
@@ -512,7 +512,7 @@ def test_main_with_mask_strategy_min_k(
 
 @patch("mm_poe.cli.set_seed")
 @patch("mm_poe.cli.load_model")
-@patch("mm_poe.cli.subprocess.call")
+@patch("mm_poe.cli.download_model")
 @patch("mm_poe.cli.questionary.select")
 @patch("mm_poe.cli.questionary.path")
 @patch("mm_poe.cli.questionary.text")
@@ -520,7 +520,7 @@ def test_main_with_mask_token(
     mock_text,
     mock_path,
     mock_select,
-    mock_subprocess_call,
+    mock_download_model,
     mock_load_model,
     mock_set_seed,
 ):
@@ -540,7 +540,7 @@ def test_main_with_mask_token(
         "What is in the image?",
         "cat,dog,horse",
     ]
-    mock_subprocess_call.return_value = 0
+    mock_download_model.return_value = 0
     mock_model = MagicMock()
     mock_tokenizer = MagicMock()
     mock_load_model.return_value = (mock_model, mock_tokenizer)
@@ -616,7 +616,7 @@ def test_main_with_mask_token(
 
 @patch("mm_poe.cli.set_seed")
 @patch("mm_poe.cli.load_model")
-@patch("mm_poe.cli.subprocess.call")
+@patch("mm_poe.cli.download_model")
 @patch("mm_poe.cli.questionary.select")
 @patch("mm_poe.cli.questionary.path")
 @patch("mm_poe.cli.questionary.text")
@@ -624,7 +624,7 @@ def test_main_with_mask_strategy_min_k(
     mock_text,
     mock_path,
     mock_select,
-    mock_subprocess_call,
+    mock_download_model,
     mock_load_model,
     mock_set_seed,
 ):
@@ -644,7 +644,7 @@ def test_main_with_mask_strategy_min_k(
         "What is in the image?",
         "cat,dog,horse",
     ]
-    mock_subprocess_call.return_value = 0
+    mock_download_model.return_value = 0
     mock_model = MagicMock()
     mock_tokenizer = MagicMock()
     mock_load_model.return_value = (mock_model, mock_tokenizer)

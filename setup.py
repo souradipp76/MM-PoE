@@ -40,7 +40,7 @@ setup(
     packages=find_packages(exclude=["tests", ".github"]),
     install_requires=read_requirements("requirements.txt"),
     entry_points={
-        "console_scripts": ["mm_poe = mm_poe.__main__:entry_point"]
+        "console_scripts": ["mm_poe = mm_poe.__main__:main"]
     },
     extras_require={"test": read_requirements("requirements-test.txt")},
 )
