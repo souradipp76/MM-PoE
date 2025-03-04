@@ -74,7 +74,7 @@ The application will prompt the user to provide relevant inputs for a multiple c
 
 ### Running Experiments
 
-For running experiments with MM-PoE on large datasets, follow the instructions below.
+For running experiments with MM-PoE on large datasets, first clone the repository in your local, go to the repository directory and follow the instructions below.
 
 Install dependencies:
 ```
