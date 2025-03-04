@@ -52,18 +52,6 @@ Lets take a look at the structure of this template:
 
 Frequent asked questions.
 
-### Why this template is not using [Poetry](https://python-poetry.org/) ?
-
-I really like Poetry and I think it is a great tool to manage your python projects,
-if you want to switch to poetry, you can run `make switch-to-poetry`.
-
-But for this template I wanted to keep it simple.
-
-Setuptools is the most simple and well supported way of packaging a Python project,
-it doesn't require extra dependencies and is the easiest way to install the project.
-
-Also, poetry doesn't have a good support for installing projects in development mode yet.
-
 ### Why the `requirements.txt` is empty ?
 
 This template is a low dependency project, so it doesn't have any extra dependencies.
@@ -193,6 +181,5 @@ clean:            ## Clean unused files.
 virtualenv:       ## Create a virtual environment.
 release:          ## Create a new tag for release.
 docs:             ## Build the documentation.
-switch-to-poetry: ## Switch to poetry package manager.
 init:             ## Initialize the project based on an application template.
 ```
