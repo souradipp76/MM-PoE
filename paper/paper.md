@@ -37,7 +37,7 @@ Using this tool, researchers and practitioners can experiment and significantly 
 
 # State of the Field
 
-A common strategy for answering multiple-choice questions, especially under examination conditions, involves a process of elimination where incorrect answers are systematically discarded to narrow down the choices to the most likely correct ones. This approach, grounded in everyday test-taking strategies[@zhang2023dynamically], contrasts with how current language models (LMs) and vision language models (VLMs) handle multiple-choice reasoning tasks. Typically, VLMs evaluate each option independently or collectively without actively discarding less likely answers, potentially reducing their effectiveness in distinguishing the best choice from plausible distractors.
+A common strategy for answering multiple-choice questions, especially under examination conditions, involves a process of elimination where incorrect answers are systematically discarded to narrow down the choices to the most likely correct ones. This approach, grounded in everyday test-taking strategies [@zhang2023dynamically], contrasts with how current language models (LMs) and vision language models (VLMs) handle multiple-choice reasoning tasks. Typically, VLMs evaluate each option independently or collectively without actively discarding less likely answers, potentially reducing their effectiveness in distinguishing the best choice from plausible distractors.
 
 This paper argues that vision language models can benefit from an explicit two-step reasoning process akin to human problem-solving techniques. The proposed method, known as Multi-Modal Process of Elimination (MM-PoE), enhances the decision-making process by first scoring and then eliminating options that are seemingly incorrect before focusing on selecting the correct answer from the remaining choices. This method is designed to align with natural human reasoning by replicating how individuals often approach multiple-choice questions, particularly under the constraint of time and accuracy, as frequently experienced in academic testing environments.
 
@@ -50,8 +50,7 @@ The effectiveness of this approach is underscored through zero-shot and few-shot
 
 # Methodology
 
-The Multi-Modal Process of Elimination (MM-PoE) introduced in this paper operates on a two-step mechanism[@datta2024consistency
-] designed to enhance the decision-making capabilities of vision language models (VLMs) in multiple-choice visual reasoning tasks. This method employs a novel approach to option elimination followed by a focused prediction phase. The strategy is rooted in the belief that separating the elimination of clearly incorrect options from the choice of the best remaining option will improve overall task performance.
+The Multi-Modal Process of Elimination (MM-PoE) introduced in this paper operates on a two-step mechanism [@datta2024consistency] designed to enhance the decision-making capabilities of vision language models (VLMs) in multiple-choice visual reasoning tasks. This method employs a novel approach to option elimination followed by a focused prediction phase. The strategy is rooted in the belief that separating the elimination of clearly incorrect options from the choice of the best remaining option will improve overall task performance.
 
 ## Problem Setting
 
@@ -111,7 +110,7 @@ To further explore the versatility of MM-PoE, we also examined its performance i
 
 ## Data
 
-Our experiments were conducted on three different multiple-choice visual reasoning datasets - Visual Question Answering(VQA) [@VQA], ScienceQA [@lu2022learn], and Diagram Understanding(AI2D) [@Kembhavi2016ADI], selected to cover a broad spectrum of reasoning types and complexities. These tasks include both traditional visual reasoning tasks and more specialized ones designed to test specific reasoning skills. To ensure a comprehensive evaluation, we used train sets from established benchmarks when available; otherwise, we utilized development sets. In case of varying number of options in the multiple-choice answers for SceinceQA and AI2D datasets, we filtered questions containing image context and exactly four options.
+Our experiments were conducted on three different multiple-choice visual reasoning datasets - Visual Question Answering (VQA) [@VQA], ScienceQA [@lu2022learn], and Diagram Understanding (AI2D) [@Kembhavi2016ADI], selected to cover a broad spectrum of reasoning types and complexities. These tasks include both traditional visual reasoning tasks and more specialized ones designed to test specific reasoning skills. To ensure a comprehensive evaluation, we used train sets from established benchmarks when available; otherwise, we utilized development sets. In case of varying number of options in the multiple-choice answers for SceinceQA and AI2D datasets, we filtered questions containing image context and exactly four options.
 
 | Dataset | #Options | Train  | Dev  | Test |
 |----|------|------|------|-----------|
