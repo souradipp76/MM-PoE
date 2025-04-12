@@ -159,7 +159,7 @@ MM-PoE consistently outperformed or matched the best-performing baselines across
 ## Examples
 
 ### ScienceQA Example
-<img src="figures/image.png" alt="Example" width="500">
+![ScienceQA Example](figures/image.png){width=75%}
 
 **Question**: Which of these states is farthest north?<br>
 **Options**: West Virginia, Louisiana, Arizona, Oklahoma<br>
@@ -170,7 +170,7 @@ MM-PoE consistently outperformed or matched the best-performing baselines across
 
 ### AI2D Example
 
-<img src="figures/17.png" alt="Example" width="500">
+![AI2D Example](figures/17.png){width=75%}
 
 **Question**: Are phytoplankton predators or prey in this food chain?<br>
 **Options**: producer, predator, prey, NA<br>
