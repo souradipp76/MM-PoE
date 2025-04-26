@@ -2,7 +2,7 @@
 
 [![codecov](https://codecov.io/gh/souradipp76/MM-PoE/branch/main/graph/badge.svg?token=77bb4fa8-804f-4498-a040-4d93886f32be)](https://codecov.io/gh/souradipp76/MM-PoE)
 [![CI](https://github.com/souradipp76/MM-PoE/actions/workflows/main.yml/badge.svg)](https://github.com/souradipp76/MM-PoE/actions/workflows/main.yml)
-
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.07783/status.svg)](https://doi.org/10.21105/joss.07783)
 
 **Multiple Choice Reasoning via. Process of Elimination using Multi-Modal Models**
 
