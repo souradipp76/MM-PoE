@@ -448,12 +448,12 @@ def test_load_data_invalid_dataset():
         ("Dolly", "AutoModelForCausalLM", "AutoTokenizer"),
         ("T5", "AutoModelForSeq2SeqLM", "AutoTokenizer"),
         ("FLAN-T5", "AutoModelForSeq2SeqLM", "AutoTokenizer"),
-        ("BLIP2-OPT", "AutoModelForVision2Seq", "AutoProcessor"),
-        ("BLIP2-T5", "AutoModelForVision2Seq", "AutoProcessor"),
-        ("InstructBLIP", "AutoModelForVision2Seq", "AutoProcessor"),
-        ("GIT", "AutoModelForVision2Seq", "AutoProcessor"),
-        ("PaliGemma", "AutoModelForVision2Seq", "AutoProcessor"),
-        ("Idefics2", "AutoModelForVision2Seq", "AutoProcessor"),
+        ("BLIP2-OPT", "AutoModelForImageTextToText", "AutoProcessor"),
+        ("BLIP2-T5", "AutoModelForImageTextToText", "AutoProcessor"),
+        ("InstructBLIP", "AutoModelForImageTextToText", "AutoProcessor"),
+        ("GIT", "AutoModelForImageTextToText", "AutoProcessor"),
+        ("PaliGemma", "AutoModelForImageTextToText", "AutoProcessor"),
+        ("Idefics2", "AutoModelForImageTextToText", "AutoProcessor"),
     ],
 )
 def test_load_model_families(
