@@ -11,7 +11,7 @@ from transformers import (
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
     AutoProcessor,
-    AutoModelForVision2Seq,
+    AutoModelForImageTextToText,
 )
 
 all_checkpoints = {
@@ -133,7 +133,7 @@ def main():
         "Idefics2",
     ]:
         tokenizer_func = AutoProcessor
-        model_func = AutoModelForVision2Seq
+        model_func = AutoModelForImageTextToText
     else:
         print(f"{args.model_family}: downloader not implemented.")
         return
