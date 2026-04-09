@@ -11,7 +11,7 @@ from transformers import (
     AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
     AutoProcessor,
-    AutoModelForVision2Seq,
+    AutoModelForImageTextToText,
     BitsAndBytesConfig,
 )
 from datasets import Dataset
@@ -593,7 +593,7 @@ def load_model(device, model_path, args):
         "Idefics2",
     ]:
         tokenizer_func = AutoProcessor
-        model_func = AutoModelForVision2Seq
+        model_func = AutoModelForImageTextToText
     else:
         print(f"{args.model_family}: downloader not implemented.")
         return
@@ -646,7 +646,7 @@ def load_model(device, model_path, args):
     else:  # FP32
         model = model_func.from_pretrained(model_path, device_map=device)
     print(
-        f"Memory footprint: {model.get_memory_footprint() / 1024 **3:.2f} GB."
+        f"Memory footprint: {model.get_memory_footprint() / 1024**3:.2f} GB."
     )
     return model, tokenizer
 
